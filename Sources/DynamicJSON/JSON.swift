@@ -1,8 +1,21 @@
 //
-//  File.swift
+//  JSON.swift
 //  DynamicJSON
 //
-//  Created by Matthias Zenger on 11.02.2024.
+//  Created by Matthias Zenger on 11/02/2024.
+//  Copyright © 2024 Matthias Zenger. All rights reserved.
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 import Foundation
@@ -179,6 +192,10 @@ public enum JSON: Hashable,
                   encoding: .utf8)
   }
   
+  public func coerce<T: Decodable>() throws -> T {
+    return try JSONDecoder().decode(T.self, from: try JSONEncoder().encode(self))
+  }
+  
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     switch self {
@@ -199,21 +216,21 @@ public enum JSON: Hashable,
     }
   }
   
-  var isNull: Bool {
+  public var isNull: Bool {
     guard case .null = self else {
       return false
     }
     return true
   }
   
-  var boolValue: Bool? {
+  public var boolValue: Bool? {
     guard case .boolean(let value) = self else {
       return nil
     }
     return value
   }
   
-  var intValue: Int? {
+  public var intValue: Int? {
     guard case .integer(let value) = self,
           let res = Int(exactly: value) else {
       return nil
@@ -221,14 +238,14 @@ public enum JSON: Hashable,
     return res
   }
   
-  var int64Value: Int64? {
+  public var int64Value: Int64? {
     guard case .integer(let value) = self else {
       return nil
     }
     return value
   }
   
-  var doubleValue: Double? {
+  public var doubleValue: Double? {
     switch self {
       case .integer(let num):
         return Double(num)
@@ -239,21 +256,21 @@ public enum JSON: Hashable,
     }
   }
 
-  var stringValue: String? {
+  public var stringValue: String? {
     guard case .string(let value) = self else {
       return nil
     }
     return value
   }
   
-  var arrayValue: [JSON]? {
+  public var arrayValue: [JSON]? {
     guard case .array(let value) = self else {
       return nil
     }
     return value
   }
   
-  var objectValue: [String: JSON]? {
+  public var objectValue: [String: JSON]? {
     guard case .object(let value) = self else {
       return nil
     }
@@ -283,7 +300,7 @@ public enum JSON: Hashable,
     case select(KeyPath, String)
     case index(KeyPath, Int)
     
-    init(from str: String) throws {
+    public init(from str: String) throws {
       var res: KeyPath = .self
       var iterator = str.makeIterator()
       var ident = ""
@@ -320,7 +337,7 @@ public enum JSON: Hashable,
       self = res
     }
     
-    var components: [KeyPathComponent] {
+    public var components: [KeyPathComponent] {
       var res: [KeyPathComponent] = []
       self.insert(into: &res)
       return res
@@ -339,7 +356,7 @@ public enum JSON: Hashable,
       }
     }
     
-    func apply(to value: JSON) -> JSON? {
+    public func apply(to value: JSON) -> JSON? {
       switch self {
         case .self:
           return value

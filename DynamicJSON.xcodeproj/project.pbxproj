@@ -29,6 +29,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CC2473DF2B7B9DEE0022800A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		CC2473E02B7B9DF60022800A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		CC2473E12B7B9E330022800A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		CC528E242B7975DC001E9E52 /* DynamicJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DynamicJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC528E272B7975DC001E9E52 /* DynamicJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DynamicJSON.h; sourceTree = "<group>"; };
 		CC528E282B7975DC001E9E52 /* DynamicJSON.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = DynamicJSON.docc; sourceTree = "<group>"; };
@@ -63,6 +66,9 @@
 		CC528E1A2B7975DC001E9E52 = {
 			isa = PBXGroup;
 			children = (
+				CC2473DF2B7B9DEE0022800A /* LICENSE */,
+				CC2473E02B7B9DF60022800A /* README.md */,
+				CC2473E12B7B9E330022800A /* Package.swift */,
 				CC528E262B7975DC001E9E52 /* DynamicJSON */,
 				CC528E322B7975DC001E9E52 /* DynamicJSONTests */,
 				CC528E252B7975DC001E9E52 /* Products */,
@@ -88,7 +94,8 @@
 				CC528E272B7975DC001E9E52 /* DynamicJSON.h */,
 				CC528E282B7975DC001E9E52 /* DynamicJSON.docc */,
 			);
-			path = DynamicJSON;
+			name = DynamicJSON;
+			path = Sources/DynamicJSON;
 			sourceTree = "<group>";
 		};
 		CC528E322B7975DC001E9E52 /* DynamicJSONTests */ = {
@@ -97,7 +104,8 @@
 				CC528E332B7975DC001E9E52 /* DynamicJSONTests.swift */,
 				CC528E442B7A15B1001E9E52 /* JSONConstructorTests.swift */,
 			);
-			path = DynamicJSONTests;
+			name = DynamicJSONTests;
+			path = Tests/DynamicJSONTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -370,7 +378,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -379,7 +387,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -407,7 +415,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -416,7 +424,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -438,8 +446,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.DynamicJSONTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -458,8 +466,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.DynamicJSONTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
