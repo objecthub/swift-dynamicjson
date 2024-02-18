@@ -41,6 +41,29 @@ public enum JSON: Hashable,
   case array([JSON])
   case object([String : JSON])
   
+  /*
+  public static func ==(lhs: JSON, rhs: JSON) -> Bool {
+    switch (lhs, rhs) {
+      case (.null, .null):
+        return true
+      case (.boolean(let l), .boolean(let r)):
+        return l == r
+      case (.integer(let l), .integer(let r)):
+        return l == r
+      case (.float(let l), .float(let r)):
+        return l == r
+      case (.string(let l), .string(let r)):
+        return l == r
+      case (.array(let l), .array(let r)):
+        return l == r
+      case (.object(let l), .object(let r)):
+        return l == r
+      default:
+        return false
+    }
+  }
+  */
+  
   public init(nilLiteral: ()) {
     self = .null
   }
@@ -277,6 +300,24 @@ public enum JSON: Hashable,
     return value
   }
   
+  public var children: [JSON] {
+    switch self {
+      case .null, .boolean(_), .integer(_), .float(_), .string(_):
+        return []
+      case .array(let arr):
+        return arr
+      case .object(let dict):
+        return [JSON](dict.values)
+    }
+  }
+  
+  public func forEachDescendant(_ proc: (JSON) throws -> Void) rethrows {
+    try proc(self)
+    for child in self.children {
+      try child.forEachDescendant(proc)
+    }
+  }
+  
   public subscript(index: Int) -> JSON? {
     guard case .array(let array) = self, array.indices.contains(index) else {
       return nil
@@ -295,121 +336,13 @@ public enum JSON: Hashable,
     return self[key]
   }
   
-  public indirect enum KeyPath: Hashable, CustomStringConvertible, CustomDebugStringConvertible {
-    case `self`
-    case select(KeyPath, String)
-    case index(KeyPath, Int)
-    
-    public init(from str: String) throws {
-      var res: KeyPath = .self
-      var iterator = str.makeIterator()
-      var ident = ""
-      while let ch = iterator.next() {
-        switch ch {
-          case ".":
-            if !ident.isEmpty {
-              res = .select(res, ident)
-              ident = ""
-            }
-          case "[":
-            if !ident.isEmpty {
-              res = .select(res, ident)
-              ident = ""
-            }
-            var num = ""
-            var nch = iterator.next()
-            while let ch = nch, ch.isASCII, ch.isNumber {
-              num.append(ch)
-              nch = iterator.next()
-            }
-            guard let index = Int(num), index >= 0, nch == .some("]") else {
-              throw JSONError.invalidKeyPath
-            }
-            res = .index(res, index)
-          default:
-            ident.append(ch)
-        }
-      }
-      if !ident.isEmpty {
-        res = .select(res, ident)
-        ident = ""
-      }
-      self = res
-    }
-    
-    public var components: [KeyPathComponent] {
-      var res: [KeyPathComponent] = []
-      self.insert(into: &res)
-      return res
-    }
-    
-    private func insert(into components: inout [KeyPathComponent]) {
-      switch self {
-        case .self:
-          break
-        case .select(let path, let key):
-          path.insert(into: &components)
-          components.append(.key(key))
-        case .index(let path, let index):
-          path.insert(into: &components)
-          components.append(.index(index))
-      }
-    }
-    
-    public func apply(to value: JSON) -> JSON? {
-      switch self {
-        case .self:
-          return value
-        case .select(let path, let key):
-          guard let pathValue = path.apply(to: value),
-                case .object(let obj) = pathValue else {
-            return nil
-          }
-          return obj[key]
-        case .index(let path, let index):
-          guard let pathValue = path.apply(to: value),
-                case .array(let arr) = pathValue else {
-            return nil
-          }
-          return arr[index]
-      }
-    }
-    
-    public var description: String {
-      switch self {
-        case .self:
-          return ""
-        case .select(let path, let key):
-          return "\(path.description).\(key)"
-        case .index(let path, let index):
-          return "\(path.description)[\(index)]"
-      }
-    }
-    
-    public var debugDescription: String {
-      switch self {
-        case .self:
-          return "self"
-        case .select(let path, let key):
-          return "select(\(path.debugDescription), \"\(key)\")"
-        case .index(let path, let index):
-          return "index(\(path.debugDescription), \(index))"
-      }
-    }
-  }
-  
-  public enum KeyPathComponent: Hashable {
-    case key(String)
-    case index(Int)
-  }
-  
-  public subscript(keyPath keyPath: KeyPath) -> JSON? {
-    return keyPath.apply(to: self)
+  public subscript(keyPath keyPath: JSONPath) -> JSON? {
+    return nil // keyPath.apply(to: self)
   }
   
   public subscript(keyPath keyPath: String) -> JSON? {
     get throws {
-      return try KeyPath(from: keyPath).apply(to: self)
+      return nil // try JSONPath(from: keyPath).apply(to: self)
     }
   }
   
@@ -433,11 +366,12 @@ public enum JSON: Hashable,
     }
   }
   
-  public func updating(_ keyPath: KeyPath, with json: JSON) throws -> JSON {
-    return try self.updating(keyPath.components, 0, with: json)
+  public func updating(_ keyPath: JSONPath, with json: JSON) throws -> JSON {
+    return .null // try self.updating(keyPath.components, 0, with: json)
   }
   
-  private func updating(_ keyPathComponents: [KeyPathComponent],
+  /*
+  private func updating(_ keyPathComponents: [JSONPath.Segment],
                         _ current: Int,
                         with json: JSON) throws -> JSON {
     if current < keyPathComponents.count {
@@ -459,6 +393,7 @@ public enum JSON: Hashable,
       return json
     }
   }
+  */
   
   public var description: String {
     return (try? self.string(

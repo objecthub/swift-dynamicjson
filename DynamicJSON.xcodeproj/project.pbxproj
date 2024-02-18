@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC2473E32B7C1BC80022800A /* JSONPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2473E22B7C1BC80022800A /* JSONPath.swift */; };
+		CC2473E52B7D466D0022800A /* JSONPathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2473E42B7D466D0022800A /* JSONPathTests.swift */; };
+		CC2473E72B7DF5040022800A /* JSONPathParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2473E62B7DF5040022800A /* JSONPathParser.swift */; };
+		CC2473E92B8161A00022800A /* JSONPathEvaluator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2473E82B8161A00022800A /* JSONPathEvaluator.swift */; };
+		CC2473F12B8180F70022800A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC2473F02B8180F70022800A /* main.swift */; };
+		CC2473F62B8184DE0022800A /* DynamicJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC528E242B7975DC001E9E52 /* DynamicJSON.framework */; };
+		CC2473F72B8184DE0022800A /* DynamicJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CC528E242B7975DC001E9E52 /* DynamicJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CC528E292B7975DC001E9E52 /* DynamicJSON.docc in Sources */ = {isa = PBXBuildFile; fileRef = CC528E282B7975DC001E9E52 /* DynamicJSON.docc */; };
 		CC528E2F2B7975DC001E9E52 /* DynamicJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC528E242B7975DC001E9E52 /* DynamicJSON.framework */; };
 		CC528E342B7975DC001E9E52 /* DynamicJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC528E332B7975DC001E9E52 /* DynamicJSONTests.swift */; };
@@ -16,9 +23,17 @@
 		CC528E432B797C1E001E9E52 /* JSONError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC528E422B797C1E001E9E52 /* JSONError.swift */; };
 		CC528E452B7A15B1001E9E52 /* JSONConstructorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC528E442B7A15B1001E9E52 /* JSONConstructorTests.swift */; };
 		CC528E472B7B5392001E9E52 /* JSONExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC528E462B7B5392001E9E52 /* JSONExtensions.swift */; };
+		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CC2473F82B8184DE0022800A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CC528E1B2B7975DC001E9E52 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC528E232B7975DC001E9E52;
+			remoteInfo = DynamicJSON;
+		};
 		CC528E302B7975DC001E9E52 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CC528E1B2B7975DC001E9E52 /* Project object */;
@@ -28,10 +43,39 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CC2473EC2B8180F70022800A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		CC2473FA2B8184DE0022800A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CC2473F72B8184DE0022800A /* DynamicJSON.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		CC2473DF2B7B9DEE0022800A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CC2473E02B7B9DF60022800A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CC2473E12B7B9E330022800A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		CC2473E22B7C1BC80022800A /* JSONPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPath.swift; sourceTree = "<group>"; };
+		CC2473E42B7D466D0022800A /* JSONPathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPathTests.swift; sourceTree = "<group>"; };
+		CC2473E62B7DF5040022800A /* JSONPathParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPathParser.swift; sourceTree = "<group>"; };
+		CC2473E82B8161A00022800A /* JSONPathEvaluator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPathEvaluator.swift; sourceTree = "<group>"; };
+		CC2473EE2B8180F70022800A /* JSONPathTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = JSONPathTool; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC2473F02B8180F70022800A /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CC528E242B7975DC001E9E52 /* DynamicJSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DynamicJSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC528E272B7975DC001E9E52 /* DynamicJSON.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DynamicJSON.h; sourceTree = "<group>"; };
 		CC528E282B7975DC001E9E52 /* DynamicJSON.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = DynamicJSON.docc; sourceTree = "<group>"; };
@@ -42,9 +86,18 @@
 		CC528E422B797C1E001E9E52 /* JSONError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONError.swift; sourceTree = "<group>"; };
 		CC528E442B7A15B1001E9E52 /* JSONConstructorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONConstructorTests.swift; sourceTree = "<group>"; };
 		CC528E462B7B5392001E9E52 /* JSONExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONExtensions.swift; sourceTree = "<group>"; };
+		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CC2473EB2B8180F70022800A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC2473F62B8184DE0022800A /* DynamicJSON.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC528E212B7975DC001E9E52 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,6 +116,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC2473EF2B8180F70022800A /* JSONPathTool */ = {
+			isa = PBXGroup;
+			children = (
+				CC2473F02B8180F70022800A /* main.swift */,
+			);
+			path = JSONPathTool;
+			sourceTree = "<group>";
+		};
+		CC2473F52B8184DE0022800A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CC528E1A2B7975DC001E9E52 = {
 			isa = PBXGroup;
 			children = (
@@ -71,7 +139,9 @@
 				CC2473E12B7B9E330022800A /* Package.swift */,
 				CC528E262B7975DC001E9E52 /* DynamicJSON */,
 				CC528E322B7975DC001E9E52 /* DynamicJSONTests */,
+				CC2473EF2B8180F70022800A /* JSONPathTool */,
 				CC528E252B7975DC001E9E52 /* Products */,
+				CC2473F52B8184DE0022800A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,6 +150,7 @@
 			children = (
 				CC528E242B7975DC001E9E52 /* DynamicJSON.framework */,
 				CC528E2E2B7975DC001E9E52 /* DynamicJSONTests.xctest */,
+				CC2473EE2B8180F70022800A /* JSONPathTool */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,6 +159,10 @@
 			isa = PBXGroup;
 			children = (
 				CC528E3E2B797811001E9E52 /* JSON.swift */,
+				CCD13B712B82536500307526 /* JSONLocation.swift */,
+				CC2473E22B7C1BC80022800A /* JSONPath.swift */,
+				CC2473E62B7DF5040022800A /* JSONPathParser.swift */,
+				CC2473E82B8161A00022800A /* JSONPathEvaluator.swift */,
 				CC528E422B797C1E001E9E52 /* JSONError.swift */,
 				CC528E462B7B5392001E9E52 /* JSONExtensions.swift */,
 				CC528E402B797980001E9E52 /* NSNumber.swift */,
@@ -102,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				CC528E332B7975DC001E9E52 /* DynamicJSONTests.swift */,
+				CC2473E42B7D466D0022800A /* JSONPathTests.swift */,
 				CC528E442B7A15B1001E9E52 /* JSONConstructorTests.swift */,
 			);
 			name = DynamicJSONTests;
@@ -122,6 +198,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		CC2473ED2B8180F70022800A /* JSONPathTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC2473F22B8180F70022800A /* Build configuration list for PBXNativeTarget "JSONPathTool" */;
+			buildPhases = (
+				CC2473EA2B8180F70022800A /* Sources */,
+				CC2473EB2B8180F70022800A /* Frameworks */,
+				CC2473EC2B8180F70022800A /* CopyFiles */,
+				CC2473FA2B8184DE0022800A /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC2473F92B8184DE0022800A /* PBXTargetDependency */,
+			);
+			name = JSONPathTool;
+			productName = JSONPathTool;
+			productReference = CC2473EE2B8180F70022800A /* JSONPathTool */;
+			productType = "com.apple.product-type.tool";
+		};
 		CC528E232B7975DC001E9E52 /* DynamicJSON */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CC528E382B7975DC001E9E52 /* Build configuration list for PBXNativeTarget "DynamicJSON" */;
@@ -168,6 +263,9 @@
 				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1520;
 				TargetAttributes = {
+					CC2473ED2B8180F70022800A = {
+						CreatedOnToolsVersion = 15.2;
+					};
 					CC528E232B7975DC001E9E52 = {
 						CreatedOnToolsVersion = 15.2;
 					};
@@ -191,6 +289,7 @@
 			targets = (
 				CC528E232B7975DC001E9E52 /* DynamicJSON */,
 				CC528E2D2B7975DC001E9E52 /* DynamicJSONTests */,
+				CC2473ED2B8180F70022800A /* JSONPathTool */,
 			);
 		};
 /* End PBXProject section */
@@ -213,15 +312,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CC2473EA2B8180F70022800A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC2473F12B8180F70022800A /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC528E202B7975DC001E9E52 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				CC528E292B7975DC001E9E52 /* DynamicJSON.docc in Sources */,
+				CC2473E72B7DF5040022800A /* JSONPathParser.swift in Sources */,
 				CC528E412B797980001E9E52 /* NSNumber.swift in Sources */,
+				CC2473E32B7C1BC80022800A /* JSONPath.swift in Sources */,
 				CC528E432B797C1E001E9E52 /* JSONError.swift in Sources */,
 				CC528E3F2B797811001E9E52 /* JSON.swift in Sources */,
 				CC528E472B7B5392001E9E52 /* JSONExtensions.swift in Sources */,
+				CCD13B722B82536500307526 /* JSONLocation.swift in Sources */,
+				CC2473E92B8161A00022800A /* JSONPathEvaluator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC528E452B7A15B1001E9E52 /* JSONConstructorTests.swift in Sources */,
+				CC2473E52B7D466D0022800A /* JSONPathTests.swift in Sources */,
 				CC528E342B7975DC001E9E52 /* DynamicJSONTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,6 +349,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CC2473F92B8184DE0022800A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC528E232B7975DC001E9E52 /* DynamicJSON */;
+			targetProxy = CC2473F82B8184DE0022800A /* PBXContainerItemProxy */;
+		};
 		CC528E312B7975DC001E9E52 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CC528E232B7975DC001E9E52 /* DynamicJSON */;
@@ -245,6 +362,32 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		CC2473F32B8180F70022800A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C72Z63N8M5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		CC2473F42B8180F70022800A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C72Z63N8M5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		CC528E362B7975DC001E9E52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -368,9 +511,11 @@
 		CC528E392B7975DC001E9E52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = C72Z63N8M5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -405,9 +550,11 @@
 		CC528E3A2B7975DC001E9E52 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = C72Z63N8M5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -482,6 +629,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CC2473F22B8180F70022800A /* Build configuration list for PBXNativeTarget "JSONPathTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC2473F32B8180F70022800A /* Debug */,
+				CC2473F42B8180F70022800A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CC528E1E2B7975DC001E9E52 /* Build configuration list for PBXProject "DynamicJSON" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
