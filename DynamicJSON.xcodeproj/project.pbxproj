@@ -23,6 +23,7 @@
 		CC528E432B797C1E001E9E52 /* JSONError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC528E422B797C1E001E9E52 /* JSONError.swift */; };
 		CC528E452B7A15B1001E9E52 /* JSONConstructorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC528E442B7A15B1001E9E52 /* JSONConstructorTests.swift */; };
 		CC528E472B7B5392001E9E52 /* JSONExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC528E462B7B5392001E9E52 /* JSONExtensions.swift */; };
+		CC908A122B82A498003253DA /* JSONPathEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC908A112B82A498003253DA /* JSONPathEnvironment.swift */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +87,7 @@
 		CC528E422B797C1E001E9E52 /* JSONError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONError.swift; sourceTree = "<group>"; };
 		CC528E442B7A15B1001E9E52 /* JSONConstructorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONConstructorTests.swift; sourceTree = "<group>"; };
 		CC528E462B7B5392001E9E52 /* JSONExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONExtensions.swift; sourceTree = "<group>"; };
+		CC908A112B82A498003253DA /* JSONPathEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPathEnvironment.swift; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -163,6 +165,7 @@
 				CC2473E22B7C1BC80022800A /* JSONPath.swift */,
 				CC2473E62B7DF5040022800A /* JSONPathParser.swift */,
 				CC2473E82B8161A00022800A /* JSONPathEvaluator.swift */,
+				CC908A112B82A498003253DA /* JSONPathEnvironment.swift */,
 				CC528E422B797C1E001E9E52 /* JSONError.swift */,
 				CC528E462B7B5392001E9E52 /* JSONExtensions.swift */,
 				CC528E402B797980001E9E52 /* NSNumber.swift */,
@@ -326,6 +329,7 @@
 			files = (
 				CC528E292B7975DC001E9E52 /* DynamicJSON.docc in Sources */,
 				CC2473E72B7DF5040022800A /* JSONPathParser.swift in Sources */,
+				CC908A122B82A498003253DA /* JSONPathEnvironment.swift in Sources */,
 				CC528E412B797980001E9E52 /* NSNumber.swift in Sources */,
 				CC2473E32B7C1BC80022800A /* JSONPath.swift in Sources */,
 				CC528E432B797C1E001E9E52 /* JSONError.swift in Sources */,
@@ -368,7 +372,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -381,7 +385,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -532,7 +536,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -571,7 +575,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -594,7 +598,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.DynamicJSONTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -614,7 +618,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.DynamicJSONTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

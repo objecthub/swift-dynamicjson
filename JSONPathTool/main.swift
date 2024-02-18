@@ -47,6 +47,25 @@ let jsonStr = """
         "foo": 2
       }
     ],
+    "less": [
+      {
+        "category": "reference",
+        "author": "Nigel Rees",
+        "title": "Sayings of the Century",
+        "display-price": 8.95,
+        "bargain": true,
+        "foo": null
+      },
+      {
+        "category": "fiction",
+        "author": "J. R. R. Tolkien",
+        "title": "The Lord of the Rings",
+        "isbn": "0-395-19395-8",
+        "display-price": 22.99,
+        "bargain": false,
+        "foo": 2
+      }
+    ],
     "bicycle": {
       "color": "red",
       "display-price": 19.95,
@@ -71,7 +90,14 @@ let jsonStr2 = """
 }
 """
 
-let json = try JSON(encoded: jsonStr2)
+let jsonStr3 = """
+{
+  "obj": {"x": "y"},
+  "arr": [2, 3]
+}
+"""
+
+let json = try JSON(encoded: jsonStr)
 
 while true {
   print("> ", terminator: "")
@@ -83,7 +109,7 @@ while true {
     var parser = JSONPathParser(string: query)
     let path = try parser.parse()
     let evaluator = JSONPathEvaluator(value: json)
-    let result = evaluator.query(path)
+    let result = try evaluator.query(path)
     var i = 0
     for res in result {
       print("[\(i)]")
