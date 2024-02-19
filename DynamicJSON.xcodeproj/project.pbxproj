@@ -123,7 +123,8 @@
 			children = (
 				CC2473F02B8180F70022800A /* main.swift */,
 			);
-			path = JSONPathTool;
+			name = JSONPathTool;
+			path = Sources/JSONPathTool;
 			sourceTree = "<group>";
 		};
 		CC2473F52B8184DE0022800A /* Frameworks */ = {

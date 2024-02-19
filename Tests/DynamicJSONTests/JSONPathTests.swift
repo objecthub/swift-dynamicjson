@@ -169,9 +169,9 @@ final class JSONPathTests: XCTestCase {
                                                        .prefix(.negate, .operation(.integer(1),
                                                                                    .plus, .integer(2)))))))
     XCTAssertEqual(parse("$[? @.id]"),
-                   .children(.self, .filter(.query(.children(.current, .member("id"))))))
+                   .children(.self, .filter(.singularQuery(.children(.current, .member("id"))))))
     XCTAssertEqual(parse("$[? @.id==42]"),
-                   .children(.self, .filter(.operation(.query(
+                   .children(.self, .filter(.operation(.singularQuery(
                     .children(.current, .member("id"))), .equals, .integer(42)))))
     XCTAssertEqual(parse("$[? function ()]"), .children(.self, .filter(.call("function", []))))
     XCTAssertEqual(parse("$[? fun()+FUN(1.2)* f (3, 4) - g(1,2,3)]"),
@@ -391,8 +391,8 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNotNil(parse("$[?(@.a.*)]"))
     XCTAssertNotNil(parse("$[?(@.key!=42)]"))
     XCTAssertNil(parse("$[?((@.d!=[\"v1\",\"v2\"]) || (@.d == true))]"))
-    XCTAssertNotNil(parse("$[? @.name=~'/hello.*/']"))
-    XCTAssertNotNil(parse("$[?(@.name=~'/@.pattern/')]"))
+    XCTAssertNil(parse("$[? @.name=~'/hello.*/']"))
+    XCTAssertNil(parse("$[?(@.name=~'/@.pattern/')]"))
     XCTAssertNotNil(parse("$[?(@[*]>=4)]"))
     XCTAssertNotNil(parse("$.x[?(@[*]>=$.y[*])]"))
     XCTAssertNil(parse("$[?(@.key=42)]"))

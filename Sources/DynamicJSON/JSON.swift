@@ -41,29 +41,6 @@ public enum JSON: Hashable,
   case array([JSON])
   case object([String : JSON])
   
-  /*
-  public static func ==(lhs: JSON, rhs: JSON) -> Bool {
-    switch (lhs, rhs) {
-      case (.null, .null):
-        return true
-      case (.boolean(let l), .boolean(let r)):
-        return l == r
-      case (.integer(let l), .integer(let r)):
-        return l == r
-      case (.float(let l), .float(let r)):
-        return l == r
-      case (.string(let l), .string(let r)):
-        return l == r
-      case (.array(let l), .array(let r)):
-        return l == r
-      case (.object(let l), .object(let r)):
-        return l == r
-      default:
-        return false
-    }
-  }
-  */
-  
   public init(nilLiteral: ()) {
     self = .null
   }
@@ -336,13 +313,20 @@ public enum JSON: Hashable,
     return self[key]
   }
   
-  public subscript(keyPath keyPath: JSONPath) -> JSON? {
-    return nil // keyPath.apply(to: self)
+  public subscript(keyPath location: JSONLocation) -> JSON? {
+    return location.apply(to: self)
   }
   
-  public subscript(keyPath keyPath: String) -> JSON? {
+  public subscript(keyPath location: String) -> JSON? {
     get throws {
-      return nil // try JSONPath(from: keyPath).apply(to: self)
+      let trimmed = location.trimmingCharacters(in: CharacterSet.whitespaces)
+      if trimmed.first == "." {
+        return try JSONLocation("$" + trimmed).apply(to: self)
+      } else if trimmed.first == "$" {
+        return try JSONLocation(trimmed).apply(to: self)
+      } else {
+        return try JSONLocation("$." + trimmed).apply(to: self)
+      }
     }
   }
   
@@ -366,34 +350,32 @@ public enum JSON: Hashable,
     }
   }
   
-  public func updating(_ keyPath: JSONPath, with json: JSON) throws -> JSON {
-    return .null // try self.updating(keyPath.components, 0, with: json)
+  public func updating(_ location: JSONLocation, with json: JSON) throws -> JSON {
+    return try self.updating(location.segments, 0, with: json)
   }
   
-  /*
-  private func updating(_ keyPathComponents: [JSONPath.Segment],
+  private func updating(_ segments: [JSONLocation.Segment],
                         _ current: Int,
                         with json: JSON) throws -> JSON {
-    if current < keyPathComponents.count {
-      switch keyPathComponents[current] {
+    if current < segments.count {
+      switch segments[current] {
         case .index(let index):
-          guard case .array(var array) = self, index < array.count else {
+          guard case .array(var array) = self, array.indices.contains(index) else {
             throw JSONError.erroneousIndexSelection(self, index)
           }
-          array[index] = try array[index].updating(keyPathComponents, current + 1, with: json)
+          array[index] = try array[index].updating(segments, current + 1, with: json)
           return .array(array)
-        case .key(let key):
+        case .member(let key):
           guard case .object(var dict) = self, let rhsval = dict[key] else {
             throw JSONError.erroneousKeySelection(self, key)
           }
-          dict[key] = try rhsval.updating(keyPathComponents, current + 1, with: json)
+          dict[key] = try rhsval.updating(segments, current + 1, with: json)
           return .object(dict)
       }
     } else {
       return json
     }
   }
-  */
   
   public var description: String {
     return (try? self.string(

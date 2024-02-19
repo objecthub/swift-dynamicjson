@@ -24,6 +24,7 @@ enum JSONError: Error {
   case initialization
   case erroneousEncoding
   case invalidKeyPath
+  case notALocation
   case erroneousIndexSelection(JSON, Int)
   case erroneousKeySelection(JSON, String)
 }

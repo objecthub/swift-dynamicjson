@@ -106,10 +106,8 @@ open class JSONPathEnvironment {
         guard case .json(.array(let full)) = args[1] else {
           throw JSONPathEvaluator.EvalError.expectedArrayReceived("subset", args[1])
         }
-        for elem in sub {
-          if !full.contains(elem) {
-            return .logical(false)
-          }
+        for elem in sub where !full.contains(elem) {
+          return .logical(false)
         }
         return .logical(true)
       })

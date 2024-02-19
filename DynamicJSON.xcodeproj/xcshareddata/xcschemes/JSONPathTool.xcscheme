@@ -8,26 +8,26 @@
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CC528E232B7975DC001E9E52"
-               BuildableName = "DynamicJSON.framework"
-               BlueprintName = "DynamicJSON"
-               ReferencedContainer = "container:DynamicJSON.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "NO">
             <AutocreatedTestPlanReference>
             </AutocreatedTestPlanReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CC2473ED2B8180F70022800A"
+               BuildableName = "JSONPathTool"
+               BlueprintName = "JSONPathTool"
+               ReferencedContainer = "container:DynamicJSON.xcodeproj">
+            </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
@@ -60,7 +60,18 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES">
+      allowLocationSimulation = "YES"
+      viewDebuggingEnabled = "No">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "CC2473ED2B8180F70022800A"
+            BuildableName = "JSONPathTool"
+            BlueprintName = "JSONPathTool"
+            ReferencedContainer = "container:DynamicJSON.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "IDEPreferLogStreaming"
@@ -75,15 +86,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CC528E232B7975DC001E9E52"
-            BuildableName = "DynamicJSON.framework"
-            BlueprintName = "DynamicJSON"
+            BlueprintIdentifier = "CC2473ED2B8180F70022800A"
+            BuildableName = "JSONPathTool"
+            BlueprintName = "JSONPathTool"
             ReferencedContainer = "container:DynamicJSON.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
