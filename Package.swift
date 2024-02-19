@@ -25,7 +25,7 @@ let package = Package(
   name: "DynamicJSON",
   
   platforms: [
-    .macOS(.v12),
+    .macOS(.v11),
     .iOS(.v15)
   ],
   
@@ -46,23 +46,26 @@ let package = Package(
   // a test suite. Targets can depend on other targets in this package, and on products
   // in packages which this package depends on.
   targets: [
-    .target(name: "DynamicJSON",
-            dependencies: [
-              // .product(name: "MarkdownKit", package: "swift-markdownkit")
-            ],
-            exclude: [
-              "DynamicJSON.h",
-              "DynamicJSON.docc"
-            ]),
-    /* .executableTarget(name: "DynamicJSONTool",
-                      dependencies: [
-                        .target(name: "DynamicJSON")
-                      ],
-                      exclude: []), */
-    .testTarget(name: "DynamicJSONTests",
-                dependencies: [
-                  .target(name: "DynamicJSON")
-                ]),
+    .target(
+      name: "DynamicJSON",
+      dependencies: [
+        // .product(name: "MarkdownKit", package: "swift-markdownkit")
+      ],
+      exclude: [
+        "DynamicJSON.h",
+        "DynamicJSON.docc"
+      ]),
+    .executableTarget(
+      name: "JSONPathTool",
+      dependencies: [
+        .target(name: "DynamicJSON")
+      ],
+      exclude: []),
+    .testTarget(
+      name: "DynamicJSONTests",
+      dependencies: [
+        .target(name: "DynamicJSON")
+      ]),
   ],
   
   // Required Swift language version.
