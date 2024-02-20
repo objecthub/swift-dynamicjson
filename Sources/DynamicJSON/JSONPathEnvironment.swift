@@ -51,10 +51,10 @@ open class JSONPathEnvironment {
       restype: .logicalType,
       impl: { root, current, args throws in
         guard case .json(.string(let str)) = args[0] else {
-          throw JSONPathEvaluator.EvalError.expectedStringReceived("match", args[0])
+          throw JSONPathEvaluator.Error.jsonTypeMismatch("match", .string, args[0])
         }
         guard case .json(.string(let pattern)) = args[1] else {
-          throw JSONPathEvaluator.EvalError.expectedStringReceived("match", args[1])
+          throw JSONPathEvaluator.Error.jsonTypeMismatch("match", .string, args[1])
         }
         let regex = try NSRegularExpression(pattern: pattern + "$")
         let range = NSRange(location: 0, length: str.utf16.count)
@@ -65,10 +65,10 @@ open class JSONPathEnvironment {
       restype: .logicalType,
       impl: { root, current, args throws in
         guard case .json(.string(let str)) = args[0] else {
-          throw JSONPathEvaluator.EvalError.expectedStringReceived("search", args[0])
+          throw JSONPathEvaluator.Error.jsonTypeMismatch("search", .string, args[0])
         }
         guard case .json(.string(let pattern)) = args[1] else {
-          throw JSONPathEvaluator.EvalError.expectedStringReceived("search", args[1])
+          throw JSONPathEvaluator.Error.jsonTypeMismatch("search", .string, args[1])
         }
         let regex = try NSRegularExpression(pattern: pattern)
         let range = NSRange(location: 0, length: str.utf16.count)
@@ -101,10 +101,10 @@ open class JSONPathEnvironment {
       restype: .logicalType,
       impl: { root, current, args throws in
         guard case .json(.array(let sub)) = args[0] else {
-          throw JSONPathEvaluator.EvalError.expectedArrayReceived("subset", args[0])
+          throw JSONPathEvaluator.Error.jsonTypeMismatch("subset", .array, args[0])
         }
         guard case .json(.array(let full)) = args[1] else {
-          throw JSONPathEvaluator.EvalError.expectedArrayReceived("subset", args[1])
+          throw JSONPathEvaluator.Error.jsonTypeMismatch("subset", .array, args[1])
         }
         for elem in sub where !full.contains(elem) {
           return .logical(false)
@@ -119,7 +119,7 @@ open class JSONPathEnvironment {
           return .logical(false)
         }
         guard case .json(.array(let full)) = args[1] else {
-          throw JSONPathEvaluator.EvalError.expectedArrayReceived("contains", args[1])
+          throw JSONPathEvaluator.Error.jsonTypeMismatch("contains", .array, args[1])
         }
         return .logical(full.contains(elem))
       })

@@ -41,6 +41,41 @@ public enum JSON: Hashable,
   case array([JSON])
   case object([String : JSON])
   
+  public enum Error: LocalizedError, CustomStringConvertible {
+    case initialization
+    case erroneousEncoding
+    case erroneousIndexSelection(JSON, Int)
+    case erroneousMemberSelection(JSON, String)
+    
+    public var description: String {
+      switch self {
+        case .initialization:
+          return "unable to initialize JSON data structure"
+        case .erroneousEncoding:
+          return "erroneous JSON encoding"
+        case .erroneousIndexSelection(let json, let index):
+          return "cannot select index \(index) from \(json)"
+        case .erroneousMemberSelection(let json, let member):
+          return "cannot select member '\(member)' from \(json)"
+      }
+    }
+    
+    public var errorDescription: String? {
+      return self.description
+    }
+    
+    public var failureReason: String? {
+      switch self {
+        case .initialization:
+          return "initialization error"
+        case .erroneousEncoding:
+          return "encoding error"
+        case .erroneousIndexSelection(_, _), .erroneousMemberSelection(_, _):
+          return "access error"
+      }
+    }
+  }
+  
   public init(nilLiteral: ()) {
     self = .null
   }
@@ -97,7 +132,7 @@ public enum JSON: Hashable,
         } else if let value = num as? Double {
           self = .float(value)
         } else {
-          throw JSONError.initialization
+          throw Error.initialization
         }
       case let str as String:
         self = .string(str)
@@ -108,7 +143,7 @@ public enum JSON: Hashable,
       case let obj as Encodable:
         self = try .init(encodable: obj)
       default:
-        throw JSONError.initialization
+        throw Error.initialization
     }
   }
   
@@ -158,12 +193,31 @@ public enum JSON: Hashable,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
               userInfo: [CodingUserInfoKey : Any]? = nil) throws {
     guard let data = encoded.data(using: .utf8) else {
-      throw JSONError.erroneousEncoding
+      throw Error.erroneousEncoding
     }
     self = try .init(encoded: data,
                      dateDecodingStrategy: dateDecodingStrategy,
                      floatDecodingStrategy: floatDecodingStrategy,
                      userInfo: userInfo)
+  }
+  
+  public var type: JSONType {
+    switch self {
+      case .null:
+        return .null
+      case .boolean(_):
+        return .boolean
+      case .integer(_):
+        return .number
+      case .float(_):
+        return .number
+      case .string(_):
+        return .string
+      case .array(_):
+        return .array
+      case .object(_):
+        return .object
+    }
   }
   
   public func data(formatting: JSONEncoder.OutputFormatting = .init(),
@@ -361,13 +415,13 @@ public enum JSON: Hashable,
       switch segments[current] {
         case .index(let index):
           guard case .array(var array) = self, array.indices.contains(index) else {
-            throw JSONError.erroneousIndexSelection(self, index)
+            throw Error.erroneousIndexSelection(self, index)
           }
           array[index] = try array[index].updating(segments, current + 1, with: json)
           return .array(array)
         case .member(let key):
           guard case .object(var dict) = self, let rhsval = dict[key] else {
-            throw JSONError.erroneousKeySelection(self, key)
+            throw Error.erroneousMemberSelection(self, key)
           }
           dict[key] = try rhsval.updating(segments, current + 1, with: json)
           return .object(dict)

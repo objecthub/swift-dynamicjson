@@ -11,6 +11,84 @@ public struct JSONPathParser {
   var ch: Character?
   var iterator: String.Iterator
   
+  public enum Error: LocalizedError, CustomStringConvertible {
+    case expectedCharacter(Character, Character?)
+    case illegalIntLiteral(String)
+    case illegalNumberLiteral(String)
+    case expectedStringLiteral(Character?)
+    case expectedMemberName(Character?)
+    case invalidSelectorCharacter(Character?)
+    case invalidSegmentCharacter(Character?)
+    case invalidQueryPrefix
+    case invalidQuerySuffix(Character)
+    
+    public var description: String {
+      switch self {
+        case .expectedCharacter(let exp, let found):
+          if let found {
+            return "expected character \(exp), but found \(found)"
+          } else {
+            return "expected character \(exp), but reached end of input"
+          }
+        case .illegalIntLiteral(let str):
+          return "cannot parse integer literal from '\(str)'"
+        case .illegalNumberLiteral(let str):
+          return "cannot parse number literal from '\(str)'"
+        case .expectedStringLiteral(let ch):
+          if let ch {
+            return "expected string literal, but found character '\(ch)'"
+          } else {
+            return "expected string literal, but reached end of input"
+          }
+        case .expectedMemberName(let ch):
+          if let ch {
+            return "expected member name, but '\(ch)' is not a valid initial character"
+          } else {
+            return "expected member name, but reached end of input"
+          }
+        case .invalidSelectorCharacter(let ch):
+          if let ch {
+            return "unable to parse selector at character '\(ch)'"
+          } else {
+            return "invalid selector"
+          }
+        case .invalidSegmentCharacter(let ch):
+          if let ch {
+            return "unable to parse segment at character '\(ch)'"
+          } else {
+            return "invalid segment"
+          }
+        case .invalidQueryPrefix:
+          return "invalid query start; must start with '$' or '@'"
+        case .invalidQuerySuffix(let ch):
+          return "superfluous character '\(ch)' at end of query"
+      }
+    }
+    
+    public var errorDescription: String? {
+      return self.description
+    }
+    
+    public var failureReason: String? {
+      switch self {
+        case .expectedCharacter(_, _):
+          return "parsing error"
+        case .illegalIntLiteral(_), .illegalNumberLiteral(_):
+          return "error parsing integer literal"
+        case .expectedStringLiteral(_):
+          return "error parsing string literal"
+        case .expectedMemberName(_):
+          return "error parsing member name"
+        case .invalidSelectorCharacter(_):
+          return "error parsing selector"
+        case .invalidSegmentCharacter(_):
+          return "error parsing segment"
+        case .invalidQueryPrefix, .invalidQuerySuffix(_):
+          return "error parsing query"
+      }
+    }
+  }
+  
   public init(string: String) {
     self.ch = nil
     self.iterator = string.makeIterator()
@@ -46,7 +124,7 @@ public struct JSONPathParser {
     if case .some(ch) = self.ch {
       self.next()
     } else {
-      throw JSONError.invalidKeyPath
+      throw Error.expectedCharacter(ch, self.ch)
     }
   }
   
@@ -70,7 +148,7 @@ public struct JSONPathParser {
       self.next()
     }
     guard let res = Int(num) else {
-      throw JSONError.invalidKeyPath
+      throw Error.illegalIntLiteral(num)
     }
     return negative ? -res : res
   }
@@ -105,13 +183,13 @@ public struct JSONPathParser {
     } else if let x = Double(num) {
       return .float(x)
     } else {
-      throw JSONError.invalidKeyPath
+      throw Error.illegalNumberLiteral(num)
     }
   }
   
   private mutating func string() throws -> String {
     guard let ch = self.ch, ch == "'" || ch == "\"" else {
-      throw JSONError.invalidKeyPath
+      throw Error.expectedStringLiteral(self.ch)
     }
     var str = ""
     var escaped = false
@@ -140,14 +218,14 @@ public struct JSONPathParser {
   
   public mutating func memberName() throws -> String {
     guard let ch = self.ch else {
-      throw JSONError.invalidKeyPath
+      throw Error.expectedMemberName(nil)
     }
     var scalars = ch.unicodeScalars
     guard ch.isLetter
            || ch == "_"
            || scalars.allSatisfy({ c in c.value >= 0x80 && c.value <= 0xD7FF })
            || scalars.allSatisfy({ c in c.value >= 0xE000 && c.value <= 0x10FFFF }) else {
-      throw JSONError.invalidKeyPath
+      throw Error.expectedMemberName(ch)
     }
     var member = String(ch)
     while let ch = self.next() {
@@ -314,7 +392,7 @@ public struct JSONPathParser {
   
   public mutating func selector() throws -> JSONPath.Selector {
     guard let ch = self.ch else {
-      throw JSONError.invalidKeyPath
+      throw Error.invalidSelectorCharacter(nil)
     }
     switch ch {
       case "*":
@@ -338,27 +416,27 @@ public struct JSONPathParser {
         } else if let n = start {
           return .index(n)
         } else {
-          throw JSONError.invalidKeyPath
+          throw Error.invalidSelectorCharacter(self.ch)
         }
       case "?":
         self.nextSkipSpaces()
         let expr = try self.expression()
         return .filter(expr)
       default:
-        throw JSONError.invalidKeyPath
+        throw Error.invalidSelectorCharacter(ch)
     }
   }
   
   public mutating func segment() throws -> [JSONPath.Selector] {
     switch self.ch {
       case .none:
-        throw JSONError.invalidKeyPath
+        throw Error.invalidSegmentCharacter(self.ch)
       case "*":
         self.next()
         return [.wildcard]
       case "[":
         guard let ch = self.nextSkipSpaces() else {
-          throw JSONError.invalidKeyPath
+          throw Error.invalidSegmentCharacter("[")
         }
         guard ch != "]" else {
           self.next()
@@ -381,7 +459,7 @@ public struct JSONPathParser {
   public mutating func childSegment() throws -> [JSONPath.Selector] {
     switch self.ch {
       case .none:
-        throw JSONError.invalidKeyPath
+        throw Error.invalidSegmentCharacter(self.ch)
       case "*":
         self.next()
         return [.wildcard]
@@ -419,7 +497,7 @@ public struct JSONPathParser {
         self.next()
         return try self.relativePath(to: .current)
       default:
-        throw JSONError.invalidKeyPath
+        throw Error.invalidQueryPrefix
     }
   }
   
@@ -428,7 +506,7 @@ public struct JSONPathParser {
     try self.accept("$")
     let res = try self.relativePath(to: .self)
     guard ignoreRemaining || self.skipSpaces() == nil else {
-      throw JSONError.invalidKeyPath
+      throw Error.invalidQuerySuffix(self.ch!)
     }
     return res
   }

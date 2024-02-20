@@ -117,6 +117,6 @@ while true {
       i += 1
     }
   } catch let e {
-    print("error: ", e.localizedDescription)
+    print("error:", e.localizedDescription)
   }
 }

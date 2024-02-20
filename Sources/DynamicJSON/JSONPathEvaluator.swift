@@ -11,8 +11,8 @@ public struct JSONPathEvaluator {
   let root: JSON
   let env: JSONPathEnvironment
   
-  public enum EvalError: Error {
-    case expectedNodelist(Value)
+  public enum Error: LocalizedError, CustomStringConvertible {
+    case booleanNotCoercableToBool
     case doesNotEvaluateToJSON(JSONPath.Expression)
     case cannotNegate(JSONPath.Expression)
     case expectedType(ValueType, JSONPath.Expression)
@@ -21,11 +21,58 @@ public struct JSONPathEvaluator {
     case unknownVariable(String)
     case unknownFunction(String)
     case numberOfArgumentsMismatch(JSONPath.Expression)
-    case expectedBoolReceived(String, JSONPathEvaluator.Value)
-    case expectedStringReceived(String, JSONPathEvaluator.Value)
-    case expectedNumberReceived(String, JSONPathEvaluator.Value)
-    case expectedArrayReceived(String, JSONPathEvaluator.Value)
-    case expectedObjectReceived(String, JSONPathEvaluator.Value)
+    case typeMismatch(String, ValueType, Value)
+    case jsonTypeMismatch(String, JSONType, Value)
+    
+    public var description: String {
+      switch self {
+        case .booleanNotCoercableToBool:
+          return "cannot coerce a boolean to a nodelist"
+        case .doesNotEvaluateToJSON(let expr):
+          return "expression \(expr) does not evaluate to a JSON value"
+        case .cannotNegate(let expr):
+          return "cannot negate expression \(expr)"
+        case .expectedType(let val, let expr):
+          return "expression \(expr) not conforming to expected type \(val)"
+        case .mismatchOfOperandTypes(let expr):
+          return "operand types of expression \(expr) not matching"
+        case .divisionByZero(let expr):
+          return "expression \(expr) subject to division by zero"
+        case .unknownVariable(let ident):
+          return "unknown variable '\(ident)'"
+        case .unknownFunction(let ident):
+          return "unknown function '\(ident)'"
+        case .numberOfArgumentsMismatch(let expr):
+          return "mismatch of number of arguments in expression \(expr)"
+        case .typeMismatch(let fun, let type, let val):
+          return "expected value of type \(type) in function '\(fun), but received \(val)"
+        case .jsonTypeMismatch(let fun, let type, let val):
+          return "expected JSON value of type \(type) in function '\(fun), but received \(val)"
+      }
+    }
+    
+    public var errorDescription: String? {
+      return self.description
+    }
+    
+    public var failureReason: String? {
+      switch self {
+        case .booleanNotCoercableToBool,
+             .doesNotEvaluateToJSON(_),
+             .cannotNegate(_),
+             .expectedType(_, _),
+             .mismatchOfOperandTypes(_),
+             .typeMismatch(_, _, _),
+             .jsonTypeMismatch(_, _, _):
+          return "type mismatch"
+        case .divisionByZero(_):
+          return "division by zero"
+        case .unknownVariable(_), .unknownFunction(_):
+          return "unknown identifier"
+        case .numberOfArgumentsMismatch(_):
+          return "number of arguments mismatch"
+      }
+    }
   }
   
   public struct Function {
@@ -63,7 +110,7 @@ public struct JSONPathEvaluator {
         case .jsonType:
           self = .json(.boolean(bool))
         case .nodesType:
-          throw EvalError.expectedNodelist(.logical(bool))
+          throw Error.booleanNotCoercableToBool
       }
     }
     
@@ -241,10 +288,10 @@ public struct JSONPathEvaluator {
                        rhs: JSONPath.Expression,
                        for value: JSON) throws -> (JSON?, JSON?) {
     guard case .some(.json(let l)) = try? self.evaluate(lhs, for: value, expecting: .jsonType) else {
-      throw EvalError.doesNotEvaluateToJSON(lhs)
+      throw Error.doesNotEvaluateToJSON(lhs)
     }
     guard case .some(.json(let r)) = try? self.evaluate(rhs, for: value, expecting: .jsonType) else {
-      throw EvalError.doesNotEvaluateToJSON(rhs)
+      throw Error.doesNotEvaluateToJSON(rhs)
     }
     switch (l, r) {
       case (.some(.integer(let l)), .some(.float(let r))):
@@ -276,7 +323,7 @@ public struct JSONPathEvaluator {
         if let res = self.env.value(of: ident) {
           return res
         } else {
-          throw EvalError.unknownVariable(ident)
+          throw Error.unknownVariable(ident)
         }
       case .query(let path):
         let nodes = try self.query(current: value, with: path)
@@ -284,7 +331,7 @@ public struct JSONPathEvaluator {
           case .logicalType:
             return .logical(!nodes.isEmpty)
           case .jsonType:
-            throw EvalError.doesNotEvaluateToJSON(expr)
+            throw Error.doesNotEvaluateToJSON(expr)
           case .nodesType:
             return .nodes(nodes)
         }
@@ -300,10 +347,10 @@ public struct JSONPathEvaluator {
         }
       case .call(let ident, let arguments):
         guard let function = self.env.function(name: ident) else {
-          throw EvalError.unknownFunction(ident)
+          throw Error.unknownFunction(ident)
         }
         guard function.argtypes.count == arguments.count else {
-          throw EvalError.numberOfArgumentsMismatch(expr)
+          throw Error.numberOfArgumentsMismatch(expr)
         }
         var args: [Value] = []
         var i = 0
@@ -324,7 +371,7 @@ public struct JSONPathEvaluator {
               case .json(.float(let num)):
                 return .json(.float(-num))
               default:
-                throw EvalError.cannotNegate(argument)
+                throw Error.cannotNegate(argument)
             }
           case .not:
             let argres = try self.evaluate(argument, for: value, expecting: .logicalType)
@@ -332,7 +379,7 @@ public struct JSONPathEvaluator {
               case .logical(let bool):
                 return .logical(!bool)
               default:
-                throw EvalError.cannotNegate(argument)
+                throw Error.cannotNegate(argument)
             }
         }
       case .operation(let lhs, let op, let rhs):
@@ -414,32 +461,32 @@ public struct JSONPathEvaluator {
             switch l {
               case .logical(let bool):
                 guard type == .logicalType else {
-                  throw EvalError.expectedType(type, lhs)
+                  throw Error.expectedType(type, lhs)
                 }
                 return bool ? l : try self.evaluate(rhs, for: value, expecting: type)
               case .json(.boolean(let bool)):
                 guard type == .jsonType else {
-                  throw EvalError.expectedType(type, lhs)
+                  throw Error.expectedType(type, lhs)
                 }
                 return bool ? l : try self.evaluate(rhs, for: value, expecting: type)
               default:
-                throw EvalError.expectedType(type, lhs)
+                throw Error.expectedType(type, lhs)
             }
           case .and:
             let l = try self.evaluate(lhs, for: value, expecting: type)
             switch l {
               case .logical(let bool):
                 guard type == .logicalType else {
-                  throw EvalError.expectedType(type, lhs)
+                  throw Error.expectedType(type, lhs)
                 }
                 return !bool ? l : try self.evaluate(rhs, for: value, expecting: type)
               case .json(.boolean(let bool)):
                 guard type == .jsonType else {
-                  throw EvalError.expectedType(type, lhs)
+                  throw Error.expectedType(type, lhs)
                 }
                 return !bool ? l : try self.evaluate(rhs, for: value, expecting: type)
               default:
-                throw EvalError.expectedType(type, lhs)
+                throw Error.expectedType(type, lhs)
             }
           case .plus:
             let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
@@ -451,7 +498,7 @@ public struct JSONPathEvaluator {
               case (.string(let l), .string(let r)):
                 return .json(.string(l.appending(r)))
               default:
-                throw EvalError.mismatchOfOperandTypes(expr)
+                throw Error.mismatchOfOperandTypes(expr)
             }
           case .minus:
             let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
@@ -461,7 +508,7 @@ public struct JSONPathEvaluator {
               case (.float(let l), .float(let r)):
                 return .json(.float(l - r))
               default:
-                throw EvalError.mismatchOfOperandTypes(expr)
+                throw Error.mismatchOfOperandTypes(expr)
             }
           case .mult:
             let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
@@ -471,23 +518,23 @@ public struct JSONPathEvaluator {
               case (.float(let l), .float(let r)):
                 return .json(.float(l * r))
               default:
-                throw EvalError.mismatchOfOperandTypes(expr)
+                throw Error.mismatchOfOperandTypes(expr)
             }
           case .divide:
             let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
             switch (l, r) {
               case (.integer(let l), .integer(let r)):
                 guard r != 0 else {
-                  throw EvalError.divisionByZero(expr)
+                  throw Error.divisionByZero(expr)
                 }
                 return .json(.integer(l / r))
               case (.float(let l), .float(let r)):
                 guard r != 0.0 else {
-                  throw EvalError.divisionByZero(expr)
+                  throw Error.divisionByZero(expr)
                 }
                 return .json(.float(l / r))
               default:
-                throw EvalError.mismatchOfOperandTypes(expr)
+                throw Error.mismatchOfOperandTypes(expr)
             }
         }
     }

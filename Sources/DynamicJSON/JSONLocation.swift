@@ -12,6 +12,28 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
   case member(JSONLocation, String)
   case index(JSONLocation, Int)
   
+  public enum Error: LocalizedError, CustomStringConvertible {
+    case invalidLocation
+    
+    public var description: String {
+      switch self {
+        case .invalidLocation:
+          return "invalid JSON location identifier"
+      }
+    }
+    
+    public var errorDescription: String? {
+      return self.description
+    }
+    
+    public var failureReason: String? {
+      switch self {
+        case .invalidLocation:
+          return "parsing error"
+      }
+    }
+  }
+  
   public enum Segment: Hashable, CustomStringConvertible {
     case member(String)
     case index(Int)
@@ -29,7 +51,7 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
   public init(_ str: String) throws {
     var parser = JSONPathParser(string: str)
     guard let location = try parser.parse().location else {
-      throw JSONError.notALocation
+      throw Error.invalidLocation
     }
     self = location
   }
