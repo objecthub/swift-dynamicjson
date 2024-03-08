@@ -1,0 +1,168 @@
+{
+  "tests": [
+    {
+      "name": "space between function name and parenthesis",
+      "selector" : "$[?count (@.*)==1]",
+      "invalid_selector": true
+    },
+    {
+      "name": "newline between function name and parenthesis",
+      "selector" : "$[?count\n(@.*)==1]",
+      "invalid_selector": true
+    },
+    {
+      "name": "tab between function name and parenthesis",
+      "selector" : "$[?count\t(@.*)==1]",
+      "invalid_selector": true
+    },
+    {
+      "name": "return between function name and parenthesis",
+      "selector" : "$[?count\r(@.*)==1]",
+      "invalid_selector": true
+    },
+    {
+      "name": "space between parenthesis and arg",
+      "selector" : "$[?count( @.*)==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "newline between parenthesis and arg",
+      "selector" : "$[?count(\n@.*)==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "tab between parenthesis and arg",
+      "selector" : "$[?count(\t@.*)==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "return between parenthesis and arg",
+      "selector" : "$[?count(\r@.*)==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "space between arg and comma",
+      "selector" : "$[?search(@ ,'[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "newline between arg and comma",
+      "selector" : "$[?search(@\n,'[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "tab between arg and comma",
+      "selector" : "$[?search(@\t,'[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "return between arg and comma",
+      "selector" : "$[?search(@\r,'[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "space between comma and arg",
+      "selector" : "$[?search(@, '[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "newline between comma and arg",
+      "selector" : "$[?search(@,\n'[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "tab between comma and arg",
+      "selector" : "$[?search(@,\t'[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "return between comma and arg",
+      "selector" : "$[?search(@,\r'[a-z]+')]",
+      "document" : [ "foo", "123" ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "space between arg and parenthesis",
+      "selector" : "$[?count(@.* )==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "newline between arg and parenthesis",
+      "selector" : "$[?count(@.*\n)==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "tab between arg and parenthesis",
+      "selector" : "$[?count(@.*\t)==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "return between arg and parenthesis",
+      "selector" : "$[?count(@.*\r)==1]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "spaces in a relative singular selector",
+      "selector" : "$[?length(@ .a .b) == 3]",
+      "document" : [ {"a":  {"b": "foo"}}, {} ],
+      "result": [ {"a":  {"b": "foo"}} ]
+    },
+    {
+      "name": "newlines in a relative singular selector",
+      "selector" : "$[?length(@\n.a\n.b) == 3]",
+      "document" : [ {"a":  {"b": "foo"}}, {} ],
+      "result": [ {"a":  {"b": "foo"}} ]
+    },
+    {
+      "name": "tabs in a relative singular selector",
+      "selector" : "$[?length(@\t.a\t.b) == 3]",
+      "document" : [ {"a":  {"b": "foo"}}, {} ],
+      "result": [ {"a":  {"b": "foo"}} ]
+    },
+    {
+      "name": "returns in a relative singular selector",
+      "selector" : "$[?length(@\r.a\r.b) == 3]",
+      "document" : [ {"a":  {"b": "foo"}}, {} ],
+      "result": [ {"a":  {"b": "foo"}} ]
+    },
+    {
+      "name": "spaces in an absolute singular selector",
+      "selector" : "$..[?length(@)==length($ [0] .a)]",
+      "document" : [ {"a": "foo"}, {} ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "newlines in an absolute singular selector",
+      "selector" : "$..[?length(@)==length($\n[0]\n.a)]",
+      "document" : [ {"a": "foo"}, {} ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "tabs in an absolute singular selector",
+      "selector" : "$..[?length(@)==length($\t[0]\t.a)]",
+      "document" : [ {"a": "foo"}, {} ],
+      "result": [ "foo" ]
+    },
+    {
+      "name": "returns in an absolute singular selector",
+      "selector" : "$..[?length(@)==length($\r[0]\r.a)]",
+      "document" : [ {"a": "foo"}, {} ],
+      "result": [ "foo" ]
+    }
+  ]
+}

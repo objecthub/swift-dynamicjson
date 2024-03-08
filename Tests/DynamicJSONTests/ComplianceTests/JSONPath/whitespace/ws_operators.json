@@ -1,0 +1,456 @@
+{
+  "tests": [
+    {
+      "name": "space before ||",
+      "selector" : "$[?@.a ||@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "newline before ||",
+      "selector" : "$[?@.a\n||@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "tab before ||",
+      "selector" : "$[?@.a\t||@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "return before ||",
+      "selector" : "$[?@.a\r||@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "space after ||",
+      "selector" : "$[?@.a|| @.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "newline after ||",
+      "selector" : "$[?@.a||\n@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "tab after ||",
+      "selector" : "$[?@.a||\t@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "return after ||",
+      "selector" : "$[?@.a||\r@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"c": 3} ],
+      "result": [ {"a": 1}, {"b": 2} ]
+    },
+    {
+      "name": "space before &&",
+      "selector" : "$[?@.a &&@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline before &&",
+      "selector" : "$[?@.a\n&&@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab before &&",
+      "selector" : "$[?@.a\t&&@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return before &&",
+      "selector" : "$[?@.a\r&&@.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space after &&",
+      "selector" : "$[?@.a&& @.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline after &&",
+      "selector" : "$[?@.a&& @.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab after &&",
+      "selector" : "$[?@.a&& @.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return after &&",
+      "selector" : "$[?@.a&& @.b]",
+      "document" : [ {"a": 1}, {"b": 2}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space before ==",
+      "selector" : "$[?@.a ==@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "newline before ==",
+      "selector" : "$[?@.a\n==@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "tab before ==",
+      "selector" : "$[?@.a\t==@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "return before ==",
+      "selector" : "$[?@.a\r==@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "space after ==",
+      "selector" : "$[?@.a== @.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "newline after ==",
+      "selector" : "$[?@.a==\n@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "tab after ==",
+      "selector" : "$[?@.a==\t@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "return after ==",
+      "selector" : "$[?@.a==\r@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 1} ]
+    },
+    {
+      "name": "space before !=",
+      "selector" : "$[?@.a !=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline before !=",
+      "selector" : "$[?@.a\n!=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab before !=",
+      "selector" : "$[?@.a\t!=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return before !=",
+      "selector" : "$[?@.a\r!=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space after !=",
+      "selector" : "$[?@.a!= @.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline after !=",
+      "selector" : "$[?@.a!=\n@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab after !=",
+      "selector" : "$[?@.a!=\t@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return after !=",
+      "selector" : "$[?@.a!=\r@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space before <",
+      "selector" : "$[?@.a <@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline before <",
+      "selector" : "$[?@.a\n<@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab before <",
+      "selector" : "$[?@.a\t<@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return before <",
+      "selector" : "$[?@.a\r<@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space after <",
+      "selector" : "$[?@.a< @.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline after <",
+      "selector" : "$[?@.a<\n@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab after <",
+      "selector" : "$[?@.a<\t@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return after <",
+      "selector" : "$[?@.a<\r@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space before >",
+      "selector" : "$[?@.b >@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline before >",
+      "selector" : "$[?@.b\n>@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab before >",
+      "selector" : "$[?@.b\t>@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return before >",
+      "selector" : "$[?@.b\r>@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space after >",
+      "selector" : "$[?@.b> @.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline after >",
+      "selector" : "$[?@.b>\n@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab after >",
+      "selector" : "$[?@.b>\t@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return after >",
+      "selector" : "$[?@.b>\r@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ],
+      "result": [ {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space before <=",
+      "selector" : "$[?@.a <=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline before <=",
+      "selector" : "$[?@.a\n<=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab before <=",
+      "selector" : "$[?@.a\t<=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return before <=",
+      "selector" : "$[?@.a\r<=@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space after <=",
+      "selector" : "$[?@.a<= @.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline after <=",
+      "selector" : "$[?@.a<=\n@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab after <=",
+      "selector" : "$[?@.a<=\t@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return after <=",
+      "selector" : "$[?@.a<=\r@.b]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space before >=",
+      "selector" : "$[?@.b >=@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline before >=",
+      "selector" : "$[?@.b\n>=@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab before >=",
+      "selector" : "$[?@.b\t>=@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return before >=",
+      "selector" : "$[?@.b\r>=@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space after >=",
+      "selector" : "$[?@.b>= @.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "newline after >=",
+      "selector" : "$[?@.b>=\n@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "tab after >=",
+      "selector" : "$[?@.b>=\t@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "return after >=",
+      "selector" : "$[?@.b>=\r@.a]",
+      "document" : [ {"a": 1, "b": 1}, {"a": 1, "b": 2}, {"a": 2, "b": 1} ],
+      "result": [ {"a": 1, "b": 1}, {"a": 1, "b": 2} ]
+    },
+    {
+      "name": "space between logical not and test expression",
+      "selector": "$[?! @.a]",
+      "document" : [{"a": "a", "d": "e"}, {"d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"d": "f"}
+      ]
+    },
+    {
+      "name": "newline between logical not and test expression",
+      "selector": "$[?!\n@.a]",
+      "document" : [{"a": "a", "d": "e"}, {"d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"d": "f"}
+      ]
+    },
+    {
+      "name": "tab between logical not and test expression",
+      "selector": "$[?!\t@.a]",
+      "document" : [{"a": "a", "d": "e"}, {"d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"d": "f"}
+      ]
+    },
+    {
+      "name": "return between logical not and test expression",
+      "selector": "$[?!\r@.a]",
+      "document" : [{"a": "a", "d": "e"}, {"d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"d": "f"}
+      ]
+    },
+    {
+      "name": "space between logical not and parenthesized expression",
+      "selector": "$[?! (@.a=='b')]",
+      "document" : [{"a": "a", "d": "e"}, {"a": "b", "d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"a": "a", "d": "e"},
+        {"a": "d", "d": "f"}
+      ]
+    },
+    {
+      "name": "newline between logical not and parenthesized expression",
+      "selector": "$[?!\n(@.a=='b')]",
+      "document" : [{"a": "a", "d": "e"}, {"a": "b", "d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"a": "a", "d": "e"},
+        {"a": "d", "d": "f"}
+      ]
+    },
+    {
+      "name": "tab between logical not and parenthesized expression",
+      "selector": "$[?!\t(@.a=='b')]",
+      "document" : [{"a": "a", "d": "e"}, {"a": "b", "d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"a": "a", "d": "e"},
+        {"a": "d", "d": "f"}
+      ]
+    },
+    {
+      "name": "return between logical not and parenthesized expression",
+      "selector": "$[?!\r(@.a=='b')]",
+      "document" : [{"a": "a", "d": "e"}, {"a": "b", "d": "f"}, {"a": "d", "d": "f"}],
+      "result": [
+        {"a": "a", "d": "e"},
+        {"a": "d", "d": "f"}
+      ]
+    }
+  ]
+}

@@ -21,6 +21,8 @@
 import Foundation
 
 public struct JSONPathParser {
+  let strict: Bool
+  let trailingSpace: Bool
   var ch: Character?
   var iterator: String.Iterator
   
@@ -29,11 +31,14 @@ public struct JSONPathParser {
     case illegalIntLiteral(String)
     case illegalNumberLiteral(String)
     case expectedStringLiteral(Character?)
+    case malformedStringLiteralEscape(String)
+    case notASingularQuery(JSONPath)
     case expectedMemberName(Character?)
     case invalidSelectorCharacter(Character?)
     case invalidSegmentCharacter(Character?)
+    case emptySegment
     case invalidQueryPrefix
-    case invalidQuerySuffix(Character)
+    case invalidQuerySuffix(Character?)
     
     public var description: String {
       switch self {
@@ -53,6 +58,10 @@ public struct JSONPathParser {
           } else {
             return "expected string literal, but reached end of input"
           }
+        case .malformedStringLiteralEscape(let str):
+          return "string literal escape sequence following '\(str)' is malformed"
+        case .notASingularQuery(let path):
+          return "not a singular query: \(path)"
         case .expectedMemberName(let ch):
           if let ch {
             return "expected member name, but '\(ch)' is not a valid initial character"
@@ -71,10 +80,16 @@ public struct JSONPathParser {
           } else {
             return "invalid segment"
           }
+        case .emptySegment:
+          return "invalid empty segment"
         case .invalidQueryPrefix:
           return "invalid query start; must start with '$' or '@'"
         case .invalidQuerySuffix(let ch):
-          return "superfluous character '\(ch)' at end of query"
+          if let ch {
+            return "superfluous character '\(ch)' at end of query"
+          } else {
+            return "superfluous character at end of query"
+          }
       }
     }
     
@@ -88,13 +103,15 @@ public struct JSONPathParser {
           return "parsing error"
         case .illegalIntLiteral(_), .illegalNumberLiteral(_):
           return "error parsing integer literal"
-        case .expectedStringLiteral(_):
+        case .expectedStringLiteral(_), .malformedStringLiteralEscape(_):
           return "error parsing string literal"
+        case .notASingularQuery(_):
+          return "error parsing singular query"
         case .expectedMemberName(_):
           return "error parsing member name"
         case .invalidSelectorCharacter(_):
           return "error parsing selector"
-        case .invalidSegmentCharacter(_):
+        case .invalidSegmentCharacter(_), .emptySegment:
           return "error parsing segment"
         case .invalidQueryPrefix, .invalidQuerySuffix(_):
           return "error parsing query"
@@ -102,7 +119,14 @@ public struct JSONPathParser {
     }
   }
   
-  public init(string: String) {
+  public init(string: String, strict: Bool = true) {
+    self.strict = strict
+    switch string.last {
+      case " ", "\t", "\n", "\r":
+        self.trailingSpace = true
+      default:
+        self.trailingSpace = false
+    }
     self.ch = nil
     self.iterator = string.makeIterator()
     self.next()
@@ -160,13 +184,14 @@ public struct JSONPathParser {
       num.append(self.ch!)
       self.next()
     }
-    guard let res = Int(num) else {
+    guard let res = Int(num),
+          !self.strict || res == 0 || num.first != "0" else {
       throw Error.illegalIntLiteral(num)
     }
     return negative ? -res : res
   }
   
-  private mutating func number() throws -> JSONPath.Expression {
+  private mutating func number(forceFloat: Bool = false) throws -> JSONPath.Expression {
     var num = ""
     while self.nextIsDigit {
       num.append(self.ch!)
@@ -175,10 +200,15 @@ public struct JSONPathParser {
     if let ch = self.ch, ch == "." {
       num.append(ch)
       self.next()
+      guard self.nextIsDigit else {
+        throw Error.illegalNumberLiteral(num)
+      }
       while self.nextIsDigit {
         num.append(self.ch!)
         self.next()
       }
+    } else if forceFloat && num != "0" {
+      throw Error.illegalNumberLiteral(num)
     }
     if let ch = self.ch, ch == "e" || ch == "E" {
       num.append(ch)
@@ -204,19 +234,71 @@ public struct JSONPathParser {
     guard let ch = self.ch, ch == "'" || ch == "\"" else {
       throw Error.expectedStringLiteral(self.ch)
     }
+    let delimiter = ch
     var str = ""
     var escaped = false
-    while let nch = self.next(), nch != ch || escaped, nch != "\n", nch != "\r" {
+    var lookahead: Character? = nil
+    loop: while let nch = lookahead ?? self.next(),
+                nch != ch || escaped,
+                nch != "\n", nch != "\r" {
+      lookahead = nil
       if escaped {
         switch nch {
-          case "a": str.append("\u{7}")
-          case "b": str.append("\u{8}")
-          case "t": str.append("\t")
-          case "n": str.append("\n")
-          case "v": str.append("\u{11}")
-          case "f": str.append("\u{12}")
-          case "r": str.append("\r")
-          default:  str.append(nch)
+          case "a":
+            str.append("\u{7}")
+          case "b":
+            str.append("\u{8}")
+          case "t":
+            str.append("\t")
+          case "n":
+            str.append("\n")
+          case "v":
+            str.append("\u{b}")
+          case "f":
+            str.append("\u{c}")
+          case "r":
+            str.append("\r")
+          case "u":
+            var scalars = [UInt16]()
+            lookahead = nch
+            while lookahead == "u" {
+              if let ch0 = self.next(),
+                 let ch1 = self.next(),
+                 let ch2 = self.next(),
+                 let ch3 = self.next(),
+                 let num = UInt16("\(ch0)\(ch1)\(ch2)\(ch3)", radix: 16) {
+                scalars.append(num)
+              } else {
+                throw Error.malformedStringLiteralEscape(str)
+              }
+              if let ch = self.next(), ch == "\\" {
+                escaped = true
+                lookahead = self.next()
+              } else {
+                escaped = false
+                lookahead = self.ch
+                break
+              }
+            }
+            let s: String? = scalars.withUnsafeBufferPointer { ptr in
+              if let adr = ptr.baseAddress {
+                return String(utf16CodeUnits: adr, count: scalars.count)
+              } else {
+                return nil
+              }
+            }
+            guard s != nil else {
+              throw Error.malformedStringLiteralEscape(str)
+            }
+            str.append(contentsOf: s!)
+            continue loop
+          case "/", "\\":
+            str.append(nch)
+          default:
+            guard !self.strict || nch == delimiter else {
+              throw Error.malformedStringLiteralEscape(str)
+            }
+            str.append(nch)
         }
         escaped = false
       } else if nch == "\\" {
@@ -263,12 +345,20 @@ public struct JSONPathParser {
   public mutating func expression() throws -> JSONPath.Expression {
     var exprs: [JSONPath.Expression] = []
     var opers: [JSONPath.BinaryOperator] = []
-    func push(op: JSONPath.BinaryOperator, rhs: JSONPath.Expression) {
+    func reduce() throws {
+      let rhs = exprs.removeLast()
+      if self.strict, case .query(let path) = rhs {
+        throw Error.notASingularQuery(path)
+      }
+      let lhs = exprs.removeLast()
+      if self.strict, case .query(let path) = lhs {
+        throw Error.notASingularQuery(path)
+      }
+      exprs.append(.operation(lhs, opers.removeLast(), rhs))
+    }
+    func push(op: JSONPath.BinaryOperator, rhs: JSONPath.Expression) throws {
       while let top = opers.last, top.precedence >= op.precedence {
-        let rhs = exprs.removeLast()
-        let lhs = exprs.removeLast()
-        opers.removeLast()
-        exprs.append(.operation(lhs, top, rhs))
+        try reduce()
       }
       opers.append(op)
       exprs.append(rhs)
@@ -280,61 +370,58 @@ public struct JSONPathParser {
           self.next()
           try self.accept("=")
           self.skipSpaces()
-          push(op: .equals, rhs: try self.operand())
+          try push(op: .equals, rhs: try self.operand())
         case "!":
           self.next()
           try self.accept("=")
           self.skipSpaces()
-          push(op: .notEquals, rhs: try self.operand())
+          try push(op: .notEquals, rhs: try self.operand())
         case "<":
           if let ch = self.next(), ch == "=" {
             self.next()
             self.skipSpaces()
-            push(op: .lessThanEquals, rhs: try self.operand())
+            try push(op: .lessThanEquals, rhs: try self.operand())
           } else {
             self.skipSpaces()
-            push(op: .lessThan, rhs: try self.operand())
+            try push(op: .lessThan, rhs: try self.operand())
           }
         case ">":
           if let ch = self.next(), ch == "=" {
             self.next()
             self.skipSpaces()
-            push(op: .greaterThanEquals, rhs: try self.operand())
+            try push(op: .greaterThanEquals, rhs: try self.operand())
           } else {
             self.skipSpaces()
-            push(op: .greaterThan, rhs: try self.operand())
+            try push(op: .greaterThan, rhs: try self.operand())
           }
         case "|":
           self.next()
           try self.accept("|")
           self.skipSpaces()
-          push(op: .or, rhs: try self.operand())
+          try push(op: .or, rhs: try self.operand())
         case "&":
           self.next()
           try self.accept("&")
           self.skipSpaces()
-          push(op: .and, rhs: try self.operand())
+          try push(op: .and, rhs: try self.operand())
         case "+":
           self.nextSkipSpaces()
-          push(op: .plus, rhs: try self.operand())
+          try push(op: .plus, rhs: try self.operand())
         case "-":
           self.nextSkipSpaces()
-          push(op: .minus, rhs: try self.operand())
+          try push(op: .minus, rhs: try self.operand())
         case "*":
           self.nextSkipSpaces()
-          push(op: .mult, rhs: try self.operand())
+          try push(op: .mult, rhs: try self.operand())
         case "/":
           self.nextSkipSpaces()
-          push(op: .divide, rhs: try self.operand())
+          try push(op: .divide, rhs: try self.operand())
         default:
           break loop
       }
     }
-    while let top = opers.last {
-      let rhs = exprs.removeLast()
-      let lhs = exprs.removeLast()
-      opers.removeLast()
-      exprs.append(.operation(lhs, top, rhs))
+    while !opers.isEmpty {
+      try reduce()
     }
     return exprs.removeLast()
   }
@@ -362,8 +449,6 @@ public struct JSONPathParser {
   
   public mutating func atomic() throws -> JSONPath.Expression {
     switch self.ch {
-      case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
-        return try self.number()
       case "'", "\"":
         return .string(try self.string())
       case "$", "@":
@@ -375,6 +460,16 @@ public struct JSONPathParser {
         self.skipSpaces()
         try self.accept(")")
         return expr
+      case "1", "2", "3", "4", "5", "6", "7", "8", "9":
+        return try self.number()
+      case "0":
+        guard self.strict else {
+          return try self.number()
+        }
+        if let expr = try? self.number(forceFloat: true) {
+          return expr
+        }
+        fallthrough
       default:
         let ident = try self.functionName()
         switch ident {
@@ -453,7 +548,10 @@ public struct JSONPathParser {
         }
         guard ch != "]" else {
           self.next()
-          return []
+          guard self.strict else {
+            return []
+          }
+          throw Error.emptySegment
         }
         var segment: [JSONPath.Selector] = []
         segment.append(try self.selector())
@@ -515,11 +613,15 @@ public struct JSONPathParser {
   }
   
   public mutating func parse(ignoreRemaining: Bool = false) throws -> JSONPath {
-    self.skipSpaces()
+    if !self.strict {
+      self.skipSpaces()
+    }
     try self.accept("$")
     let res = try self.relativePath(to: .self)
-    guard ignoreRemaining || self.skipSpaces() == nil else {
-      throw Error.invalidQuerySuffix(self.ch!)
+    guard ignoreRemaining
+            || (self.strict && self.ch == nil && !self.trailingSpace)
+            || (!self.strict && self.skipSpaces() == nil) else {
+      throw Error.invalidQuerySuffix(self.ch)
     }
     return res
   }

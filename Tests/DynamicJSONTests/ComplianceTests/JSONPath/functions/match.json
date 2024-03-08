@@ -1,0 +1,110 @@
+{
+  "tests": [
+    {
+      "name": "found match",
+      "selector" : "$[?match(@.a, 'a.*')]",
+      "document" : [{"a": "ab"}],
+      "result": [
+        {"a":"ab"}
+      ]
+    },
+    {
+      "name": "double quotes",
+      "selector" : "$[?match(@.a, \"a.*\")]",
+      "document" : [{"a": "ab"}],
+      "result": [
+        {"a":"ab"}
+      ]
+    },
+    {
+      "name": "regex from the document",
+      "selector" : "$.values[?match(@, $.regex)]",
+      "document" : {"regex": "b.?b", "values": ["abc", "bcd", "bab", "bba", "bbab", "b", true, [], {}]},
+      "result": ["bab"]
+    },
+    {
+      "name": "don't select match",
+      "selector" : "$[?!match(@.a, 'a.*')]",
+      "document" : [{"a": "ab"}],
+      "result": [
+      ]
+    },
+    {
+      "name": "not a match",
+      "selector" : "$[?match(@.a, 'a.*')]",
+      "document" : [{"a": "bc"}],
+      "result": []
+    },
+    {
+      "name": "select non-match",
+      "selector" : "$[?!match(@.a, 'a.*')]",
+      "document" : [{"a": "bc"}],
+      "result": [{"a": "bc"}]
+    },
+    {
+      "name": "non-string first arg",
+      "selector" : "$[?match(1, 'a.*')]",
+      "document" : [{"a": "bc"}],
+      "result": []
+    },
+    {
+      "name": "non-string second arg",
+      "selector" : "$[?match(@.a, 1)]",
+      "document" : [{"a": "bc"}],
+      "result": []
+    },
+    {
+      "name": "filter, match function, unicode char class, uppercase",
+      "selector": "$[?match(@, '\\\\p{Lu}')]",
+      "document": ["ж", "Ж", "1", "жЖ", true, [], {}],
+      "result": ["Ж"]
+    },
+    {
+      "name": "filter, match function, unicode char class negated, uppercase",
+      "selector": "$[?match(@, '\\\\P{Lu}')]",
+      "document": ["ж", "Ж", "1", true, [], {}],
+      "result": ["ж", "1"]
+    },
+    {
+      "name": "filter, match function, unicode, surrogate pair",
+      "selector": "$[?match(@, 'a.b')]",
+      "document": ["a\uD800\uDD01b", "ab", "1", true, [], {}],
+      "result": ["a\uD800\uDD01b"]
+    },
+    {
+      "name": "result cannot be compared",
+      "selector" : "$[?match(@.a, 'a.*')==true]",
+      "invalid_selector": true
+    },
+    {
+      "name": "too few params",
+      "selector" : "$[?match(@.a)==1]",
+      "invalid_selector": true
+    },
+    {
+      "name": "too many params",
+      "selector" : "$[?match(@.a,@.b,@.c)==1]",
+      "invalid_selector": true
+    },
+    {
+      "name": "arg is a function expression",
+      "selector": "$.values[?match(@.a, value($..['regex']))]",
+      "document": {
+        "regex": "a.*",
+        "values": [
+          {
+            "a": "ab"
+          },
+          {
+            "a": "ba"
+          }
+        ]
+      },
+      "result": [
+        {
+          "a": "ab"
+        }
+      ]
+    }
+  ]
+}

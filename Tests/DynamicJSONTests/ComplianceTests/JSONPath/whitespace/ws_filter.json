@@ -1,0 +1,132 @@
+{
+  "tests": [
+    {
+      "name": "space between question mark and expression",
+      "selector" : "$[? @.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "newline between question mark and expression",
+      "selector" : "$[?\n@.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "tab between question mark and expression",
+      "selector" : "$[?\t@.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "return between question mark and expression",
+      "selector" : "$[?\r@.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "space between question mark and parenthesized expression",
+      "selector" : "$[? (@.a)]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "newline between question mark and parenthesized expression",
+      "selector" : "$[?\n(@.a)]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "tab between question mark and parenthesized expression",
+      "selector" : "$[?\t(@.a)]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "return between question mark and parenthesized expression",
+      "selector" : "$[?\r(@.a)]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "space between parenthesized expression and bracket",
+      "selector" : "$[?(@.a) ]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "newline between parenthesized expression and bracket",
+      "selector" : "$[?(@.a)\n]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "tab between parenthesized expression and bracket",
+      "selector" : "$[?(@.a)\t]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "return between parenthesized expression and bracket",
+      "selector" : "$[?(@.a)\r]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "space between bracket and question mark",
+      "selector" : "$[ ?@.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "newline between bracket and question mark",
+      "selector" : "$[\n?@.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "tab between bracket and question mark",
+      "selector" : "$[\t?@.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    },
+    {
+      "name": "return between bracket and question mark",
+      "selector" : "$[\r?@.a]",
+      "document" : [{"a": "b", "d": "e"}, {"b": "c", "d": "f"}],
+      "result": [
+        {"a": "b", "d": "e"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "tests": [
+    {
+      "name": "space between start and colon",
+      "selector" : "$[1 :5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "newline between start and colon",
+      "selector" : "$[1\n:5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "tab between start and colon",
+      "selector" : "$[1\t:5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "return between start and colon",
+      "selector" : "$[1\r:5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "space between colon and end",
+      "selector" : "$[1: 5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "newline between colon and end",
+      "selector" : "$[1:\n5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "tab between colon and end",
+      "selector" : "$[1:\t5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "return between colon and end",
+      "selector" : "$[1:\r5:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "space between end and colon",
+      "selector" : "$[1:5 :2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "newline between end and colon",
+      "selector" : "$[1:5\n:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "tab between end and colon",
+      "selector" : "$[1:5\t:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "return between end and colon",
+      "selector" : "$[1:5\r:2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "space between colon and step",
+      "selector" : "$[1:5: 2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "newline between colon and step",
+      "selector" : "$[1:5:\n2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "tab between colon and step",
+      "selector" : "$[1:5:\t2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    },
+    {
+      "name": "return between colon and step",
+      "selector" : "$[1:5:\r2]",
+      "document" : [1,2,3,4,5,6],
+      "result": [ 2, 4 ]
+    }
+  ]
+}

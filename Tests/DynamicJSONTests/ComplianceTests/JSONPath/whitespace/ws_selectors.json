@@ -1,0 +1,212 @@
+{
+  "tests": [
+    {
+      "name": "space between root and bracket",
+      "selector" : "$ ['a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "newline between root and bracket",
+      "selector" : "$\n['a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "tab between root and bracket",
+      "selector" : "$\t['a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "return between root and bracket",
+      "selector" : "$\r['a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "space between bracket and bracket",
+      "selector" : "$['a'] ['b']",
+      "document" : {"a": {"b": "ab"} },
+      "result": [ "ab" ]
+    },
+    {
+      "name": "newline between root and bracket",
+      "selector" : "$['a'] \n['b']",
+      "document" : {"a": {"b": "ab"} },
+      "result": [ "ab" ]
+    },
+    {
+      "name": "tab between root and bracket",
+      "selector" : "$['a'] \t['b']",
+      "document" : {"a": {"b": "ab"} },
+      "result": [ "ab" ]
+    },
+    {
+      "name": "return between root and bracket",
+      "selector" : "$['a'] \r['b']",
+      "document" : {"a": {"b": "ab"} },
+      "result": [ "ab" ]
+    },
+    {
+      "name": "space between root and dot",
+      "selector" : "$ .a",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "newline between root and dot",
+      "selector" : "$\n.a",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "tab between root and dot",
+      "selector" : "$\t.a",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "return between root and dot",
+      "selector" : "$\r.a",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "space between dot and name",
+      "selector" : "$. a",
+      "invalid_selector": true
+    },
+    {
+      "name": "newline between dot and name",
+      "selector" : "$.\na",
+      "invalid_selector": true
+    },
+    {
+      "name": "tab between dot and name",
+      "selector" : "$.\ta",
+      "invalid_selector": true
+    },
+    {
+      "name": "return between dot and name",
+      "selector" : "$.\ra",
+      "invalid_selector": true
+    },
+    {
+      "name": "space between recursive descent and name",
+      "selector" : "$.. a",
+      "invalid_selector": true
+    },
+    {
+      "name": "newline between recursive descent and name",
+      "selector" : "$..\na",
+      "invalid_selector": true
+    },
+    {
+      "name": "tab between recursive descent and name",
+      "selector" : "$..\ta",
+      "invalid_selector": true
+    },
+    {
+      "name": "return between recursive descent and name",
+      "selector" : "$..\ra",
+      "invalid_selector": true
+    },
+    {
+      "name": "space between bracket and selector",
+      "selector" : "$[ 'a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "newline between bracket and selector",
+      "selector" : "$[\n'a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "tab between bracket and selector",
+      "selector" : "$[\t'a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "return between bracket and selector",
+      "selector" : "$[\r'a']",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "space between selector and bracket",
+      "selector" : "$['a' ]",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "newline between selector and bracket",
+      "selector" : "$['a'\n]",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "tab between selector and bracket",
+      "selector" : "$['a'\t]",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "return between selector and bracket",
+      "selector" : "$['a'\r]",
+      "document" : {"a": "ab"},
+      "result": [ "ab" ]
+    },
+    {
+      "name": "space between selector and comma",
+      "selector" : "$['a' ,'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    },
+    {
+      "name": "newline between selector and comma",
+      "selector" : "$['a'\n,'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    },
+    {
+      "name": "tab between selector and comma",
+      "selector" : "$['a'\t,'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    },
+    {
+      "name": "return between selector and comma",
+      "selector" : "$['a'\r,'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    },
+    {
+      "name": "space between comma and selector",
+      "selector" : "$['a', 'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    },
+    {
+      "name": "newline between comma and selector",
+      "selector" : "$['a',\n'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    },
+    {
+      "name": "tab between comma and selector",
+      "selector" : "$['a',\t'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    },
+    {
+      "name": "return between comma and selector",
+      "selector" : "$['a',\r'b']",
+      "document" : {"a": "ab", "b": "bc"},
+      "result": [ "ab", "bc" ]
+    }
+  ]
+}

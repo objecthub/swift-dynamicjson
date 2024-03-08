@@ -1,0 +1,31 @@
+{
+  "tests": [
+    {
+      "name": "single-value nodelist",
+      "selector" : "$[?value(@.*)==4]",
+      "document" : [[4], {"foo": 4}, [5], {"foo": 5}, 4],
+      "result": [[4], {"foo": 4}]
+    },
+    {
+      "name": "multi-value nodelist",
+      "selector" : "$[?value(@.*)==4]",
+      "document" : [[4,4], {"foo": 4, "bar": 4}],
+      "result": []
+    },
+    {
+      "name": "too few params",
+      "selector" : "$[?value()==4]",
+      "invalid_selector": true
+    },
+    {
+      "name": "too many params",
+      "selector" : "$[?value(@.a,@.b)==4]",
+      "invalid_selector": true
+    },
+    {
+      "name": "result must be compared",
+      "selector" : "$[?value(@.a)]",
+      "invalid_selector": true
+    }
+  ]
+}

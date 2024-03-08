@@ -465,7 +465,7 @@ public struct JSONPathEvaluator {
                 return try .init(lf >= rf, type: type)
               case (.string(let l), .string(let r)):
                 let res = l.compare(r)
-                return try .init(res == .orderedAscending || res == .orderedSame, type: type)
+                return try .init(res == .orderedDescending || res == .orderedSame, type: type)
               default:
                 return try .init(false, type: type)
             }

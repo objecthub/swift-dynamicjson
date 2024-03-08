@@ -185,7 +185,7 @@ public enum JSON: Hashable,
     if let userInfo {
       decoder.userInfo = userInfo
     }
-    self = try JSONDecoder().decode(JSON.self, from: encoded)
+    self = try decoder.decode(JSON.self, from: encoded)
   }
   
   public init(encoded: String,
@@ -382,6 +382,15 @@ public enum JSON: Hashable,
         return try JSONLocation("$." + trimmed).apply(to: self)
       }
     }
+  }
+  
+  public func query(_ path: JSONPath) throws -> [JSON] {
+    return try JSONPathEvaluator(value: self).query(path)
+  }
+  
+  public func query(_ path: String) throws -> [JSON] {
+    var parser = JSONPathParser(string: path)
+    return try self.query(parser.parse())
   }
   
   public func merging(with other: JSON) -> JSON {

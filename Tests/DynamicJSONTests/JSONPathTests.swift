@@ -22,21 +22,23 @@ import XCTest
 @testable import DynamicJSON
 
 final class JSONPathTests: XCTestCase {
-  private func parse(_ str: String) -> JSONPath? {
-    var parser = JSONPathParser(string: str)
+  private func parse(_ str: String, strict: Bool = true) -> JSONPath? {
+    var parser = JSONPathParser(string: str, strict: strict)
     return try? parser.parse()
   }
   
   func testSimplePaths() {
     XCTAssertEqual(parse("$"), .self)
-    XCTAssertEqual(parse(" $"), .self)
+    XCTAssertEqual(parse(" $", strict: false), .self)
+    XCTAssertEqual(parse("$ ", strict: false), .self)
+    XCTAssertNil(parse("$ ", strict: true))
     XCTAssertEqual(parse("$.foo"), .children(.self, .member("foo")))
     XCTAssertEqual(parse("$ .foo"), .children(.self, .member("foo")))
     XCTAssertEqual(parse("$ .foo. bar"),
                    .children(.children(.self, .member("foo")), .member("bar")))
     XCTAssertEqual(parse("$[0]"), .children(.self, .index(0)))
     XCTAssertEqual(parse("$[ 1 ]"), .children(.self, .index(1)))
-    XCTAssertEqual(parse("$ [23] "), .children(.self, .index(23)))
+    XCTAssertEqual(parse("$ [23]"), .children(.self, .index(23)))
     XCTAssertEqual(parse("$[0][12]"), .children(.children(.self, .index(0)), .index(12)))
     XCTAssertEqual(parse("$[0].foo[12]"),
                    .children(.children(.children(.self, .index(0)), .member("foo")), .index(12)))
@@ -221,7 +223,8 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNotNil(parse("$[0:3:2]"))
     XCTAssertNotNil(parse("$[0:3:0]"))
     XCTAssertNotNil(parse("$[0:3:1]"))
-    XCTAssertNotNil(parse("$[010:024:010]"))
+    XCTAssertNotNil(parse("$[010:024:010]", strict: false))
+    XCTAssertNil(parse("$[010:024:010]"))
     XCTAssertNotNil(parse("$[0:4:2]"))
     XCTAssertNotNil(parse("$[1:3:]"))
     XCTAssertNotNil(parse("$[::2]"))
@@ -231,7 +234,7 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNotNil(parse("$['ü']"))
     XCTAssertNotNil(parse("$['two.some']"))
     XCTAssertNotNil(parse("$[\"key\"]"))
-    XCTAssertNotNil(parse("$[]"))
+    XCTAssertNil(parse("$[]", strict: true))
     XCTAssertNotNil(parse("$['']"))
     XCTAssertNotNil(parse("$[\"\"]"))
     XCTAssertNotNil(parse("$[-2]"))
@@ -308,7 +311,7 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNil(parse("$.'key'"))
     XCTAssertNil(parse("$..'key'"))
     XCTAssertNil(parse("$.'some.key'"))
-    XCTAssertNotNil(parse("$. a "))
+    XCTAssertNotNil(parse("$. a"))
     XCTAssertNotNil(parse("$.*"))
     XCTAssertNotNil(parse("$.*"))
     XCTAssertNotNil(parse("$.*"))
@@ -357,11 +360,11 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNotNil(parse("$[?((@.key<44)==false)]"))
     XCTAssertNotNil(parse("$[?(@.key==false)]"))
     XCTAssertNotNil(parse("$[?(@.key==null)]"))
-    XCTAssertNotNil(parse("$[?(@[0:1]==1)]"))
-    XCTAssertNotNil(parse("$[?(@[*]==2)]"))
-    XCTAssertNotNil(parse("$[?(@.*==2)]"))
+    XCTAssertNotNil(parse("$[?(@[0:1]==1)]", strict: false))
+    XCTAssertNotNil(parse("$[?(@[*]==2)]", strict: false))
+    XCTAssertNotNil(parse("$[?(@.*==2)]", strict: false))
     XCTAssertNotNil(parse("$[?(@.key==-0.123e2)]"))
-    XCTAssertNotNil(parse("$[?(@.key==010)]"))
+    XCTAssertNil(parse("$[?(@.key==010)]"))
     XCTAssertNil(parse("$[?(@.d=={\"k\":\"v\"})]"))
     XCTAssertNotNil(parse("$[?(@.key==\"value\")]"))
     XCTAssertNotNil(parse("$[?(@.key==\"Motörhead\")]"))
@@ -393,8 +396,8 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNil(parse("$[?((@.d!=[\"v1\",\"v2\"]) || (@.d == true))]"))
     XCTAssertNil(parse("$[? @.name=~'/hello.*/']"))
     XCTAssertNil(parse("$[?(@.name=~'/@.pattern/')]"))
-    XCTAssertNotNil(parse("$[?(@[*]>=4)]"))
-    XCTAssertNotNil(parse("$.x[?(@[*]>=$.y[*])]"))
+    XCTAssertNotNil(parse("$[?(@[*]>=4)]", strict: false))
+    XCTAssertNotNil(parse("$.x[?(@[*]>=$.y[*])]", strict: false))
     XCTAssertNil(parse("$[?(@.key=42)]"))
     XCTAssertNotNil(parse("$[?(@.a[?(@.price>10)])]"))
     XCTAssertNotNil(parse("$[?(@.a.b==3)]"))
