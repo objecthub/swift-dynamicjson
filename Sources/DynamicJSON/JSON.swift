@@ -44,8 +44,10 @@ public enum JSON: Hashable,
   public enum Error: LocalizedError, CustomStringConvertible {
     case initialization
     case erroneousEncoding
-    case erroneousIndexSelection(JSON, Int)
-    case erroneousMemberSelection(JSON, String)
+    case cannotAppend(JSON, JSON)
+    case cannotInsert(JSON, JSON, Int)
+    case cannotAssign(String, JSON)
+    case typeMismatch(JSONTypes, JSON)
     
     public var description: String {
       switch self {
@@ -53,10 +55,14 @@ public enum JSON: Hashable,
           return "unable to initialize JSON data structure"
         case .erroneousEncoding:
           return "erroneous JSON encoding"
-        case .erroneousIndexSelection(let json, let index):
-          return "cannot select index \(index) from \(json)"
-        case .erroneousMemberSelection(let json, let member):
-          return "cannot select member '\(member)' from \(json)"
+        case .cannotAppend(let json, let array):
+          return "unable to append \(json) to \(array)"
+        case .cannotInsert(let json, let array, let index):
+          return "unable to insert \(json) into \(array) at \(index)"
+        case .cannotAssign(let member, let json):
+          return "unable to set/update member '\(member)' of \(json)"
+        case .typeMismatch(let types, let json):
+          return "expected \(json) to be of type \(types)"
       }
     }
     
@@ -70,8 +76,10 @@ public enum JSON: Hashable,
           return "initialization error"
         case .erroneousEncoding:
           return "encoding error"
-        case .erroneousIndexSelection(_, _), .erroneousMemberSelection(_, _):
-          return "access error"
+        case .cannotAppend(_, _), .cannotInsert(_, _, _), .cannotAssign(_, _):
+          return "mutation error"
+        case .typeMismatch(_, _):
+          return "type mismatch"
       }
     }
   }
@@ -201,7 +209,7 @@ public enum JSON: Hashable,
                      userInfo: userInfo)
   }
   
-  public var type: JSONType {
+  public var type: JSONTypes {
     switch self {
       case .null:
         return .null
@@ -309,7 +317,7 @@ public enum JSON: Hashable,
         return nil
     }
   }
-
+  
   public var stringValue: String? {
     guard case .string(let value) = self else {
       return nil
@@ -356,31 +364,24 @@ public enum JSON: Hashable,
     return array[index]
   }
   
-  public subscript(key: String) -> JSON? {
+  public subscript(member: String) -> JSON? {
     guard case .object(let dict) = self else {
       return nil
     }
-    return dict[key]
+    return dict[member]
   }
   
-  public subscript(dynamicMember key: String) -> JSON? {
-    return self[key]
+  public subscript(dynamicMember member: String) -> JSON? {
+    return self[member]
   }
   
-  public subscript(keyPath location: JSONLocation) -> JSON? {
-    return location.apply(to: self)
+  public subscript(keyPath ref: JSONReference) -> JSON? {
+    return ref.get(from: self)
   }
   
-  public subscript(keyPath location: String) -> JSON? {
+  public subscript(keyPath reference: String) -> JSON? {
     get throws {
-      let trimmed = location.trimmingCharacters(in: CharacterSet.whitespaces)
-      if trimmed.first == "." {
-        return try JSONLocation("$" + trimmed).apply(to: self)
-      } else if trimmed.first == "$" {
-        return try JSONLocation(trimmed).apply(to: self)
-      } else {
-        return try JSONLocation("$." + trimmed).apply(to: self)
-      }
+      return try JSON.reference(from: reference).get(from: self)
     }
   }
   
@@ -413,31 +414,108 @@ public enum JSON: Hashable,
     }
   }
   
-  public func updating(_ location: JSONLocation, with json: JSON) throws -> JSON {
-    return try self.updating(location.segments, 0, with: json)
+  public func updating(_ ref: JSONReference, with json: JSON) throws -> JSON {
+    return try ref.set(to: json, in: self)
   }
   
-  private func updating(_ segments: [JSONLocation.Segment],
-                        _ current: Int,
-                        with json: JSON) throws -> JSON {
-    if current < segments.count {
-      switch segments[current] {
-        case .index(let index):
-          guard case .array(var array) = self, array.indices.contains(index) else {
-            throw Error.erroneousIndexSelection(self, index)
-          }
-          array[index] = try array[index].updating(segments, current + 1, with: json)
-          return .array(array)
-        case .member(let key):
-          guard case .object(var dict) = self, let rhsval = dict[key] else {
-            throw Error.erroneousMemberSelection(self, key)
-          }
-          dict[key] = try rhsval.updating(segments, current + 1, with: json)
-          return .object(dict)
-      }
+  public func updating(_ ref: String, with json: JSON) throws -> JSON {
+    return try JSON.reference(from: ref).set(to: json, in: self)
+  }
+  
+  public mutating func append(_ json: JSON) throws {
+    if case .array(var arr) = self {
+      self = .null        // remove reference to arr
+      arr.append(json)    // modify arr
+      self = .array(arr)  // restore self
+    } else if case .string(var str) = self,
+              case .string(let ext) = json {
+      self = .null        // remove reference to str
+      str.append(ext)     // modify arr
+      self = .string(str) // restore self
     } else {
-      return json
+      throw Error.cannotAppend(json, self)
     }
+  }
+  
+  public mutating func insert(_ json: JSON, at index: Int) throws {
+    if case .array(var arr) = self {
+      self = .null                // remove reference to arr
+      arr.insert(json, at: index) // modify arr
+      arr.append(json)            // modify arr
+      self = .array(arr)          // restore self
+    } else if case .string(var str) = self,
+              case .string(let ext) = json {
+      self = .null                // remove reference to str
+      str.insert(contentsOf: ext, at: str.index(str.startIndex, offsetBy: index))
+      str.append(ext)             // modify arr
+      self = .string(str)         // restore self
+    } else {
+      throw Error.cannotInsert(json, self, index)
+    }
+  }
+  
+  public mutating func assign(_ member: String, to json: JSON) throws {
+    if case .object(var dict) = self {
+      self = .null         // remove reference to dict
+      dict[member] = json  // modify dict
+      self = .object(dict) // restore self
+    } else {
+      throw Error.cannotAppend(json, self)
+    }
+  }
+  
+  public mutating func update(_ ref: JSONReference, with json: JSON) throws {
+    try self.mutate(ref) { $0 = json }
+  }
+  
+  public mutating func update(_ ref: String, with json: JSON) throws {
+    try self.mutate(ref) { $0 = json }
+  }
+  
+  public mutating func mutate(_ ref: JSONReference, with proc: (inout JSON) throws -> Void) throws {
+    try ref.mutate(&self, with: proc)
+  }
+  
+  public mutating func mutate(array ref: JSONReference,
+                              with proc: (inout [JSON]) throws -> Void) throws {
+    try ref.mutate(&self) { value in
+      guard case .array(var arr) = value else {
+        throw JSON.Error.typeMismatch(.array, value)
+      }
+      value = .null
+      defer {
+        value = .array(arr)
+      }
+      try proc(&arr)
+    }
+  }
+  
+  public mutating func mutate(object ref: JSONReference,
+                              with proc: (inout [String : JSON]) throws -> Void) throws {
+    try ref.mutate(&self) { value in
+      guard case .object(var dict) = value else {
+        throw JSON.Error.typeMismatch(.object, value)
+      }
+      value = .null
+      defer {
+        value = .object(dict)
+      }
+      try proc(&dict)
+    }
+  }
+  
+  public mutating func mutate(_ ref: String, with proc: (inout JSON) throws -> Void) throws {
+    try self.mutate(try JSON.reference(from: ref), with: proc)
+  }
+  
+  public mutating func mutate(array ref: String,
+                              with proc: (inout [JSON]) throws -> Void) throws {
+    try self.mutate(array: try JSON.reference(from: ref), with: proc)
+  }
+  
+  public mutating func mutate(object ref: String,
+                              with proc: (inout [String : JSON]) throws -> Void) throws {
+    try self.mutate(object: try JSON.reference(from: ref), with: proc)
   }
   
   public var description: String {
@@ -469,6 +547,25 @@ public enum JSON: Hashable,
         } else {
           return "<error>"
         }
+    }
+  }
+  
+  public static func reference(from str: String) throws -> JSONReference {
+    if let first = str.first {
+      if first == "/" {
+        return try JSONPointer(str)
+      } else {
+        let trimmed = str.trimmingCharacters(in: CharacterSet.whitespaces)
+        if trimmed.first == "." {
+          return try JSONLocation("$" + trimmed)
+        } else if trimmed.first == "$" {
+          return try JSONLocation(trimmed)
+        } else {
+          return try JSONLocation("$." + trimmed)
+        }
+      }
+    } else {
+      return try JSONLocation("$")
     }
   }
 }

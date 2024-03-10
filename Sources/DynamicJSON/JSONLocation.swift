@@ -20,7 +20,10 @@
 
 import Foundation
 
-public indirect enum JSONLocation: Hashable, CustomStringConvertible {
+public indirect enum JSONLocation: JSONReference,
+                                   Codable,
+                                   Hashable,
+                                   CustomStringConvertible {
   case root
   case member(JSONLocation, String)
   case index(JSONLocation, Int)
@@ -31,7 +34,7 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
     public var description: String {
       switch self {
         case .invalidLocation:
-          return "invalid JSON location identifier"
+          return "JSON path query does not denote a location"
       }
     }
     
@@ -47,7 +50,7 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
     }
   }
   
-  public enum Segment: Hashable, CustomStringConvertible {
+  public enum Segment: Codable, Hashable, CustomStringConvertible {
     case member(String)
     case index(Int)
     
@@ -69,7 +72,7 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
     self = location
   }
   
-  public init(segments: [Segment]) {
+  public init<S: Sequence>(segments: S) where S.Element == Segment {
     var location: JSONLocation = .root
     for segment in segments {
       switch segment {
@@ -80,6 +83,39 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
       }
     }
     self = location
+  }
+  
+  public init(from codingPath: [CodingKey]) {
+    self.init(segments:
+      codingPath.map { component in
+        if let i = component.intValue {
+          return .index(i)
+        } else {
+          return .member(component.stringValue)
+        }
+      }
+    )
+  }
+  
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    try self.init(try container.decode(String.self))
+  }
+  
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    try container.encode(self.description)
+  }
+  
+  public var pointer: JSONPointer {
+    return JSONPointer(components: self.segments.map{ segment in
+      switch segment {
+        case .member(let member):
+          return member
+        case .index(let index):
+          return "\(index)"
+      }
+    })
   }
   
   public var path: JSONPath {
@@ -112,23 +148,91 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
     }
   }
   
-  public func apply(to value: JSON) -> JSON? {
+  public func get(from value: JSON) -> JSON? {
     switch self {
       case .root:
         return value
       case .member(let location, let member):
-        guard let parent = location.apply(to: value),
+        guard let parent = location.get(from: value),
               case .object(let dict) = parent else {
           return nil
         }
         return dict[member]
       case .index(let location, let index):
-        guard let parent = location.apply(to: value),
+        guard let parent = location.get(from: value),
               case .array(let arr) = parent,
               arr.indices.contains(index) else {
           return nil
         }
         return arr[index]
+    }
+  }
+  
+  public func set(to json: JSON, in value: JSON) throws -> JSON {
+    return try self.set(value, at: self.segments, index: 0, to: json)
+  }
+  
+  private func set(_ value: JSON,
+                   at segments: [JSONLocation.Segment],
+                   index current: Int,
+                   to json: JSON) throws -> JSON {
+    if current < segments.count {
+      switch segments[current] {
+        case .index(let index):
+          guard case .array(var array) = value, array.indices.contains(index) else {
+            throw JSONReferenceError.erroneousIndexSelection(value, index)
+          }
+          array[index] = try self.set(array[index], at: segments, index: current + 1, to: json)
+          return .array(array)
+        case .member(let key):
+          guard case .object(var dict) = value, let rhsval = dict[key] else {
+            throw JSONReferenceError.erroneousMemberSelection(value, key)
+          }
+          dict[key] = try self.set(rhsval, at: segments, index: current + 1, to: json)
+          return .object(dict)
+      }
+    } else {
+      return json
+    }
+  }
+  
+  public func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws {
+    var iter = self.segments.makeIterator()
+    try self.mutate(&json, next: &iter, with: proc)
+  }
+  
+  public func mutate(_ value: inout JSON,
+                     next iter: inout [JSONLocation.Segment].Iterator,
+                     with proc: (inout JSON) throws -> Void) throws {
+    if let segment = iter.next() {
+      switch segment {
+        case .member(let member):
+          guard case .object(var dict) = value,
+                var json = dict[member] else {
+            throw JSONReferenceError.erroneousMemberSelection(value, member)
+          }
+          value = .null
+          dict[member] = nil
+          defer {
+            dict[member] = json
+            value = .object(dict)
+          }
+          try self.mutate(&json, next: &iter, with: proc)
+        case .index(let index):
+          guard case .array(var arr) = value, arr.indices.contains(index) else {
+            return
+          }
+          var json = arr[index]
+          value = .null
+          arr[index] = .null
+          defer {
+            arr[index] = json
+            value = .array(arr)
+          }
+          try self.mutate(&json, next: &iter, with: proc)
+      }
+    } else {
+      try proc(&value)
     }
   }
   
@@ -143,7 +247,7 @@ public indirect enum JSONLocation: Hashable, CustomStringConvertible {
     }
   }
   
-  public static func escapeMember(_ str: String) -> String {
+  internal static func escapeMember(_ str: String) -> String {
     var res = ""
     for c in str {
       switch c {

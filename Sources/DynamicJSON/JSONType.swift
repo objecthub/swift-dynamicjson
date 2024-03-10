@@ -1,5 +1,5 @@
 //
-//  JSONType.swift
+//  JSONTypes.swift
 //  DynamicJSON
 //
 //  Created by Matthias Zenger on 19/02/2024.
@@ -20,28 +20,60 @@
 
 import Foundation
 
-public enum JSONType: Hashable, CustomStringConvertible {
-  case null
-  case boolean
-  case number
-  case string
-  case array
-  case object
+public struct JSONTypes: OptionSet,
+                         Hashable,
+                         CustomStringConvertible,
+                         CustomDebugStringConvertible {
+  public let rawValue: UInt
+  public let name: String?
+  
+  public init(rawValue: UInt) {
+    self.rawValue = rawValue
+    self.name = nil
+  }
+  
+  public init(rawValue: UInt, name: String) {
+    self.rawValue = rawValue
+    self.name = nil
+  }
+  
+  public static let null = JSONTypes(rawValue: 1 << 0, name: "null")
+  public static let boolean = JSONTypes(rawValue: 1 << 1, name: "boolean")
+  public static let number = JSONTypes(rawValue: 1 << 2, name: "number")
+  public static let string = JSONTypes(rawValue: 1 << 3, name: "string")
+  public static let array = JSONTypes(rawValue: 1 << 4, name: "array")
+  public static let object = JSONTypes(rawValue: 1 << 5, name: "object")
+  
+  public static let all: JSONTypes = [.null, .boolean, .number, .string, .array, .object]
+  private static let types: [JSONTypes] = [.null, .boolean, .number, .string, .array, .object]
   
   public var description: String {
-    switch self {
-      case .null:
-        return "Null"
-      case .boolean:
-        return "Boolean"
-      case .number:
-        return "Number"
-      case .string:
-        return "String"
-      case .array:
-        return "Array"
-      case .object:
-        return "Object"
+    var res = [String]()
+    for type in JSONTypes.types {
+      if self.contains(type), let name = type.name {
+        res.append(name)
+      }
     }
+    switch res.count {
+      case 0:
+        return "none"
+      case 1:
+        return res[0]
+      case 2:
+        return "\(res[0]) or \(res[1])"
+      default:
+        let last = res.dropLast()
+        return "\(res.joined(separator: ", ")) or \(last)"
+    }
+  }
+  
+  public var debugDescription: String {
+    var res = [String]()
+    for type in JSONTypes.types {
+      if self.contains(type), let name = type.name {
+        res.append(name)
+      }
+    }
+    return res.debugDescription
   }
 }

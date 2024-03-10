@@ -1,8 +1,8 @@
 //
-//  JSONPathComplianceSuite.swift
+//  JSONPathComplianceTest.swift
 //  DynamicJSONTests
 //
-//  Created by Matthias Zenger on 06/03/2024.
+//  Created by Matthias Zenger on 05/03/2024.
 //  Copyright © 2024 Matthias Zenger. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,21 +18,18 @@
 //  limitations under the License.
 //
 
-final class JSONPathComplianceSuite: JSONPathTestCase {
+import Foundation
+import DynamicJSON
 
-  func testBasic() {
-    self.execute(suite: "basic")
-  }
-  
-  func testNameSelector() {
-    self.execute(suite: "name_selector")
-  }
-  
-  func testIndexSelector() {
-    self.execute(suite: "index_selector")
-  }
-  
-  func testFilter() {
-    self.execute(suite: "filter")
-  }
+struct JSONPathComplianceTest: Codable {
+  var name: String
+  var selector: String
+  var invalid_selector: Bool?
+  var ignore: Bool?
+  var document: JSON?
+  var result: JSON?
+}
+
+struct JSONPathComplianceTests: Codable {
+  var tests: [JSONPathComplianceTest]
 }
