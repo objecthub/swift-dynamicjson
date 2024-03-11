@@ -35,7 +35,7 @@ public struct JSONPathEvaluator {
     case unknownFunction(String)
     case numberOfArgumentsMismatch(JSONPath.Expression)
     case typeMismatch(String, ValueType, Value)
-    case jsonTypeMismatch(String, JSONTypes, Value)
+    case jsonTypeMismatch(String, JSONType, Value)
     
     public var description: String {
       switch self {

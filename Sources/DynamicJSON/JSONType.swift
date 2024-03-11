@@ -1,5 +1,5 @@
 //
-//  JSONTypes.swift
+//  JSONType.swift
 //  DynamicJSON
 //
 //  Created by Matthias Zenger on 19/02/2024.
@@ -20,37 +20,69 @@
 
 import Foundation
 
-public struct JSONTypes: OptionSet,
-                         Hashable,
-                         Codable,
-                         CustomStringConvertible,
-                         CustomDebugStringConvertible {
+///
+/// Representation of types for JSON values. The struct supports both individual
+/// types as well as type sets. The supported basic types are:
+///
+///   - `null`
+///   - `boolean`
+///   - `number` (representing both integers and floats)
+///   - `string`
+///   - `array`
+///   - `object`
+///
+public struct JSONType: OptionSet,
+                        Hashable,
+                        Codable,
+                        CustomStringConvertible,
+                        CustomDebugStringConvertible {
+  
+  /// The raw value of this type/type set.
   public let rawValue: UInt
+  
+  /// The name of a basic type. Type sets do not have a name.
   public let name: String?
   
+  /// Initialize a new JSON type set.
   public init(rawValue: UInt) {
     self.rawValue = rawValue
     self.name = nil
   }
   
+  /// Initialize a new basic JSON type with the given name.
   public init(rawValue: UInt, name: String) {
     self.rawValue = rawValue
     self.name = nil
   }
   
-  public static let null = JSONTypes(rawValue: 1 << 0, name: "null")
-  public static let boolean = JSONTypes(rawValue: 1 << 1, name: "boolean")
-  public static let number = JSONTypes(rawValue: 1 << 2, name: "number")
-  public static let string = JSONTypes(rawValue: 1 << 3, name: "string")
-  public static let array = JSONTypes(rawValue: 1 << 4, name: "array")
-  public static let object = JSONTypes(rawValue: 1 << 5, name: "object")
+  /// The JSON null type.
+  public static let null = JSONType(rawValue: 1 << 0, name: "null")
   
-  public static let all: JSONTypes = [.null, .boolean, .number, .string, .array, .object]
-  private static let types: [JSONTypes] = [.null, .boolean, .number, .string, .array, .object]
+  /// The JSON boolean type.
+  public static let boolean = JSONType(rawValue: 1 << 1, name: "boolean")
   
+  /// The JSON number type, covering both integers and floating-point numbers.
+  public static let number = JSONType(rawValue: 1 << 2, name: "number")
+  
+  /// The JSON string type.
+  public static let string = JSONType(rawValue: 1 << 3, name: "string")
+  
+  /// The JSON array type, representing sequences of JSON values.
+  public static let array = JSONType(rawValue: 1 << 4, name: "array")
+  
+  /// The JSON object type, representing dictionaries/name-value pairs.
+  public static let object = JSONType(rawValue: 1 << 5, name: "object")
+  
+  /// A JSON type set including all JSON types.
+  public static let all: JSONType = [.null, .boolean, .number, .string, .array, .object]
+  
+  /// Internal array of basic JSON types.
+  private static let types: [JSONType] = [.null, .boolean, .number, .string, .array, .object]
+  
+  /// Returns a textual description of this type/type set.
   public var description: String {
     var res = [String]()
-    for type in JSONTypes.types {
+    for type in JSONType.types {
       if self.contains(type), let name = type.name {
         res.append(name)
       }
@@ -68,9 +100,10 @@ public struct JSONTypes: OptionSet,
     }
   }
   
+  /// Returns a textual description of this type/type set for debugging purposes.
   public var debugDescription: String {
     var res = [String]()
-    for type in JSONTypes.types {
+    for type in JSONType.types {
       if self.contains(type), let name = type.name {
         res.append(name)
       }

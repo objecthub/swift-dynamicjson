@@ -20,12 +20,32 @@
 
 import Foundation
 
+///
+/// Implementations of the `JSONReference` protocol can be used to refer to
+/// individual values within a JSON document. There are currently two implementations
+/// coming with the DynamicJSON framework: `JSONPointer` (implementing RFC 6901) and
+/// `JSONLocation` (implementing singular JSONPath queries as defined by RFC 9535)
+///
 public protocol JSONReference {
+  
+  /// Retrieve value at which this reference is pointing from JSON document `value`.
+  /// If the reference does not match any value, `nil` is returned.
   func get(from value: JSON) -> JSON?
+  
+  /// Replace value at which this reference is pointing with `json` within JSON
+  /// document `value`. If the reference does not match any value, an error is thrown.
   func set(to json: JSON, in value: JSON) throws -> JSON
+  
+  /// Mutate value at which this reference is pointing within JSON document `value`
+  /// with function `proc`. `proc` is provided a reference, enabling efficient,
+  /// in-place mutations that do not trigger copying large parts of the JSON
+  /// document.
   func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
 }
 
+///
+/// Collection of errors triggered by implementations of protocol `JSONReference`.
+///
 public enum JSONReferenceError: LocalizedError, CustomStringConvertible {
   case erroneousIndexSelection(JSON, Int)
   case erroneousMemberSelection(JSON, String)

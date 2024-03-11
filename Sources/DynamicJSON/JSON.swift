@@ -65,7 +65,7 @@ public enum JSON: Hashable,
     case cannotAppend(JSON, JSON)
     case cannotInsert(JSON, JSON, Int)
     case cannotAssign(String, JSON)
-    case typeMismatch(JSONTypes, JSON)
+    case typeMismatch(JSONType, JSON)
     
     public var description: String {
       switch self {
@@ -307,7 +307,7 @@ public enum JSON: Hashable,
   // MARK: - Projections and accessors
   
   /// Returns the type of this JSON value.
-  public var type: JSONTypes {
+  public var type: JSONType {
     switch self {
       case .null:
         return .null
