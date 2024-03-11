@@ -22,6 +22,7 @@ import Foundation
 
 public struct JSONTypes: OptionSet,
                          Hashable,
+                         Codable,
                          CustomStringConvertible,
                          CustomDebugStringConvertible {
   public let rawValue: UInt
