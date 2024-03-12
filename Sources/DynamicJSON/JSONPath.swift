@@ -25,6 +25,11 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
   case current
   case select(JSONPath, Segment)
   
+  public init(query: String, strict: Bool = true) throws {
+    var parser = JSONPathParser(string: query, strict: strict)
+    self = try parser.parse()
+  }
+  
   public var isSingular: Bool {
     switch self {
       case .self:
