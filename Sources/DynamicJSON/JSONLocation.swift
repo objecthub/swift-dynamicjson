@@ -116,7 +116,7 @@ public indirect enum JSONLocation: JSONReference,
     try self.init(try container.decode(String.self))
   }
   
-  /// Encode a `JSONLocation` reference using the given encode.
+  /// Encode a `JSONLocation` reference using the given encoder.
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.description)

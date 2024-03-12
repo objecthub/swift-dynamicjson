@@ -20,13 +20,19 @@
 
 import Foundation
 
+///
+/// `JSONPointer` implements the `JSONReference` protocol based on RFC 6901
+/// (JavaScript Object Notation (JSON) Pointer). A `JSONPointer` value is defined
+/// in terms of a sequence of reference tokens used to navigate through the
+/// structure of a JSON document.
+///
 public struct JSONPointer: JSONReference,
                            Codable,
                            Hashable,
                            CustomStringConvertible {
   private let tokens: [ReferenceToken]
   
-  public enum ReferenceToken: Hashable, CustomStringConvertible {
+  private enum ReferenceToken: Hashable, CustomStringConvertible {
     case member(String)
     case index(String, Int?)
     
@@ -49,6 +55,7 @@ public struct JSONPointer: JSONReference,
     }
   }
   
+  /// Collection of errors raised by functionality provided by enum `JSONLocation`.
   public enum Error: LocalizedError, CustomStringConvertible {
     case rootMissing
     case invalidPointer
@@ -84,6 +91,22 @@ public struct JSONPointer: JSONReference,
     "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"
   ]
   
+  /// Initialize a `JSONPointer` reference using a string representation of a JSON
+  /// pointer based on RFC 6901.
+  public init(_ jsonPointer: String) throws {
+    let cs = jsonPointer.split(separator: "/", omittingEmptySubsequences: false)
+    if let initial = cs.first {
+      guard initial.isEmpty else {
+        throw Error.rootMissing
+      }
+      self.init(components: cs.dropFirst().map { JSONPointer.unescapeMember(String($0)) })
+    } else {
+      self.init(components: [])
+    }
+  }
+  
+  /// Initializes a new `JSONPointer` value based on a sequence of strings
+  /// each representing a reference token.
   public init<S: Sequence>(components: S) where S.Element == String {
     var tokens: [ReferenceToken] = []
     for component in components {
@@ -108,18 +131,7 @@ public struct JSONPointer: JSONReference,
     self.init(tokens: tokens)
   }
   
-  public init(_ jsonPointer: String) throws {
-    let cs = jsonPointer.split(separator: "/", omittingEmptySubsequences: false)
-    if let initial = cs.first {
-      guard initial.isEmpty else {
-        throw Error.rootMissing
-      }
-      self.init(components: cs.dropFirst().map { JSONPointer.unescapeMember(String($0)) })
-    } else {
-      self.init(components: [])
-    }
-  }
-  
+  /// Initialize a `JSONPointer` reference from an array of coding keys.
   public init(from codingPath: [CodingKey]) {
     self.init(components:
       codingPath.map { component in
@@ -132,6 +144,7 @@ public struct JSONPointer: JSONReference,
     )
   }
   
+  /// The reference tokens defining this `JSONPointer` value.
   public var components: [String] {
     var components: [String] = []
     for token in tokens {
@@ -140,16 +153,20 @@ public struct JSONPointer: JSONReference,
     return components
   }
   
+  /// Initialize a `JSONPointer` reference using a decoder.
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
     try self.init(try container.decode(String.self))
   }
   
+  /// Encode a `JSONPointer` reference using the given encoder.
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.description)
   }
   
+  /// Retrieve value at which this reference is pointing from JSON document `value`.
+  /// If the reference does not match any value, `nil` is returned.
   public func get(from value: JSON) -> JSON? {
     var res = value
     for token in self.tokens {
@@ -180,6 +197,8 @@ public struct JSONPointer: JSONReference,
     return res
   }
   
+  /// Replace value at which this reference is pointing with `json` within JSON
+  /// document `value`. If the reference does not match any value, an error is thrown.
   public func set(to json: JSON, in value: JSON) throws -> JSON {
     return try self.set(value, index: 0, to: json)
   }
@@ -227,14 +246,17 @@ public struct JSONPointer: JSONReference,
     }
   }
   
+  /// Mutate value at which this reference is pointing within JSON document `value`
+  /// with function `proc`. `proc` is provided a reference, enabling efficient,
+  /// in-place mutations that do not trigger copying large parts of the JSON document.
   public func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws {
     var iter = self.tokens.makeIterator()
     try self.mutate(&json, next: &iter, with: proc)
   }
   
-  public func mutate(_ value: inout JSON,
-                     next iter: inout [ReferenceToken].Iterator,
-                     with proc: (inout JSON) throws -> Void) throws {
+  private func mutate(_ value: inout JSON,
+                      next iter: inout [ReferenceToken].Iterator,
+                      with proc: (inout JSON) throws -> Void) throws {
     if let token = iter.next() {
       switch token {
         case .member(let member):
@@ -291,6 +313,7 @@ public struct JSONPointer: JSONReference,
     }
   }
   
+  /// Returns a textual description of this `JSONPointer`.
   public var description: String {
     return self.tokens.isEmpty ? "" : self.tokens.map{ $0.description }.joined()
   }
