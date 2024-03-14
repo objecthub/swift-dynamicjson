@@ -20,16 +20,38 @@
 
 import Foundation
 
+///
+/// Enumeration `JSONPath` represents JSONPath queries based on RFC 9535
+/// (JSONPath: Query Expressions for JSON). JSONPath defines a syntax
+/// for selecting and extracting JSON (RFC 8259) values from within a given
+/// JSON value.
+///
 public indirect enum JSONPath: Hashable, CustomStringConvertible {
   case `self`
   case current
   case select(JSONPath, Segment)
   
+  /// Syntactic sugar for appending a single selector to the JSONPath query `path`.
+  public static func children(_ path: JSONPath, _ selector: Selector) -> JSONPath {
+    return .select(path, .children([selector]))
+  }
+  
+  /// Syntactic sugar for appending a single descendant to the JSONPath query `path`.
+  public static func descendants(_ path: JSONPath, _ selector: Selector) -> JSONPath {
+    return .select(path, .descendants([selector]))
+  }
+  
+  /// Creates a `JSONPath` representation of the JSONPath query represented
+  /// using the syntax as specified by RFC 9535. An error is thrown if `query`
+  /// is not compliant with JSONPath syntax. If parameter `strict` is set to
+  /// false, the syntax and semantics of JSONPath are slighly relaxed. For
+  /// instance, non-singular queries are supported in query filters.
   public init(query: String, strict: Bool = true) throws {
     var parser = JSONPathParser(string: query, strict: strict)
     self = try parser.parse()
   }
   
+  /// Returns true if this JSONPath value represents a singular query.
   public var isSingular: Bool {
     switch self {
       case .self:
@@ -41,6 +63,38 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     }
   }
   
+  /// Returns true if this query is a relative JSONPath query, i.e. it does not start
+  /// with "$'.
+  public var isRelative: Bool {
+    switch self {
+      case .self:
+        return false
+      case .current:
+        return true
+      case .select(let path, _):
+        return path.isRelative
+    }
+  }
+  
+  /// Returns the sequence of segments of this JSONPath query.
+  public var segments: [Segment] {
+    var res: [Segment] = []
+    self.insert(into: &res)
+    return res
+  }
+  
+  private func insert(into segments: inout [Segment]) {
+    switch self {
+      case .self, .current:
+        break
+      case .select(let path, let segment):
+        path.insert(into: &segments)
+        segments.append(segment)
+    }
+  }
+  
+  /// Returns a `JSONLocation` value matching this JSONPath query. Non-singular queries
+  /// cannot be represented as a `JSONLocation` value and thus `nil` gets returned.
   public var location: JSONLocation? {
     switch self {
       case .self:
@@ -62,6 +116,7 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     }
   }
   
+  /// Returns the JSONPath query as a string.
   public var description: String {
     switch self {
       case .self:
@@ -73,18 +128,13 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     }
   }
   
-  public static func children(_ path: JSONPath, _ selector: Selector) -> JSONPath {
-    return .select(path, .children([selector]))
-  }
-  
-  public static func descendants(_ path: JSONPath, _ selector: Selector) -> JSONPath {
-    return .select(path, .descendants([selector]))
-  }
-  
+  /// Representation of JSONPath query segments. There are two different segment types:
+  /// children and descendants.
   public enum Segment: Hashable, CustomStringConvertible {
     case children([Selector])
     case descendants([Selector])
     
+    /// Returns true if this segment is a descendant segment.
     public var isDescendant: Bool {
       switch self {
         case .children(_):
@@ -94,6 +144,7 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
       }
     }
     
+    /// Returns true if this segment is singular, i.e. it refers to at most one value.
     public var isSingular: Bool {
       switch self {
         case .children(let selectors):
@@ -103,6 +154,7 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
       }
     }
     
+    /// Returns the selectors encapsulated by this segment.
     public var selectors: [Selector] {
       switch self {
         case .children(let selectors):
@@ -112,6 +164,8 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
       }
     }
     
+    /// Returns true if this segment can be represented using a shorthand form avoiding
+    /// the usage of brackets.
     private func canUseShorthand(for member: String) -> Bool {
       var first = true
       for ch in member {
@@ -129,6 +183,7 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
       return true
     }
     
+    /// Returns a string representation of this segment.
     public var description: String {
       var res = ""
       var selectors: [Selector]
@@ -170,6 +225,13 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     }
   }
   
+  /// Representation of JSONPath query path selectors. Selectors are either child or
+  /// descendant selectors. Supported are:
+  ///   - wildcard selectors,
+  ///   - member selectors,
+  ///   - index selectors,
+  ///   - slice selectors, and
+  ///   - filter selectors.
   public enum Selector: Hashable, CustomStringConvertible {
     case wildcard
     case member(String)
@@ -177,6 +239,7 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     case slice(Int?, Int?, Int?)
     case filter(Expression)
     
+    /// Returns true if this selector is singular, i.e. it refers to at most one value.
     public var isSingular: Bool {
       switch self {
         case .wildcard:
@@ -192,6 +255,8 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
       }
     }
     
+    /// Returns a string representation of this selector when used within a segment
+    /// delimited by brackets.
     public var description: String {
       switch self {
         case .wildcard:
@@ -222,6 +287,7 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     }
   }
   
+  /// Representation of JSONPath query filter expressions.
   public indirect enum Expression: Hashable, CustomStringConvertible {
     case `null`
     case `true`
@@ -236,11 +302,12 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     case prefix(UnaryOperator, Expression)
     case operation(Expression, BinaryOperator, Expression)
     
+    /// Return a string representation of this expression if nested within another expression.
     public func description(within context: Expression) -> String {
       switch (self, context) {
         case (.null, _), (.true, _), (.false, _),
-             (.integer(_), _), (.float(_), _), (.string(_), _), (.variable(_), _),
-             (.query(_), _), (.call(_, _), _):
+             (.integer(_), _), (.float(_), _), (.string(_), _),
+             (.variable(_), _), (.query(_), _), (.call(_, _), _):
           return self.description
         case (.operation(_, _, _), .prefix(_, _)):
           return "(\(self))"
@@ -254,6 +321,8 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
       }
     }
     
+    /// Returns a string representation of this expression assuming it is not
+    /// embedded in another expression.
     public var description: String {
       switch self {
         case .null:
@@ -284,6 +353,7 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     }
   }
   
+  /// Representation of a unary operator. Supported are currently "-" and "!".
   public enum UnaryOperator: Hashable, CustomStringConvertible {
     case not
     case negate
@@ -298,6 +368,8 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
     }
   }
   
+  /// Representation of a binary operator. Supported are currently "==", "!=", "<",
+  /// ">", "<=", ">=", "||", "&&", "+", "-", "*", and "/".
   public enum BinaryOperator: Hashable, CustomStringConvertible {
     case equals
     case notEquals
@@ -368,33 +440,6 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
         case .divide:
           return "/"
       }
-    }
-  }
-  
-  public var isRelative: Bool {
-    switch self {
-      case .self:
-        return false
-      case .current:
-        return true
-      case .select(let path, _):
-        return path.isRelative
-    }
-  }
-  
-  public var segments: [Segment] {
-    var res: [Segment] = []
-    self.insert(into: &res)
-    return res
-  }
-  
-  private func insert(into segments: inout [Segment]) {
-    switch self {
-      case .self, .current:
-        break
-      case .select(let path, let segment):
-        path.insert(into: &segments)
-        segments.append(segment)
     }
   }
 }
