@@ -21,12 +21,17 @@
 import Foundation
 
 extension Encodable {
+  
+  /// Returns a JSON representation for this encodable object, if encoding
+  /// as JSON succeeds; otherwise `nil` is returned.
   var jsonValue: JSON? {
     return try? JSON(encodable: self)
   }
 }
 
 extension Decodable {
+  
+  /// Initializes a new value given the JSON representation `json`.
   init?(_ json: JSON?) {
     if let value: Self = try? json?.coerce() {
       self = value

@@ -20,17 +20,31 @@
 
 import Foundation
 
+///
+/// Class `JSONPathEnvironment` implements an extensible representation of
+/// environments used by `JSONPathEvaluator`. `JSONPathEnvironment` objects
+/// encapsulate two different dictionaries: `variables` is used to look up
+/// variables appearing in JSONPath expressions; `functions` is used to look
+/// up function definitions.
+///
 open class JSONPathEnvironment {
+  
+  /// Registry of variables/constants available in JSONPath filter expressions.
   public var variables: [String : JSONPathEvaluator.Value] = [:]
+  
+  /// Registry of variables/constants available in JSONPath filter expressions.
   public var functions: [String : JSONPathEvaluator.Function] = [:]
   
-  init(variables: [String : JSONPathEvaluator.Value] = [:],
-       functions: [String : JSONPathEvaluator.Function] = [:]) {
+  /// Creates a new `JSONPathEnvironment` object which gets initialized via
+  /// method `initialize`.
+  public init(variables: [String : JSONPathEvaluator.Value] = [:],
+              functions: [String : JSONPathEvaluator.Function] = [:]) {
     self.variables = variables
     self.functions = functions
     self.initialize()
   }
   
+  /// Initializes the `variables` and `functions` registries with default entries.
   open func initialize() {
     self.variables["pi"] = .json(.float(.pi))
     self.functions["length"] = JSONPathEvaluator.Function(
@@ -138,10 +152,12 @@ open class JSONPathEnvironment {
       })
   }
   
+  /// Looks up variable of name `ident`.
   public func value(of ident: String) -> JSONPathEvaluator.Value? {
     return self.variables[ident]
   }
   
+  /// Looks up function of name `name`.
   public func function(name: String) -> JSONPathEvaluator.Function? {
     return self.functions[name]
   }

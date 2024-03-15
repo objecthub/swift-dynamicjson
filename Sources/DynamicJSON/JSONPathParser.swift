@@ -20,12 +20,27 @@
 
 import Foundation
 
+///
+/// Parser for JSONPath syntax according to RFC 9535. The parser operates in
+/// two different modes: in _strict_ mode, all limitations imposed by RFC 9535
+/// are implemented; if _strict_ mode is disabled, there is more flexibility
+/// in filter expressions, e.g. also non-singular queries are supported.
+///
 public struct JSONPathParser {
-  let strict: Bool
-  let trailingSpace: Bool
-  var ch: Character?
-  var iterator: String.Iterator
   
+  /// Is strict mode enabled?
+  let strict: Bool
+  
+  /// Was there trailing space (determined initially)?
+  private let trailingSpace: Bool
+  
+  /// Next character to parse
+  private var ch: Character?
+  
+  /// Remaining characters to parse
+  private var iterator: String.Iterator
+  
+  /// Collection of errors raised by functionality provided by enum `JSONPathParser`.
   public enum Error: LocalizedError, CustomStringConvertible {
     case expectedCharacter(Character, Character?)
     case illegalIntLiteral(String)
@@ -119,6 +134,8 @@ public struct JSONPathParser {
     }
   }
   
+  /// Initializes a new parser for parsing `string`. Parser structs can only be used
+  /// once for parsing the string given at initialization time.
   public init(string: String, strict: Bool = true) {
     self.strict = strict
     switch string.last {
@@ -311,7 +328,7 @@ public struct JSONPathParser {
     return str
   }
   
-  public mutating func memberName() throws -> String {
+  private mutating func memberName() throws -> String {
     guard let ch = self.ch else {
       throw Error.expectedMemberName(nil)
     }
@@ -338,11 +355,11 @@ public struct JSONPathParser {
     return member
   }
   
-  public mutating func functionName() throws -> String {
+  private mutating func functionName() throws -> String {
     return try self.memberName()
   }
   
-  public mutating func expression() throws -> JSONPath.Expression {
+  private mutating func expression() throws -> JSONPath.Expression {
     var exprs: [JSONPath.Expression] = []
     var opers: [JSONPath.BinaryOperator] = []
     func reduce() throws {
@@ -426,7 +443,7 @@ public struct JSONPathParser {
     return exprs.removeLast()
   }
   
-  public mutating func operand() throws -> JSONPath.Expression {
+  private mutating func operand() throws -> JSONPath.Expression {
     switch self.ch {
       case "!":
         self.nextSkipSpaces()
@@ -447,7 +464,7 @@ public struct JSONPathParser {
     }
   }
   
-  public mutating func atomic() throws -> JSONPath.Expression {
+  private mutating func atomic() throws -> JSONPath.Expression {
     switch self.ch {
       case "'", "\"":
         return .string(try self.string())
@@ -498,7 +515,7 @@ public struct JSONPathParser {
     }
   }
   
-  public mutating func selector() throws -> JSONPath.Selector {
+  private mutating func selector() throws -> JSONPath.Selector {
     guard let ch = self.ch else {
       throw Error.invalidSelectorCharacter(nil)
     }
@@ -535,7 +552,7 @@ public struct JSONPathParser {
     }
   }
   
-  public mutating func segment() throws -> [JSONPath.Selector] {
+  private mutating func segment() throws -> [JSONPath.Selector] {
     switch self.ch {
       case .none:
         throw Error.invalidSegmentCharacter(self.ch)
@@ -567,7 +584,7 @@ public struct JSONPathParser {
     }
   }
   
-  public mutating func childSegment() throws -> [JSONPath.Selector] {
+  private mutating func childSegment() throws -> [JSONPath.Selector] {
     switch self.ch {
       case .none:
         throw Error.invalidSegmentCharacter(self.ch)
@@ -579,7 +596,7 @@ public struct JSONPathParser {
     }
   }
   
-  public mutating func relativePath(to root: JSONPath) throws -> JSONPath {
+  private mutating func relativePath(to root: JSONPath) throws -> JSONPath {
     var path = root
     while let ch = self.skipSpaces() {
       switch ch {
@@ -599,7 +616,7 @@ public struct JSONPathParser {
     return path
   }
   
-  public mutating func absolutePath() throws -> JSONPath {
+  private mutating func absolutePath() throws -> JSONPath {
     switch self.ch {
       case "$":
         self.next()
@@ -612,6 +629,8 @@ public struct JSONPathParser {
     }
   }
   
+  /// Parses the string provided in the initializer. Parameter `ignoreRemaining` determines
+  /// if trailing whitespace yields an error in strict mode or not.
   public mutating func parse(ignoreRemaining: Bool = false) throws -> JSONPath {
     if !self.strict {
       self.skipSpaces()

@@ -20,10 +20,20 @@
 
 import Foundation
 
+///
+/// `JSONPathEvaluator` implements an evaulator of JSONPath queries given
+/// a root JSON document. Evaluators are parameterized with `JSONPathEnvironment`
+/// objects which define the functions supported in filter expressions.
+///
 public struct JSONPathEvaluator {
+  
+  /// The JSON document for which queries can be evaluated.
   let root: JSON
+  
+  /// The environment defining functions which can be used in filter expressions.
   let env: JSONPathEnvironment
   
+  /// Collection of errors raised by functionality provided by `JSONPathEvaluator`.
   public enum Error: LocalizedError, CustomStringConvertible {
     case booleanNotCoercableToBool
     case doesNotEvaluateToJSON(JSONPath.Expression)
@@ -88,12 +98,14 @@ public struct JSONPathEvaluator {
     }
   }
   
+  /// Representation of functions available in JSONPath filter expressions.
   public struct Function {
-    let argtypes: [ValueType]
-    let restype: ValueType
-    let impl: (JSON, JSON, [Value]) throws -> Value
+    public let argtypes: [ValueType]
+    public let restype: ValueType
+    public let impl: (JSON, JSON, [Value]) throws -> Value
   }
   
+  /// Types of values as defined by JSONPath
   public enum ValueType: Hashable, CustomStringConvertible {
     case logicalType
     case jsonType
@@ -111,12 +123,13 @@ public struct JSONPathEvaluator {
     }
   }
   
+  /// Values used for evaluating JSONPath filter expressions.
   public enum Value: Hashable, CustomStringConvertible {
     case logical(Bool)
     case json(JSON?)
     case nodes([JSON])
     
-    init(_ bool: Bool, type: ValueType) throws {
+    public init(_ bool: Bool, type: ValueType) throws {
       switch type {
         case .logicalType:
           self = .logical(bool)
@@ -163,16 +176,21 @@ public struct JSONPathEvaluator {
     }
   }
   
+  /// Initializer creating an evaluator object for querying JSON document `value`.
+  /// Queries executed using this evaluator can refer to the JSONPath filter expression
+  /// functions provided by the environment `env`. An evaluator object can be reused
+  /// for executing many queries.
   public init(value: JSON, env: JSONPathEnvironment? = nil) {
     self.root = value
     self.env = env ?? JSONPathEnvironment()
   }
   
+  /// Executes `query` using this evaluator returning an array of results.
   public func query(_ query: JSONPath) throws -> [JSON] {
     return try self.query(current: self.root, with: query)
   }
   
-  public func query(current: JSON, with query: JSONPath) throws -> [JSON] {
+  private func query(current: JSON, with query: JSONPath) throws -> [JSON] {
     switch query {
       case .self:
         return [self.root]
@@ -185,7 +203,7 @@ public struct JSONPathEvaluator {
     }
   }
   
-  public func select(_ segment: JSONPath.Segment, from value: JSON) throws -> [JSON] {
+  private func select(_ segment: JSONPath.Segment, from value: JSON) throws -> [JSON] {
     switch segment {
       case .children(let selectors):
         return try selectors.flatMap { selector in
@@ -202,7 +220,7 @@ public struct JSONPathEvaluator {
     }
   }
   
-  public func select(_ selector: JSONPath.Selector, from value: JSON) throws -> [JSON] {
+  private func select(_ selector: JSONPath.Selector, from value: JSON) throws -> [JSON] {
     switch selector {
       case .wildcard:
         switch value {
@@ -297,9 +315,9 @@ public struct JSONPathEvaluator {
     }
   }
   
-  public func evaluate(lhs: JSONPath.Expression,
-                       rhs: JSONPath.Expression,
-                       for value: JSON) throws -> (JSON?, JSON?) {
+  private func evaluate(lhs: JSONPath.Expression,
+                        rhs: JSONPath.Expression,
+                        for value: JSON) throws -> (JSON?, JSON?) {
     guard case .some(.json(let l)) = try? self.evaluate(lhs, for: value, expecting: .jsonType) else {
       throw Error.doesNotEvaluateToJSON(lhs)
     }
@@ -316,9 +334,9 @@ public struct JSONPathEvaluator {
     }
   }
   
-  public func evaluate(_ expr: JSONPath.Expression,
-                       for value: JSON,
-                       expecting type: ValueType) throws -> Value {
+  private func evaluate(_ expr: JSONPath.Expression,
+                        for value: JSON,
+                        expecting type: ValueType) throws -> Value {
     switch expr {
       case .null:
         return .json(.null)
