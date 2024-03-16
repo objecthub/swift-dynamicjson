@@ -23,6 +23,46 @@ import XCTest
 
 class DynamicJSONTests: XCTestCase {
 
+  struct Person: Codable {
+    let name: String
+    let age: Int
+    let children: [Person]
+  }
+  
+  func testConversion() throws {
+    let person = Person(name: "John", age: 34, children: [Person(name: "Sofia", age: 5, children: [])])
+    let json2 = try JSON(encodable: person)
+    print(json2)
+  }
+  
+  func testInitializers() throws {
+    let json0: JSON = [
+      "foo": true,
+      "bar": 123,
+      "str": "one two",
+      "object": [
+        "value": nil,
+        "arr": [1, 2, 3],
+        "obj": [ "x" : 17.6 ]
+      ]
+    ]
+    let json1 = try JSON(encoded:
+      """
+      {
+        "foo": true,
+        "bar": 123,
+        "str": "one two",
+        "object": {
+          "value": null,
+          "arr": [1, 2, 3],
+          "obj": { "x" : 17.6 }
+        }
+      }
+      """
+    )
+    XCTAssertEqual(json0, json1)
+  }
+  
   func testKeyPath() {
     let json: JSON = [
         "string": "one two",
