@@ -5,11 +5,11 @@
 _DynamicJSON_ is a framework for representing, querying, and manipulating generic JSON values. The framework provides:
 
    - A generic representation of JSON values as defined by [RFC 8259](https://datatracker.ietf.org/doc/html/rfc8259/).
-   - A natural embedding of functionality for creating and manipulating JSON values into the Swift programming language, including support for reading and writing JSON data and for converting typed and untyped JSO representations.
+   - A natural embedding of functionality for creating and manipulating JSON values into the Swift programming language, including support for reading and writing JSON data and for converting typed and untyped JSON representations.
    - An implementation of _JSON Pointer_ as defined by [RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901/) for locating values within a JSON document.
    - An implementation of _JSON Path_ as defined by [RFC 9535](https://datatracker.ietf.org/doc/html/rfc9535/) for querying JSON data.
 
-## Generic Representation of JSON Data
+## Representation of JSON Data
 
 All JSON values in framework _DynamicJSON_ are represented with enumeration [`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSON.swift).
 Enumeration `JSON` defines the following cases:
@@ -51,8 +51,7 @@ enumeration. The following code initializes a JSON value from a JSON encoded val
 literal.
 
 ```swift
-let json1 = try JSON(encoded:
-  """
+let json1 = try JSON(encoded: """
   {
     "foo": true,
     "str": "one two",
@@ -62,8 +61,7 @@ let json1 = try JSON(encoded:
       "obj": { "x" : 17.6 }
     }
   }
-  """
-)
+""")
 ```
 
 Any encodable type can be converted into a JSON value using the initializer `init(encodable:)`.
@@ -99,7 +97,25 @@ Executing this code will print the following JSON-based representation of `Perso
 }
 ```
 
+## Accessing JSON Values
 
+JSON values can be accessed using dynamic member lookup as if the data was typed.
+Here are several examples showcasing the different ways how to access the first
+element of array `arr` in `object` of `json1`. All expressions return the JSON
+value 1.
+
+   - **Dynamic member lookup:** `json1.object?.arr?[0]`
+   - **Keypath lookup:** `json1[keyPath: \.object?.arr?[0]]`
+   - **Subscript lookup:** `json1["object"]?["arr"]?[0]`
+   - **Subscript lookup:** `json1[location: "\]?["arr"]?[0]`
+   - **Reference lookup:**
+      - Using JSON Pointer string: `try json1[ref: "/object/arr/0"]`
+      - Using JSON Path string: `try json1[ref: "$.object.arr[0]"]`
+      - Using `JSONPointer` or `JSONPath` object `p`: `json1[ref: p]`
+
+## Access with JSON Pointer
+
+## Queries with JSON Path
 
 ## Requirements
 

@@ -46,8 +46,7 @@ class DynamicJSONTests: XCTestCase {
         "obj": [ "x" : 17.6 ]
       ]
     ]
-    let json1 = try JSON(encoded:
-      """
+    let json1 = try JSON(encoded: """
       {
         "foo": true,
         "bar": 123,
@@ -58,9 +57,13 @@ class DynamicJSONTests: XCTestCase {
           "obj": { "x" : 17.6 }
         }
       }
-      """
-    )
+    """)
     XCTAssertEqual(json0, json1)
+    XCTAssertEqual(json1.object?.arr?[0], 1)
+    XCTAssertEqual(json1[keyPath: \.object?.arr?[0]], 1)
+    XCTAssertEqual(json1["object"]?["arr"]?[0], 1)
+    XCTAssertEqual(try json1[ref: "/object/arr/0"], 1)
+    XCTAssertEqual(try json1[ref: "$.object.arr[0]"], 1)
   }
   
   func testKeyPath() {
@@ -78,13 +81,13 @@ class DynamicJSONTests: XCTestCase {
             ]
         ]
     ]
-    XCTAssertEqual(try json[keyPath: "string"], "one two")
-    XCTAssertEqual(try json[keyPath: "boolean"], true)
-    XCTAssertEqual(try json[keyPath: "number"], 123)
-    XCTAssertEqual(try json[keyPath: "object.str"], "col")
-    XCTAssertEqual(try json[keyPath: "object.arr"], [1, 2, 3])
-    XCTAssertEqual(try json[keyPath: "object.obj.y"], "tar")
-    XCTAssertEqual(try json[keyPath: "object.obj.z[1]"], "one")
+    XCTAssertEqual(try json[ref: "string"], "one two")
+    XCTAssertEqual(try json[ref: "boolean"], true)
+    XCTAssertEqual(try json[ref: "number"], 123)
+    XCTAssertEqual(try json[ref: "object.str"], "col")
+    XCTAssertEqual(try json[ref: "object.arr"], [1, 2, 3])
+    XCTAssertEqual(try json[ref: "object.obj.y"], "tar")
+    XCTAssertEqual(try json[ref: "object.obj.z[1]"], "one")
   }
   
   func testKeyPath2() throws {

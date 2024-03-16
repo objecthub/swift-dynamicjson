@@ -453,13 +453,13 @@ public enum JSON: Hashable,
   /// Returns the JSON value referenced via the JSON reference `ref`. Supported JSON
   /// reference implementations are `JSONLocation` (singular JSON path queries) and
   /// `JSONPointer`, and every third party implementation of the `JSONReference` protocol.
-  public subscript(keyPath ref: JSONReference) -> JSON? {
+  public subscript(ref ref: JSONReference) -> JSON? {
     return ref.get(from: self)
   }
   
   /// Returns the JSON value referenced via the JSON reference string `ref`. Both,
   /// JSON path syntax as well as JSON pointer syntax are supported.
-  public subscript(keyPath ref: String) -> JSON? {
+  public subscript(ref ref: String) -> JSON? {
     get throws {
       return try JSON.reference(from: ref).get(from: self)
     }
