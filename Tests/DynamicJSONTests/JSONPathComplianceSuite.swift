@@ -35,4 +35,44 @@ final class JSONPathComplianceSuite: JSONPathTestCase {
   func testFilter() {
     self.execute(suite: "filter")
   }
+  
+  func testWhitespaceFilter() {
+    self.execute(suite: "ws_filter")
+  }
+  
+  func testWhitespaceOperators() {
+    self.execute(suite: "ws_operators")
+  }
+  
+  func testWhitespaceSelectors() {
+    self.execute(suite: "ws_selectors")
+  }
+  
+  func testWhitespaceSlice() {
+    self.execute(suite: "ws_slice")
+  }
+  
+  func testWhitespaceFunctions() {
+    self.execute(suite: "ws_functions")
+  }
+  
+  func testFunctionSearch() {
+    self.execute(suite: "fn_search")
+  }
+  
+  func testFunctionValue() {
+    self.execute(suite: "fn_value")
+  }
+  
+  func testFunctionMatch() {
+    self.execute(suite: "fn_match")
+  }
+  
+  func testFunctionLength() {
+    self.execute(suite: "fn_length")
+  }
+  
+  func testFunctionCount() {
+    self.execute(suite: "fn_count")
+  }
 }

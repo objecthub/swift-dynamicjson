@@ -15,16 +15,19 @@
     {
       "name": "too few params",
       "selector" : "$[?value()==4]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "too many params",
       "selector" : "$[?value(@.a,@.b)==4]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "result must be compared",
       "selector" : "$[?value(@.a)]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     }
   ]

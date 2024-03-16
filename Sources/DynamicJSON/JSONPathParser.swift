@@ -169,9 +169,31 @@ public struct JSONPathParser {
   }
   
   @discardableResult
+  private mutating func skipSpacesIfNonStrict() -> Character? {
+    guard !self.strict else {
+      return self.ch
+    }
+    while let ch = self.ch {
+      switch ch {
+        case " ", "\t", "\n", "\r":
+          self.next()
+        default:
+          return ch
+      }
+    }
+    return nil
+  }
+  
+  @discardableResult
   private mutating func nextSkipSpaces() -> Character? {
     self.next()
     return self.skipSpaces()
+  }
+  
+  @discardableResult
+  private mutating func nextSkipSpacesIfNonStrict() -> Character? {
+    self.next()
+    return self.skipSpacesIfNonStrict()
   }
   
   private mutating func accept(_ ch: Character) throws {
@@ -497,7 +519,7 @@ public struct JSONPathParser {
           case "false":
             return .false
           default:
-            if let ch = self.skipSpaces(), ch == "(" {
+            if let ch = self.skipSpacesIfNonStrict(), ch == "(" {
               var arguments: [JSONPath.Expression] = []
               if let ch = self.nextSkipSpaces(), ch != ")" {
                 arguments.append(try self.expression())
@@ -601,8 +623,8 @@ public struct JSONPathParser {
     while let ch = self.skipSpaces() {
       switch ch {
         case ".":
-          if self.nextSkipSpaces() == "." {
-            self.nextSkipSpaces()
+          if self.nextSkipSpacesIfNonStrict() == "." {
+            self.nextSkipSpacesIfNonStrict()
             path = .select(path, .descendants(try self.segment()))
           } else {
             path = .select(path, .children(try self.childSegment()))

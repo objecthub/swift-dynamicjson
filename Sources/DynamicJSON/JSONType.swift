@@ -52,7 +52,7 @@ public struct JSONType: OptionSet,
   /// Initialize a new basic JSON type with the given name.
   public init(rawValue: UInt, name: String) {
     self.rawValue = rawValue
-    self.name = nil
+    self.name = name
   }
   
   /// The JSON null type.
@@ -95,8 +95,7 @@ public struct JSONType: OptionSet,
       case 2:
         return "\(res[0]) or \(res[1])"
       default:
-        let last = res.dropLast()
-        return "\(res.joined(separator: ", ")) or \(last)"
+        return "\(res.dropLast().joined(separator: ", ")) or \(res.last!)"
     }
   }
   

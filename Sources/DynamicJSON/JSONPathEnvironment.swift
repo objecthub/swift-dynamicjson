@@ -61,7 +61,8 @@ open class JSONPathEnvironment {
           default:
             return .json(nil)
         }
-      })
+      }
+    )
     self.functions["count"] = JSONPathEvaluator.Function(
       argtypes: [.nodesType],
       restype: .jsonType,
@@ -70,37 +71,52 @@ open class JSONPathEnvironment {
           case .nodes(let nodes):
             return .json(.integer(Int64(nodes.count)))
           default:
-            return .json(nil)
+            throw JSONPathEvaluator.Error.typeMismatch("count", .nodesType, args[0])
         }
-      })
+      }
+    )
     self.functions["match"] = JSONPathEvaluator.Function(
       argtypes: [.jsonType, .jsonType],
       restype: .logicalType,
       impl: { root, current, args throws in
         guard case .json(.string(let str)) = args[0] else {
-          throw JSONPathEvaluator.Error.jsonTypeMismatch("match", .string, args[0])
+          guard case .json(_) = args[0] else {
+            throw JSONPathEvaluator.Error.jsonTypeMismatch("match", .string, args[0])
+          }
+          return .logical(false)
         }
         guard case .json(.string(let pattern)) = args[1] else {
-          throw JSONPathEvaluator.Error.jsonTypeMismatch("match", .string, args[1])
+          guard case .json(_) = args[1] else {
+            throw JSONPathEvaluator.Error.jsonTypeMismatch("match", .string, args[1])
+          }
+          return .logical(false)
         }
         let regex = try NSRegularExpression(pattern: pattern + "$")
         let range = NSRange(location: 0, length: str.utf16.count)
         return .logical(regex.firstMatch(in: str, options: [.anchored], range: range) != nil)
-      })
+      }
+    )
     self.functions["search"] = JSONPathEvaluator.Function(
       argtypes: [.jsonType, .jsonType],
       restype: .logicalType,
       impl: { root, current, args throws in
         guard case .json(.string(let str)) = args[0] else {
-          throw JSONPathEvaluator.Error.jsonTypeMismatch("search", .string, args[0])
+          guard case .json(_) = args[0] else {
+            throw JSONPathEvaluator.Error.jsonTypeMismatch("search", .string, args[0])
+          }
+          return .logical(false)
         }
         guard case .json(.string(let pattern)) = args[1] else {
-          throw JSONPathEvaluator.Error.jsonTypeMismatch("search", .string, args[1])
+          guard case .json(_) = args[1] else {
+            throw JSONPathEvaluator.Error.jsonTypeMismatch("search", .string, args[1])
+          }
+          return .logical(false)
         }
         let regex = try NSRegularExpression(pattern: pattern)
         let range = NSRange(location: 0, length: str.utf16.count)
         return .logical(regex.firstMatch(in: str, options: [], range: range) != nil)
-      })
+      }
+    )
     self.functions["value"] = JSONPathEvaluator.Function(
       argtypes: [.nodesType],
       restype: .jsonType,
@@ -111,7 +127,8 @@ open class JSONPathEnvironment {
           default:
             return .json(nil)
         }
-      })
+      }
+    )
     self.functions["values"] = JSONPathEvaluator.Function(
       argtypes: [.nodesType],
       restype: .jsonType,
@@ -122,7 +139,8 @@ open class JSONPathEnvironment {
           default:
             return .json(nil)
         }
-      })
+      }
+    )
     self.functions["subset"] = JSONPathEvaluator.Function(
       argtypes: [.jsonType, .jsonType],
       restype: .logicalType,
@@ -137,7 +155,8 @@ open class JSONPathEnvironment {
           return .logical(false)
         }
         return .logical(true)
-      })
+      }
+    )
     self.functions["contains"] = JSONPathEvaluator.Function(
       argtypes: [.jsonType, .jsonType],
       restype: .logicalType,
@@ -149,7 +168,8 @@ open class JSONPathEnvironment {
           throw JSONPathEvaluator.Error.jsonTypeMismatch("contains", .array, args[1])
         }
         return .logical(full.contains(elem))
-      })
+      }
+    )
   }
   
   /// Looks up variable of name `ident`.

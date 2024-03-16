@@ -33,6 +33,9 @@ public struct JSONPathEvaluator {
   /// The environment defining functions which can be used in filter expressions.
   let env: JSONPathEnvironment
   
+  /// Execute in strict mode?
+  let strict: Bool
+  
   /// Collection of errors raised by functionality provided by `JSONPathEvaluator`.
   public enum Error: LocalizedError, CustomStringConvertible {
     case booleanNotCoercableToBool
@@ -44,6 +47,7 @@ public struct JSONPathEvaluator {
     case unknownVariable(String)
     case unknownFunction(String)
     case numberOfArgumentsMismatch(JSONPath.Expression)
+    case filterExprNotLogical(JSONPath.Expression)
     case typeMismatch(String, ValueType, Value)
     case jsonTypeMismatch(String, JSONType, Value)
     
@@ -68,9 +72,11 @@ public struct JSONPathEvaluator {
         case .numberOfArgumentsMismatch(let expr):
           return "mismatch of number of arguments in expression \(expr)"
         case .typeMismatch(let fun, let type, let val):
-          return "expected value of type \(type) in function '\(fun), but received \(val)"
+          return "expected value of type \(type) in function '\(fun)', but received \(val)"
         case .jsonTypeMismatch(let fun, let type, let val):
-          return "expected JSON value of type \(type) in function '\(fun), but received \(val)"
+          return "expected JSON value of type \(type) in function '\(fun)', but received \(val)"
+        case .filterExprNotLogical(let expr):
+          return "\(expr) does not evaluate to a logical value"
       }
     }
     
@@ -86,7 +92,8 @@ public struct JSONPathEvaluator {
              .expectedType(_, _),
              .mismatchOfOperandTypes(_),
              .typeMismatch(_, _, _),
-             .jsonTypeMismatch(_, _, _):
+             .jsonTypeMismatch(_, _, _),
+             .filterExprNotLogical(_):
           return "type mismatch"
         case .divisionByZero(_):
           return "division by zero"
@@ -180,9 +187,10 @@ public struct JSONPathEvaluator {
   /// Queries executed using this evaluator can refer to the JSONPath filter expression
   /// functions provided by the environment `env`. An evaluator object can be reused
   /// for executing many queries.
-  public init(value: JSON, env: JSONPathEnvironment? = nil) {
+  public init(value: JSON, env: JSONPathEnvironment? = nil, strict: Bool = true) {
     self.root = value
     self.env = env ?? JSONPathEnvironment()
+    self.strict = strict
   }
   
   /// Executes `query` using this evaluator returning an array of results.
@@ -296,16 +304,30 @@ public struct JSONPathEvaluator {
           case .array(let arr):
             var res: [JSON] = []
             for child in arr {
-              if try self.evaluate(expr, for: child, expecting: .logicalType).isTrue  {
-                res.append(child)
+              switch try self.evaluate(expr, for: child, expecting: .logicalType) {
+                case .logical(let bool):
+                  if bool {
+                    res.append(child)
+                  }
+                case .json(_), .nodes(_):
+                  if self.strict {
+                    throw Error.filterExprNotLogical(expr)
+                  }
               }
             }
             return res
           case .object(let dict):
             var res: [JSON] = []
             for child in dict.values {
-              if try self.evaluate(expr, for: child, expecting: .logicalType).isTrue {
-                res.append(child)
+              switch try self.evaluate(expr, for: child, expecting: .logicalType) {
+                case .logical(let bool):
+                  if bool {
+                    res.append(child)
+                  }
+                case .json(_), .nodes(_):
+                  if self.strict {
+                    throw Error.filterExprNotLogical(expr)
+                  }
               }
             }
             return res

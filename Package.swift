@@ -65,7 +65,26 @@ let package = Package(
       name: "DynamicJSONTests",
       dependencies: [
         .target(name: "DynamicJSON")
-      ]),
+      ],
+      exclude: [
+        "ComplianceTests/JSONPath/NOTICE.txt",
+        "ComplianceTests/JSONPath/LICENSE.txt",
+        "ComplianceTests/JSONPath/basic.json",
+        "ComplianceTests/JSONPath/filter.json",
+        "ComplianceTests/JSONPath/fn_count.json",
+        "ComplianceTests/JSONPath/fn_length.json",
+        "ComplianceTests/JSONPath/fn_match.json",
+        "ComplianceTests/JSONPath/fn_search.json",
+        "ComplianceTests/JSONPath/fn_value.json",
+        "ComplianceTests/JSONPath/index_selector.json",
+        "ComplianceTests/JSONPath/name_selector.json",
+        "ComplianceTests/JSONPath/slice_selector.json",
+        "ComplianceTests/JSONPath/ws_filter.json",
+        "ComplianceTests/JSONPath/ws_functions.json",
+        "ComplianceTests/JSONPath/ws_operators.json",
+        "ComplianceTests/JSONPath/ws_selectors.json",
+        "ComplianceTests/JSONPath/ws_slice.json"
+      ])
   ],
   
   // Required Swift language version.

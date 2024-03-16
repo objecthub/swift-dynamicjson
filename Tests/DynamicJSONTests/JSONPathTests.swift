@@ -34,7 +34,7 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNil(parse("$ ", strict: true))
     XCTAssertEqual(parse("$.foo"), .children(.self, .member("foo")))
     XCTAssertEqual(parse("$ .foo"), .children(.self, .member("foo")))
-    XCTAssertEqual(parse("$ .foo. bar"),
+    XCTAssertEqual(parse("$ .foo. bar", strict: false),
                    .children(.children(.self, .member("foo")), .member("bar")))
     XCTAssertEqual(parse("$[0]"), .children(.self, .index(0)))
     XCTAssertEqual(parse("$[ 1 ]"), .children(.self, .index(1)))
@@ -42,7 +42,9 @@ final class JSONPathTests: XCTestCase {
     XCTAssertEqual(parse("$[0][12]"), .children(.children(.self, .index(0)), .index(12)))
     XCTAssertEqual(parse("$[0].foo[12]"),
                    .children(.children(.children(.self, .index(0)), .member("foo")), .index(12)))
-    XCTAssertEqual(parse("$ [ 0 ]  .  foo [ 12 ]"),
+    XCTAssertEqual(parse("$[ 0 ] .foo[ 12 ]"),
+                   .children(.children(.children(.self, .index(0)), .member("foo")), .index(12)))
+    XCTAssertEqual(parse("$ [0]  .  foo [12]", strict: false),
                    .children(.children(.children(.self, .index(0)), .member("foo")), .index(12)))
     XCTAssertEqual(parse("$.foo[0][12].b[3]"),
                    .children(.children(.children(.children(.children(.self, .member("foo")),
@@ -60,14 +62,18 @@ final class JSONPathTests: XCTestCase {
   func testDescendantsPaths() {
     XCTAssertEqual(parse("$..foo"), .descendants(.self, .member("foo")))
     XCTAssertEqual(parse("$ ..foo"), .descendants(.self, .member("foo")))
-    XCTAssertEqual(parse("$ ..foo.. bar"),
+    XCTAssertEqual(parse("$ ..foo.. bar", strict: false),
+                   .descendants(.descendants(.self, .member("foo")), .member("bar")))
+    XCTAssertEqual(parse("$..foo..bar"),
                    .descendants(.descendants(.self, .member("foo")), .member("bar")))
     XCTAssertEqual(parse("$..[0]"), .descendants(.self, .index(0)))
     XCTAssertEqual(parse("$  ..[23]"), .descendants(.self, .index(23)))
     XCTAssertEqual(parse("$[0]..[12]"), .descendants(.children(.self, .index(0)), .index(12)))
-    XCTAssertEqual(parse("$[0]..  foo[12]"),
+    XCTAssertEqual(parse("$[0]..  foo[12]", strict: false),
                    .children(.descendants(.children(.self, .index(0)), .member("foo")), .index(12)))
-    XCTAssertEqual(parse("$ [ 0 ]  ..  foo..[1]"),
+    XCTAssertEqual(parse("$[0]..foo[ 12 ]"),
+                   .children(.descendants(.children(.self, .index(0)), .member("foo")), .index(12)))
+    XCTAssertEqual(parse("$ [ 0 ]  ..foo..[1]", strict: false),
                    .descendants(.descendants(.children(.self, .index(0)), .member("foo")), .index(1)))
     XCTAssertEqual(parse("$..foo[0][12]..b[3]"),
                    .children(.descendants(.children(.children(
@@ -175,8 +181,8 @@ final class JSONPathTests: XCTestCase {
     XCTAssertEqual(parse("$[? @.id==42]"),
                    .children(.self, .filter(.operation(.singularQuery(
                     .children(.current, .member("id"))), .equals, .integer(42)))))
-    XCTAssertEqual(parse("$[? function ()]"), .children(.self, .filter(.call("function", []))))
-    XCTAssertEqual(parse("$[? fun()+FUN(1.2)* f (3, 4) - g(1,2,3)]"),
+    XCTAssertEqual(parse("$[? function ()]", strict: false), .children(.self, .filter(.call("function", []))))
+    XCTAssertEqual(parse("$[? fun()+FUN(1.2)* f (3, 4) - g(1,2,3)]", strict: false),
                    .children(.self, .filter(
                     .operation(.operation(.call("fun", []), .plus,
                       .operation(.call("FUN", [.float(1.2)]), .mult,
@@ -311,7 +317,8 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNil(parse("$.'key'"))
     XCTAssertNil(parse("$..'key'"))
     XCTAssertNil(parse("$.'some.key'"))
-    XCTAssertNotNil(parse("$. a"))
+    XCTAssertNotNil(parse("$. a", strict: false))
+    XCTAssertNil(parse("$. a"))
     XCTAssertNotNil(parse("$.*"))
     XCTAssertNotNil(parse("$.*"))
     XCTAssertNotNil(parse("$.*"))

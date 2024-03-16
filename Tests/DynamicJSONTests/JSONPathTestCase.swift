@@ -30,11 +30,18 @@ class JSONPathTestCase: XCTestCase {
   
   public func loadComplianceTests(from filename: String) throws -> JSONPathComplianceTests {
     let bundle = Bundle(for: type(of: self))
-    guard let url = bundle.url(forResource: filename, withExtension: "json") else {
-      throw JSONPathTestError.testSuiteNotFound
+    if let url = bundle.url(forResource: filename, withExtension: "json") {
+      let data = try Data(contentsOf: url)
+      return try JSONDecoder().decode(JSONPathComplianceTests.self, from: data)
+    } else {
+      let url = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONPath/\(filename).json")
+      if FileManager.default.fileExists(atPath: url.path) {
+        let data = try Data(contentsOf: url)
+        return try JSONDecoder().decode(JSONPathComplianceTests.self, from: data)
+      } else {
+        throw JSONPathTestError.testSuiteNotFound
+      }
     }
-    let data = try Data(contentsOf: url)
-    return try JSONDecoder().decode(JSONPathComplianceTests.self, from: data)
   }
   
   private func parse(_ str: String) -> JSONPath? {
@@ -52,8 +59,13 @@ class JSONPathTestCase: XCTestCase {
         if test.ignore ?? false {
           // Don't do anything
         } else if test.invalid_selector ?? false {
-          var parser = JSONPathParser(string: test.selector)
-          XCTAssertThrowsError(try parser.parse(), "🛑 \(name)/\(test.name) did not fail")
+          if let document = test.document {
+            XCTAssertThrowsError(try document.query(test.selector),
+                                 "🛑 \(name)/\(test.name) did not fail")
+          } else {
+            var parser = JSONPathParser(string: test.selector)
+            XCTAssertThrowsError(try parser.parse(), "🛑 \(name)/\(test.name) did not fail")
+          }
         } else if let document = test.document,
                   case .some(.array(let res)) = test.result {
           let result = Set(res)

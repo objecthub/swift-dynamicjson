@@ -55,21 +55,25 @@
     {
       "name": "result must be compared",
       "selector" : "$[?length(@.a)]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "no params",
       "selector" : "$[?length()==1]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "too many params",
       "selector" : "$[?length(@.a,@.b)==1]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "non-singular query arg",
       "selector": "$[?length(@.*)<3]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {

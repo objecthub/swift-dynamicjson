@@ -100,41 +100,49 @@
     {
       "name": "non-query arg, number",
       "selector": "$[?count(1)>2]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "non-query arg, string",
       "selector": "$[?count('string')>2]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "non-query arg, true",
       "selector": "$[?count(true)>2]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "non-query arg, false",
       "selector": "$[?count(false)>2]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "non-query arg, null",
       "selector": "$[?count(null)>2]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "result must be compared",
       "selector": "$[?count(@..*)]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "no params",
       "selector": "$[?count()==1]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "too many params",
       "selector": "$[?count(@.a,@.b)==1]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     }
   ]

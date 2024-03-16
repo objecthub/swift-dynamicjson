@@ -89,16 +89,19 @@
     {
       "name": "result cannot be compared",
       "selector" : "$[?search(@.a, 'a.*')==true]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "too few params",
       "selector" : "$[?search(@.a)]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "too many params",
       "selector" : "$[?search(@.a,@.b,@.c)]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {

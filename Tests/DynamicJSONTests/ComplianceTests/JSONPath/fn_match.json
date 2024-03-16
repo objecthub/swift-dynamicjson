@@ -19,7 +19,10 @@
     {
       "name": "regex from the document",
       "selector" : "$.values[?match(@, $.regex)]",
-      "document" : {"regex": "b.?b", "values": ["abc", "bcd", "bab", "bba", "bbab", "b", true, [], {}]},
+      "document" : {
+        "regex": "b.?b",
+        "values": [ "abc", "bcd", "bab", "bba", "bbab", "b", true, [], {} ]
+      },
       "result": ["bab"]
     },
     {
@@ -74,16 +77,19 @@
     {
       "name": "result cannot be compared",
       "selector" : "$[?match(@.a, 'a.*')==true]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "too few params",
       "selector" : "$[?match(@.a)==1]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
       "name": "too many params",
       "selector" : "$[?match(@.a,@.b,@.c)==1]",
+      "document": [ { "a" : 1, "b" : 2 } ],
       "invalid_selector": true
     },
     {
