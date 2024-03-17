@@ -27,6 +27,7 @@ extension Encodable {
   var jsonValue: JSON? {
     return try? JSON(encodable: self)
   }
+  
 }
 
 extension Decodable {
@@ -39,4 +40,41 @@ extension Decodable {
       return nil
     }
   }
+  
+}
+
+extension Array<LocatedJSON> {
+  
+  public var values: [JSON] {
+    return self.map { res in res.value }
+  }
+  
+  public var locations: [JSONLocation] {
+    return self.map { res in res.location }
+  }
+  
+}
+
+extension Array<JSON> {
+  
+  public func located(at location: JSONLocation) -> [LocatedJSON] {
+    var res: [LocatedJSON] = []
+    for i in self.indices {
+      res.append(LocatedJSON(self[i], .index(location, i)))
+    }
+    return res
+  }
+  
+}
+
+extension Dictionary<String, JSON> {
+  
+  public func located(at location: JSONLocation) -> [LocatedJSON] {
+    var res: [LocatedJSON] = []
+    for (key, val) in self {
+      res.append(LocatedJSON(val, .member(location, key)))
+    }
+    return res
+  }
+  
 }

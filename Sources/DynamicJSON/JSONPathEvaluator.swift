@@ -194,32 +194,33 @@ public struct JSONPathEvaluator {
   }
   
   /// Executes `query` using this evaluator returning an array of results.
-  public func query(_ query: JSONPath) throws -> [JSON] {
-    return try self.query(current: self.root, with: query)
+  public func query(_ query: JSONPath) throws -> [LocatedJSON] {
+    return try self.query(current: .root(self.root), with: query)
   }
   
-  private func query(current: JSON, with query: JSONPath) throws -> [JSON] {
+  private func query(current: LocatedJSON, with query: JSONPath) throws -> [LocatedJSON] {
     switch query {
       case .self:
-        return [self.root]
+        return [.root(self.root)]
       case .current:
         return [current]
       case .select(let path, let segment):
-        return try self.query(current: current, with: path).flatMap { value in
-          return try self.select(segment, from: value)
+        return try self.query(current: current, with: path).flatMap { result in
+          return try self.select(segment, from: result)
         }
     }
   }
   
-  private func select(_ segment: JSONPath.Segment, from value: JSON) throws -> [JSON] {
+  private func select(_ segment: JSONPath.Segment,
+                      from current: LocatedJSON) throws -> [LocatedJSON] {
     switch segment {
       case .children(let selectors):
         return try selectors.flatMap { selector in
-          return try self.select(selector, from: value)
+          return try self.select(selector, from: current)
         }
       case .descendants(let selectors):
-        var result: [JSON] = []
-        try value.forEachDescendant { json in
+        var result: [LocatedJSON] = []
+        try current.forEachDescendant { json in
           try result.append(contentsOf: selectors.flatMap { selector in
             return try self.select(selector, from: json)
           })
@@ -228,42 +229,34 @@ public struct JSONPathEvaluator {
     }
   }
   
-  private func select(_ selector: JSONPath.Selector, from value: JSON) throws -> [JSON] {
+  private func select(_ selector: JSONPath.Selector,
+                      from current: LocatedJSON) throws -> [LocatedJSON] {
     switch selector {
       case .wildcard:
-        switch value {
+        switch current.value {
           case .array(let arr):
-            return arr
+            return arr.located(at: current.location)
           case .object(let dict):
-            return [JSON](dict.values)
+            return dict.located(at: current.location)
           default:
             return []
         }
       case .member(let name):
-        switch value {
-          case .object(let dict):
-            if let result = dict[name] {
-              return [result]
-            }
-            fallthrough
-          default:
-            return []
+        if let result = current.member(name) {
+          return [result]
+        } else {
+          return []
         }
       case .index(let i):
-        switch value {
-          case .array(let arr):
-            let index = i < 0 ? arr.count + i : i
-            if arr.indices.contains(index) {
-              return [arr[index]]
-            }
-            fallthrough
-          default:
-            return []
+        if let result = current.index(i) {
+          return [result]
+        } else {
+          return []
         }
       case .slice(nil, nil, nil):
-        switch value {
+        switch current.value {
           case .array(let arr):
-            return arr
+            return arr.located(at: current.location)
           default:
             return []
         }
@@ -272,7 +265,7 @@ public struct JSONPathEvaluator {
         guard step != 0 else {
           return []
         }
-        switch value {
+        switch current.value {
           case .array(let arr):
             func normalize(_ i: Int) -> Int {
               return i >= 0 ? i : arr.count + i
@@ -281,17 +274,17 @@ public struct JSONPathEvaluator {
             let end = normalize(e ?? (step >= 0 ? arr.count : -arr.count - 1))
             let lower = step >= 0 ? min(max(start, 0), arr.count) : min(max(end, -1), arr.count - 1)
             let upper = step >= 0 ? min(max(end, 0), arr.count) : min(max(start, -1), arr.count - 1)
-            var result: [JSON] = []
+            var result: [LocatedJSON] = []
             if step > 0 {
               var i = lower
               while i < upper {
-                result.append(arr[i])
+                result.append(LocatedJSON(arr[i], .index(current.location, i)))
                 i += step
               }
             } else {
               var i = upper
               while lower < i {
-                result.append(arr[i])
+                result.append(LocatedJSON(arr[i], .index(current.location, i)))
                 i += step
               }
             }
@@ -300,14 +293,17 @@ public struct JSONPathEvaluator {
             return []
         }
       case .filter(let expr):
-        switch value {
+        switch current.value {
           case .array(let arr):
-            var res: [JSON] = []
-            for child in arr {
-              switch try self.evaluate(expr, for: child, expecting: .logicalType) {
+            var res: [LocatedJSON] = []
+            for i in arr.indices {
+              switch try self.evaluate(expr,
+                                       for: arr[i],
+                                       at: .index(current.location, i),
+                                       expecting: .logicalType) {
                 case .logical(let bool):
                   if bool {
-                    res.append(child)
+                    res.append(LocatedJSON(arr[i], .index(current.location, i)))
                   }
                 case .json(_), .nodes(_):
                   if self.strict {
@@ -317,12 +313,15 @@ public struct JSONPathEvaluator {
             }
             return res
           case .object(let dict):
-            var res: [JSON] = []
-            for child in dict.values {
-              switch try self.evaluate(expr, for: child, expecting: .logicalType) {
+            var res: [LocatedJSON] = []
+            for (key, child) in dict {
+              switch try self.evaluate(expr,
+                                       for: child,
+                                       at: .member(current.location, key),
+                                       expecting: .logicalType) {
                 case .logical(let bool):
                   if bool {
-                    res.append(child)
+                    res.append(LocatedJSON(child, .member(current.location, key)))
                   }
                 case .json(_), .nodes(_):
                   if self.strict {
@@ -339,11 +338,18 @@ public struct JSONPathEvaluator {
   
   private func evaluate(lhs: JSONPath.Expression,
                         rhs: JSONPath.Expression,
-                        for value: JSON) throws -> (JSON?, JSON?) {
-    guard case .some(.json(let l)) = try? self.evaluate(lhs, for: value, expecting: .jsonType) else {
+                        for value: JSON,
+                        at location: JSONLocation) throws -> (JSON?, JSON?) {
+    guard case .some(.json(let l)) = try? self.evaluate(lhs,
+                                                        for: value,
+                                                        at: location,
+                                                        expecting: .jsonType) else {
       throw Error.doesNotEvaluateToJSON(lhs)
     }
-    guard case .some(.json(let r)) = try? self.evaluate(rhs, for: value, expecting: .jsonType) else {
+    guard case .some(.json(let r)) = try? self.evaluate(rhs,
+                                                        for: value,
+                                                        at: location,
+                                                        expecting: .jsonType) else {
       throw Error.doesNotEvaluateToJSON(rhs)
     }
     switch (l, r) {
@@ -358,6 +364,7 @@ public struct JSONPathEvaluator {
   
   private func evaluate(_ expr: JSONPath.Expression,
                         for value: JSON,
+                        at location: JSONLocation,
                         expecting type: ValueType) throws -> Value {
     switch expr {
       case .null:
@@ -379,7 +386,7 @@ public struct JSONPathEvaluator {
           throw Error.unknownVariable(ident)
         }
       case .query(let path):
-        let nodes = try self.query(current: value, with: path)
+        let nodes = try self.query(current: LocatedJSON(value, location), with: path).values
         switch type {
           case .logicalType:
             return .logical(!nodes.isEmpty)
@@ -389,7 +396,7 @@ public struct JSONPathEvaluator {
             return .nodes(nodes)
         }
       case .singularQuery(let path):
-        let nodes = try self.query(current: value, with: path)
+        let nodes = try self.query(current: LocatedJSON(value, location), with: path).values
         switch type {
           case .logicalType:
             return .logical(!nodes.isEmpty)
@@ -408,14 +415,20 @@ public struct JSONPathEvaluator {
         var args: [Value] = []
         var i = 0
         while i < arguments.count {
-          args.append(try self.evaluate(arguments[i], for: value, expecting: function.argtypes[i]))
+          args.append(try self.evaluate(arguments[i],
+                                        for: value,
+                                        at: location,
+                                        expecting: function.argtypes[i]))
           i += 1
         }
         return try function.impl(self.root, value, args)
       case .prefix(let op, let argument):
         switch op {
           case .negate:
-            let argres = try self.evaluate(argument, for: value, expecting: .jsonType)
+            let argres = try self.evaluate(argument,
+                                           for: value,
+                                           at: location,
+                                           expecting: .jsonType)
             switch argres {
               case .json(.boolean(let bool)):
                 return .json(.boolean(!bool))
@@ -427,7 +440,10 @@ public struct JSONPathEvaluator {
                 throw Error.cannotNegate(argument)
             }
           case .not:
-            let argres = try self.evaluate(argument, for: value, expecting: .logicalType)
+            let argres = try self.evaluate(argument,
+                                           for: value,
+                                           at: location,
+                                           expecting: .logicalType)
             switch argres {
               case .logical(let bool):
                 return .logical(!bool)
@@ -438,13 +454,13 @@ public struct JSONPathEvaluator {
       case .operation(let lhs, let op, let rhs):
         switch op {
           case .equals:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             return try .init(l == r, type: type)
           case .notEquals:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             return try .init(l != r, type: type)
           case .lessThan:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (.boolean(let l), .boolean(let r)):
                 return try .init(!l && r, type: type)
@@ -458,7 +474,7 @@ public struct JSONPathEvaluator {
                 return try .init(false, type: type)
             }
           case .lessThanEquals:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (nil, nil):
                 return try .init(true, type: type)
@@ -477,7 +493,7 @@ public struct JSONPathEvaluator {
                 return try .init(false, type: type)
             }
           case .greaterThan:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (.boolean(let lb), .boolean(let rb)):
                 return try .init(!rb && lb, type: type)
@@ -491,7 +507,7 @@ public struct JSONPathEvaluator {
                 return try .init(false, type: type)
             }
           case .greaterThanEquals:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (nil, nil):
                 return try .init(true, type: type)
@@ -510,39 +526,39 @@ public struct JSONPathEvaluator {
                 return try .init(false, type: type)
             }
           case .or:
-            let l = try self.evaluate(lhs, for: value, expecting: type)
+            let l = try self.evaluate(lhs, for: value, at: location, expecting: type)
             switch l {
               case .logical(let bool):
                 guard type == .logicalType else {
                   throw Error.expectedType(type, lhs)
                 }
-                return bool ? l : try self.evaluate(rhs, for: value, expecting: type)
+                return bool ? l : try self.evaluate(rhs, for: value, at: location, expecting: type)
               case .json(.boolean(let bool)):
                 guard type == .jsonType else {
                   throw Error.expectedType(type, lhs)
                 }
-                return bool ? l : try self.evaluate(rhs, for: value, expecting: type)
+                return bool ? l : try self.evaluate(rhs, for: value, at: location, expecting: type)
               default:
                 throw Error.expectedType(type, lhs)
             }
           case .and:
-            let l = try self.evaluate(lhs, for: value, expecting: type)
+            let l = try self.evaluate(lhs, for: value, at: location, expecting: type)
             switch l {
               case .logical(let bool):
                 guard type == .logicalType else {
                   throw Error.expectedType(type, lhs)
                 }
-                return !bool ? l : try self.evaluate(rhs, for: value, expecting: type)
+                return !bool ? l : try self.evaluate(rhs, for: value, at: location, expecting: type)
               case .json(.boolean(let bool)):
                 guard type == .jsonType else {
                   throw Error.expectedType(type, lhs)
                 }
-                return !bool ? l : try self.evaluate(rhs, for: value, expecting: type)
+                return !bool ? l : try self.evaluate(rhs, for: value, at: location, expecting: type)
               default:
                 throw Error.expectedType(type, lhs)
             }
           case .plus:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (.integer(let l), .integer(let r)):
                 return .json(.integer(l &+ r))
@@ -554,7 +570,7 @@ public struct JSONPathEvaluator {
                 throw Error.mismatchOfOperandTypes(expr)
             }
           case .minus:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (.integer(let l), .integer(let r)):
                 return .json(.integer(l &- r))
@@ -564,7 +580,7 @@ public struct JSONPathEvaluator {
                 throw Error.mismatchOfOperandTypes(expr)
             }
           case .mult:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (.integer(let l), .integer(let r)):
                 return .json(.integer(l &* r))
@@ -574,7 +590,7 @@ public struct JSONPathEvaluator {
                 throw Error.mismatchOfOperandTypes(expr)
             }
           case .divide:
-            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value)
+            let (l, r) = try self.evaluate(lhs: lhs, rhs: rhs, for: value, at: location)
             switch (l, r) {
               case (.integer(let l), .integer(let r)):
                 guard r != 0 else {

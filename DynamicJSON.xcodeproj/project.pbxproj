@@ -47,6 +47,7 @@
 		CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC95DB1B2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift */; };
 		CCB464F82BA0FAA3001FBDFA /* JSONLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB464F72BA0FAA3001FBDFA /* JSONLocationTests.swift */; };
 		CCB464FA2BA5131A001FBDFA /* JSONTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB464F92BA5131A001FBDFA /* JSONTypeTests.swift */; };
+		CCB464FD2BA66DBD001FBDFA /* LocatedJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB464FB2BA66D64001FBDFA /* LocatedJSON.swift */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -136,6 +137,7 @@
 		CC95DB1B2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPathComplianceSuite.swift; sourceTree = "<group>"; };
 		CCB464F72BA0FAA3001FBDFA /* JSONLocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLocationTests.swift; sourceTree = "<group>"; };
 		CCB464F92BA5131A001FBDFA /* JSONTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONTypeTests.swift; sourceTree = "<group>"; };
+		CCB464FB2BA66D64001FBDFA /* LocatedJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocatedJSON.swift; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -210,6 +212,7 @@
 			isa = PBXGroup;
 			children = (
 				CC528E3E2B797811001E9E52 /* JSON.swift */,
+				CCB464FB2BA66D64001FBDFA /* LocatedJSON.swift */,
 				CC9353002B840C2600E043A2 /* JSONType.swift */,
 				CC10ABE92B9D27F200746181 /* JSONReference.swift */,
 				CCD13B712B82536500307526 /* JSONLocation.swift */,
@@ -438,6 +441,7 @@
 				CC9353012B840C2600E043A2 /* JSONType.swift in Sources */,
 				CC908A122B82A498003253DA /* JSONPathEnvironment.swift in Sources */,
 				CC528E412B797980001E9E52 /* NSNumber.swift in Sources */,
+				CCB464FD2BA66DBD001FBDFA /* LocatedJSON.swift in Sources */,
 				CC2473E32B7C1BC80022800A /* JSONPath.swift in Sources */,
 				CC528E3F2B797811001E9E52 /* JSON.swift in Sources */,
 				CC528E472B7B5392001E9E52 /* JSONExtensions.swift in Sources */,

@@ -465,17 +465,42 @@ public enum JSON: Hashable,
     }
   }
   
-  /// Executes the given JSON path query and returns all matching JSON values in an
-  /// array.
-  public func query(_ path: JSONPath) throws -> [JSON] {
+  /// Executes the given JSON path query and returns all matching JSON values with their
+  /// corresponding locations.
+  public func query(_ path: JSONPath) throws -> [LocatedJSON] {
     return try JSONPathEvaluator(value: self).query(path)
   }
   
   /// Executes the JSON path query given in JSON path syntax and returns all matching
-  /// JSON values in an array.
-  public func query(_ path: String) throws -> [JSON] {
+  /// JSON values with their corresponding locations.
+  public func query(_ path: String) throws -> [LocatedJSON] {
     var parser = JSONPathParser(string: path)
     return try self.query(parser.parse())
+  }
+  
+  /// Executes the given JSON path query and returns all matching JSON values.
+  public func query(values path: JSONPath) throws -> [JSON] {
+    return try JSONPathEvaluator(value: self).query(path).values
+  }
+  
+  /// Executes the JSON path query given in JSON path syntax and returns all matching
+  /// JSON values.
+  public func query(values path: String) throws -> [JSON] {
+    var parser = JSONPathParser(string: path)
+    return try self.query(values: parser.parse())
+  }
+  
+  /// Executes the given JSON path query and returns the locations of all matching JSON
+  /// values.
+  public func query(locations path: JSONPath) throws -> [JSONLocation] {
+    return try JSONPathEvaluator(value: self).query(path).locations
+  }
+  
+  /// Executes the JSON path query given in JSON path syntax and returns the locations
+  /// of all matching JSON values.
+  public func query(locations path: String) throws -> [JSONLocation] {
+    var parser = JSONPathParser(string: path)
+    return try self.query(locations: parser.parse())
   }
   
   // MARK: - Transforming data

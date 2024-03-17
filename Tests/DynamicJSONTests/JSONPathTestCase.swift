@@ -60,17 +60,22 @@ class JSONPathTestCase: XCTestCase {
           // Don't do anything
         } else if test.invalid_selector ?? false {
           if let document = test.document {
-            XCTAssertThrowsError(try document.query(test.selector),
-                                 "🛑 \(name)/\(test.name) did not fail")
+            XCTAssertThrowsError(try document.query(values: test.selector),
+                                 "🛑 \(name)/\(test.name): did not fail")
           } else {
             var parser = JSONPathParser(string: test.selector)
-            XCTAssertThrowsError(try parser.parse(), "🛑 \(name)/\(test.name) did not fail")
+            XCTAssertThrowsError(try parser.parse(), "🛑 \(name)/\(test.name): did not fail")
           }
-        } else if let document = test.document,
-                  case .some(.array(let res)) = test.result {
+        } else if let document = test.document, case .some(.array(let res)) = test.result {
+          let resultset = try document.query(test.selector)
           let result = Set(res)
-          let computed = Set(try document.query(test.selector))
-          XCTAssertEqual(computed, result, "🛑 \(name)/\(test.name)")
+          let computed = Set(resultset.values)
+          XCTAssertEqual(computed, result, "🛑 \(name)/\(test.name): value mismatch")
+          for res in resultset {
+            XCTAssertEqual(res.value,
+                           document[ref: res.location],
+                           "🛑 \(name)/\(test.name): location mismatch for \(res.location)")
+          }
         } else {
           XCTFail("🛑 \(name)/\(test.name): invalid test case")
         }

@@ -121,9 +121,8 @@ while true {
   do {
     var parser = JSONPathParser(string: query)
     let path = try parser.parse()
-    print("# \(path)")
     let evaluator = JSONPathEvaluator(value: json)
-    let result = try evaluator.query(path)
+    let result = try evaluator.query(path).values
     var i = 0
     for res in result {
       print("[\(i)]")

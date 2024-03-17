@@ -32,7 +32,20 @@ class DynamicJSONTests: XCTestCase {
   func testConversion() throws {
     let person = Person(name: "John", age: 34, children: [Person(name: "Sofia", age: 5, children: [])])
     let json2 = try JSON(encodable: person)
-    print(json2)
+    let json3 = try JSON(encoded: """
+      {
+        "age" : 34,
+        "children" : [
+          {
+            "age" : 5,
+            "children" : [],
+            "name" : "Sofia"
+          }
+        ],
+        "name" : "John"
+      }
+    """)
+    XCTAssertEqual(json2, json3)
   }
   
   func testInitializers() throws {

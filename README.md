@@ -9,7 +9,7 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
    - An implementation of _JSON Pointer_ as defined by [RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901/) for locating values within a JSON document.
    - An implementation of _JSON Path_ as defined by [RFC 9535](https://datatracker.ietf.org/doc/html/rfc9535/) for querying JSON data.
 
-## Representation of JSON Data
+## Representing JSON Data
 
 All JSON values in framework _DynamicJSON_ are represented with enumeration [`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSON.swift).
 Enumeration `JSON` defines the following cases:
@@ -107,7 +107,6 @@ value 1.
    - **Dynamic member lookup:** `json1.object?.arr?[0]`
    - **Keypath lookup:** `json1[keyPath: \.object?.arr?[0]]`
    - **Subscript lookup:** `json1["object"]?["arr"]?[0]`
-   - **Subscript lookup:** `json1[location: "\]?["arr"]?[0]`
    - **Reference lookup:**
       - Using JSON Pointer string: `try json1[ref: "/object/arr/0"]`
       - Using JSON Path string: `try json1[ref: "$.object.arr[0]"]`
@@ -117,6 +116,8 @@ value 1.
 
 ## Queries with JSON Path
 
+## Mutating JSON Values
+
 ## Requirements
 
 The following technologies are needed to build the _DynamicJSON_ framework. The library
@@ -125,7 +126,6 @@ and the command-line tool can both be built either using _Xcode_ or the _Swift P
 - [Xcode 15](https://developer.apple.com/xcode/)
 - [Swift 5.9](https://developer.apple.com/swift/)
 - [Swift Package Manager](https://swift.org/package-manager/)
-
 
 ## Copyright
 
