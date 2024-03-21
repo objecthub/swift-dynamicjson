@@ -48,6 +48,109 @@
 		CCB464F82BA0FAA3001FBDFA /* JSONLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB464F72BA0FAA3001FBDFA /* JSONLocationTests.swift */; };
 		CCB464FA2BA5131A001FBDFA /* JSONTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB464F92BA5131A001FBDFA /* JSONTypeTests.swift */; };
 		CCB464FD2BA66DBD001FBDFA /* LocatedJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB464FB2BA66D64001FBDFA /* LocatedJSON.swift */; };
+		CCB465022BA83C44001FBDFA /* JSONSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465002BA834D8001FBDFA /* JSONSchema.swift */; };
+		CCB465042BAA4D2D001FBDFA /* Indirect.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465032BAA4D2D001FBDFA /* Indirect.swift */; };
+		CCB4655C2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4655B2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift */; };
+		CCB4655E2BAB9828001FBDFA /* JSONSchemaTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4655D2BAB9828001FBDFA /* JSONSchemaTestCase.swift */; };
+		CCB465602BAB98EB001FBDFA /* additionalProperties.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4652A2BAB907A001FBDFA /* additionalProperties.json */; };
+		CCB465612BAB98EB001FBDFA /* allOf.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4652B2BAB907A001FBDFA /* allOf.json */; };
+		CCB465622BAB98EB001FBDFA /* anchor.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4652C2BAB907A001FBDFA /* anchor.json */; };
+		CCB465632BAB98EB001FBDFA /* anyOf.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4652D2BAB907A001FBDFA /* anyOf.json */; };
+		CCB465642BAB98EB001FBDFA /* boolean_schema.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4652E2BAB907A001FBDFA /* boolean_schema.json */; };
+		CCB465652BAB98EB001FBDFA /* const.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4652F2BAB907A001FBDFA /* const.json */; };
+		CCB465662BAB98EB001FBDFA /* contains.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465302BAB907A001FBDFA /* contains.json */; };
+		CCB465672BAB98EB001FBDFA /* content.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465312BAB907A001FBDFA /* content.json */; };
+		CCB465682BAB98EB001FBDFA /* default.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465322BAB907A001FBDFA /* default.json */; };
+		CCB465692BAB98EB001FBDFA /* defs.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465332BAB907A001FBDFA /* defs.json */; };
+		CCB4656A2BAB98EB001FBDFA /* dependentRequired.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465342BAB907A001FBDFA /* dependentRequired.json */; };
+		CCB4656B2BAB98EB001FBDFA /* dependentSchemas.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465352BAB907A001FBDFA /* dependentSchemas.json */; };
+		CCB4656C2BAB98EB001FBDFA /* dynamicRef.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465362BAB907A001FBDFA /* dynamicRef.json */; };
+		CCB4656D2BAB98EB001FBDFA /* enum.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465372BAB907A001FBDFA /* enum.json */; };
+		CCB4656E2BAB98EB001FBDFA /* exclusiveMaximum.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465382BAB907A001FBDFA /* exclusiveMaximum.json */; };
+		CCB4656F2BAB98EB001FBDFA /* exclusiveMinimum.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465392BAB907A001FBDFA /* exclusiveMinimum.json */; };
+		CCB465702BAB98EB001FBDFA /* format.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4653A2BAB907A001FBDFA /* format.json */; };
+		CCB465712BAB98EB001FBDFA /* id.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4653B2BAB907A001FBDFA /* id.json */; };
+		CCB465722BAB98EB001FBDFA /* if-then-else.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4653C2BAB907A001FBDFA /* if-then-else.json */; };
+		CCB465732BAB98EB001FBDFA /* infinite-loop-detection.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4653D2BAB907A001FBDFA /* infinite-loop-detection.json */; };
+		CCB465742BAB98EB001FBDFA /* items.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4653E2BAB907A001FBDFA /* items.json */; };
+		CCB465752BAB98EB001FBDFA /* maxContains.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4653F2BAB907A001FBDFA /* maxContains.json */; };
+		CCB465762BAB98EB001FBDFA /* maximum.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465402BAB907A001FBDFA /* maximum.json */; };
+		CCB465772BAB98EB001FBDFA /* maxItems.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465412BAB907A001FBDFA /* maxItems.json */; };
+		CCB465782BAB98EB001FBDFA /* maxLength.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465422BAB907A001FBDFA /* maxLength.json */; };
+		CCB465792BAB98EC001FBDFA /* maxProperties.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465432BAB907A001FBDFA /* maxProperties.json */; };
+		CCB4657A2BAB98EC001FBDFA /* minContains.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465442BAB907A001FBDFA /* minContains.json */; };
+		CCB4657B2BAB98EC001FBDFA /* minimum.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465452BAB907A001FBDFA /* minimum.json */; };
+		CCB4657C2BAB98EC001FBDFA /* minItems.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465462BAB907A001FBDFA /* minItems.json */; };
+		CCB4657D2BAB98EC001FBDFA /* minLength.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465472BAB907A001FBDFA /* minLength.json */; };
+		CCB4657E2BAB98EC001FBDFA /* minProperties.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465482BAB907A001FBDFA /* minProperties.json */; };
+		CCB4657F2BAB98EC001FBDFA /* multipleOf.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465492BAB907A001FBDFA /* multipleOf.json */; };
+		CCB465802BAB98EC001FBDFA /* not.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4654A2BAB907A001FBDFA /* not.json */; };
+		CCB465812BAB98EC001FBDFA /* oneOf.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4654B2BAB907A001FBDFA /* oneOf.json */; };
+		CCB465822BAB98EC001FBDFA /* pattern.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4654C2BAB907A001FBDFA /* pattern.json */; };
+		CCB465832BAB98EC001FBDFA /* patternProperties.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4654D2BAB907A001FBDFA /* patternProperties.json */; };
+		CCB465842BAB98EC001FBDFA /* prefixItems.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4654E2BAB907A001FBDFA /* prefixItems.json */; };
+		CCB465852BAB98EC001FBDFA /* properties.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB4654F2BAB907A001FBDFA /* properties.json */; };
+		CCB465862BAB98EC001FBDFA /* propertyNames.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465502BAB907A001FBDFA /* propertyNames.json */; };
+		CCB465872BAB98EC001FBDFA /* ref.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465512BAB907A001FBDFA /* ref.json */; };
+		CCB465882BAB98EC001FBDFA /* refRemote.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465522BAB907A001FBDFA /* refRemote.json */; };
+		CCB465892BAB98EC001FBDFA /* required.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465532BAB907A001FBDFA /* required.json */; };
+		CCB4658A2BAB98EC001FBDFA /* type.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465542BAB907A001FBDFA /* type.json */; };
+		CCB4658B2BAB98EC001FBDFA /* unevaluatedItems.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465552BAB907A001FBDFA /* unevaluatedItems.json */; };
+		CCB4658C2BAB98EC001FBDFA /* unevaluatedProperties.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465562BAB907A001FBDFA /* unevaluatedProperties.json */; };
+		CCB4658D2BAB98EC001FBDFA /* uniqueItems.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465572BAB907A001FBDFA /* uniqueItems.json */; };
+		CCB4658E2BAB98EC001FBDFA /* vocabulary.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465582BAB907A001FBDFA /* vocabulary.json */; };
+		CCB465902BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */; };
+		CCB465AA2BACDC8B001FBDFA /* detached-dynamicref.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659A2BACDAC8001FBDFA /* detached-dynamicref.json */; };
+		CCB465AB2BACDC8B001FBDFA /* detached-ref.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659B2BACDAC8001FBDFA /* detached-ref.json */; };
+		CCB465AC2BACDC8B001FBDFA /* extendible-dynamic-ref.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659C2BACDAC8001FBDFA /* extendible-dynamic-ref.json */; };
+		CCB465AD2BACDC8B001FBDFA /* format-assertion-false.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659D2BACDAC8001FBDFA /* format-assertion-false.json */; };
+		CCB465AE2BACDC8B001FBDFA /* format-assertion-true.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659E2BACDAC8001FBDFA /* format-assertion-true.json */; };
+		CCB465AF2BACDC8B001FBDFA /* integer.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659F2BACDAC8001FBDFA /* integer.json */; };
+		CCB465B02BACDC8B001FBDFA /* locationIndependentIdentifier.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A02BACDAC8001FBDFA /* locationIndependentIdentifier.json */; };
+		CCB465B12BACDC8B001FBDFA /* metaschema-no-validation.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A12BACDAC8001FBDFA /* metaschema-no-validation.json */; };
+		CCB465B22BACDC8B001FBDFA /* metaschema-optional-vocabulary.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A22BACDAC8001FBDFA /* metaschema-optional-vocabulary.json */; };
+		CCB465B32BACDC8B001FBDFA /* name-defs.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A32BACDAC8001FBDFA /* name-defs.json */; };
+		CCB465B42BACDC8B001FBDFA /* prefixItems.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A42BACDAC8001FBDFA /* prefixItems.json */; };
+		CCB465B52BACDC8B001FBDFA /* ref-and-defs.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */; };
+		CCB465B62BACDC8B001FBDFA /* subSchemas.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A62BACDAC8001FBDFA /* subSchemas.json */; };
+		CCB465B72BACDC8B001FBDFA /* tree.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A72BACDAC8001FBDFA /* tree.json */; };
+		CCB465B92BACDD03001FBDFA /* anchor.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB4651D2BAB907A001FBDFA /* anchor.json */; };
+		CCB465BA2BACDD04001FBDFA /* bignum.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB4651E2BAB907A001FBDFA /* bignum.json */; };
+		CCB465BB2BACDD04001FBDFA /* cross-draft.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB4651F2BAB907A001FBDFA /* cross-draft.json */; };
+		CCB465BC2BACDD04001FBDFA /* dependencies-compatibility.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465202BAB907A001FBDFA /* dependencies-compatibility.json */; };
+		CCB465BD2BACDD04001FBDFA /* ecmascript-regex.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465212BAB907A001FBDFA /* ecmascript-regex.json */; };
+		CCB465BE2BACDD04001FBDFA /* float-overflow.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465222BAB907A001FBDFA /* float-overflow.json */; };
+		CCB465BF2BACDD04001FBDFA /* format-assertion.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465232BAB907A001FBDFA /* format-assertion.json */; };
+		CCB465C02BACDD04001FBDFA /* id.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465242BAB907A001FBDFA /* id.json */; };
+		CCB465C12BACDD04001FBDFA /* no-schema.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465252BAB907A001FBDFA /* no-schema.json */; };
+		CCB465C22BACDD04001FBDFA /* non-bmp-regex.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465262BAB907A001FBDFA /* non-bmp-regex.json */; };
+		CCB465C32BACDD04001FBDFA /* refOfUnknownKeyword.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465272BAB907A001FBDFA /* refOfUnknownKeyword.json */; };
+		CCB465C42BACDD04001FBDFA /* unknownKeyword.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB465282BAB907A001FBDFA /* unknownKeyword.json */; };
+		CCB465C62BACDD43001FBDFA /* date-time.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465082BAB907A001FBDFA /* date-time.json */; };
+		CCB465C72BACDD43001FBDFA /* date.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465092BAB907A001FBDFA /* date.json */; };
+		CCB465C82BACDD43001FBDFA /* duration.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4650A2BAB907A001FBDFA /* duration.json */; };
+		CCB465C92BACDD43001FBDFA /* email.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4650B2BAB907A001FBDFA /* email.json */; };
+		CCB465CA2BACDD43001FBDFA /* hostname.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4650C2BAB907A001FBDFA /* hostname.json */; };
+		CCB465CB2BACDD43001FBDFA /* idn-email.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4650D2BAB907A001FBDFA /* idn-email.json */; };
+		CCB465CC2BACDD43001FBDFA /* idn-hostname.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4650E2BAB907A001FBDFA /* idn-hostname.json */; };
+		CCB465CD2BACDD43001FBDFA /* ipv4.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4650F2BAB907A001FBDFA /* ipv4.json */; };
+		CCB465CE2BACDD43001FBDFA /* ipv6.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465102BAB907A001FBDFA /* ipv6.json */; };
+		CCB465CF2BACDD43001FBDFA /* iri-reference.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465112BAB907A001FBDFA /* iri-reference.json */; };
+		CCB465D02BACDD43001FBDFA /* iri.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465122BAB907A001FBDFA /* iri.json */; };
+		CCB465D12BACDD43001FBDFA /* json-pointer.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465132BAB907A001FBDFA /* json-pointer.json */; };
+		CCB465D22BACDD43001FBDFA /* regex.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465142BAB907A001FBDFA /* regex.json */; };
+		CCB465D32BACDD43001FBDFA /* relative-json-pointer.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465152BAB907A001FBDFA /* relative-json-pointer.json */; };
+		CCB465D42BACDD43001FBDFA /* time.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465162BAB907A001FBDFA /* time.json */; };
+		CCB465D52BACDD43001FBDFA /* unknown.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465172BAB907A001FBDFA /* unknown.json */; };
+		CCB465D62BACDD43001FBDFA /* uri-reference.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465182BAB907A001FBDFA /* uri-reference.json */; };
+		CCB465D72BACDD43001FBDFA /* uri-template.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465192BAB907A001FBDFA /* uri-template.json */; };
+		CCB465D82BACDD43001FBDFA /* uri.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4651A2BAB907A001FBDFA /* uri.json */; };
+		CCB465D92BACDD43001FBDFA /* uuid.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4651B2BAB907A001FBDFA /* uuid.json */; };
+		CCB465DB2BACDDA6001FBDFA /* foo-ref-string.json in Copy JSONSchema/remotes/nested */ = {isa = PBXBuildFile; fileRef = CCB465972BACDAC8001FBDFA /* foo-ref-string.json */; };
+		CCB465DC2BACDDA6001FBDFA /* string.json in Copy JSONSchema/remotes/nested */ = {isa = PBXBuildFile; fileRef = CCB465982BACDAC8001FBDFA /* string.json */; };
+		CCB465DE2BACDDDE001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChange */ = {isa = PBXBuildFile; fileRef = CCB465912BACDAC8001FBDFA /* folderInteger.json */; };
+		CCB465E02BACDE0D001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolder */ = {isa = PBXBuildFile; fileRef = CCB465932BACDAC8001FBDFA /* folderInteger.json */; };
+		CCB465E22BACDE72001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */ = {isa = PBXBuildFile; fileRef = CCB465952BACDAC8001FBDFA /* folderInteger.json */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +190,184 @@
 				CC2473F72B8184DE0022800A /* DynamicJSON.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB4655F2BAB987F001FBDFA /* Copy JSONSchema/tests */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/tests;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465602BAB98EB001FBDFA /* additionalProperties.json in Copy JSONSchema/tests */,
+				CCB465612BAB98EB001FBDFA /* allOf.json in Copy JSONSchema/tests */,
+				CCB465622BAB98EB001FBDFA /* anchor.json in Copy JSONSchema/tests */,
+				CCB465632BAB98EB001FBDFA /* anyOf.json in Copy JSONSchema/tests */,
+				CCB465642BAB98EB001FBDFA /* boolean_schema.json in Copy JSONSchema/tests */,
+				CCB465652BAB98EB001FBDFA /* const.json in Copy JSONSchema/tests */,
+				CCB465662BAB98EB001FBDFA /* contains.json in Copy JSONSchema/tests */,
+				CCB465672BAB98EB001FBDFA /* content.json in Copy JSONSchema/tests */,
+				CCB465682BAB98EB001FBDFA /* default.json in Copy JSONSchema/tests */,
+				CCB465692BAB98EB001FBDFA /* defs.json in Copy JSONSchema/tests */,
+				CCB4656A2BAB98EB001FBDFA /* dependentRequired.json in Copy JSONSchema/tests */,
+				CCB4656B2BAB98EB001FBDFA /* dependentSchemas.json in Copy JSONSchema/tests */,
+				CCB4656C2BAB98EB001FBDFA /* dynamicRef.json in Copy JSONSchema/tests */,
+				CCB4656D2BAB98EB001FBDFA /* enum.json in Copy JSONSchema/tests */,
+				CCB4656E2BAB98EB001FBDFA /* exclusiveMaximum.json in Copy JSONSchema/tests */,
+				CCB4656F2BAB98EB001FBDFA /* exclusiveMinimum.json in Copy JSONSchema/tests */,
+				CCB465702BAB98EB001FBDFA /* format.json in Copy JSONSchema/tests */,
+				CCB465712BAB98EB001FBDFA /* id.json in Copy JSONSchema/tests */,
+				CCB465722BAB98EB001FBDFA /* if-then-else.json in Copy JSONSchema/tests */,
+				CCB465732BAB98EB001FBDFA /* infinite-loop-detection.json in Copy JSONSchema/tests */,
+				CCB465742BAB98EB001FBDFA /* items.json in Copy JSONSchema/tests */,
+				CCB465752BAB98EB001FBDFA /* maxContains.json in Copy JSONSchema/tests */,
+				CCB465762BAB98EB001FBDFA /* maximum.json in Copy JSONSchema/tests */,
+				CCB465772BAB98EB001FBDFA /* maxItems.json in Copy JSONSchema/tests */,
+				CCB465782BAB98EB001FBDFA /* maxLength.json in Copy JSONSchema/tests */,
+				CCB465792BAB98EC001FBDFA /* maxProperties.json in Copy JSONSchema/tests */,
+				CCB4657A2BAB98EC001FBDFA /* minContains.json in Copy JSONSchema/tests */,
+				CCB4657B2BAB98EC001FBDFA /* minimum.json in Copy JSONSchema/tests */,
+				CCB4657C2BAB98EC001FBDFA /* minItems.json in Copy JSONSchema/tests */,
+				CCB4657D2BAB98EC001FBDFA /* minLength.json in Copy JSONSchema/tests */,
+				CCB4657E2BAB98EC001FBDFA /* minProperties.json in Copy JSONSchema/tests */,
+				CCB4657F2BAB98EC001FBDFA /* multipleOf.json in Copy JSONSchema/tests */,
+				CCB465802BAB98EC001FBDFA /* not.json in Copy JSONSchema/tests */,
+				CCB465812BAB98EC001FBDFA /* oneOf.json in Copy JSONSchema/tests */,
+				CCB465822BAB98EC001FBDFA /* pattern.json in Copy JSONSchema/tests */,
+				CCB465832BAB98EC001FBDFA /* patternProperties.json in Copy JSONSchema/tests */,
+				CCB465842BAB98EC001FBDFA /* prefixItems.json in Copy JSONSchema/tests */,
+				CCB465852BAB98EC001FBDFA /* properties.json in Copy JSONSchema/tests */,
+				CCB465862BAB98EC001FBDFA /* propertyNames.json in Copy JSONSchema/tests */,
+				CCB465872BAB98EC001FBDFA /* ref.json in Copy JSONSchema/tests */,
+				CCB465882BAB98EC001FBDFA /* refRemote.json in Copy JSONSchema/tests */,
+				CCB465892BAB98EC001FBDFA /* required.json in Copy JSONSchema/tests */,
+				CCB4658A2BAB98EC001FBDFA /* type.json in Copy JSONSchema/tests */,
+				CCB4658B2BAB98EC001FBDFA /* unevaluatedItems.json in Copy JSONSchema/tests */,
+				CCB4658C2BAB98EC001FBDFA /* unevaluatedProperties.json in Copy JSONSchema/tests */,
+				CCB4658D2BAB98EC001FBDFA /* uniqueItems.json in Copy JSONSchema/tests */,
+				CCB4658E2BAB98EC001FBDFA /* vocabulary.json in Copy JSONSchema/tests */,
+			);
+			name = "Copy JSONSchema/tests";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB465A92BACDC3C001FBDFA /* Copy JSONSchema/remotes */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/remotes;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465AA2BACDC8B001FBDFA /* detached-dynamicref.json in Copy JSONSchema/remotes */,
+				CCB465AB2BACDC8B001FBDFA /* detached-ref.json in Copy JSONSchema/remotes */,
+				CCB465AC2BACDC8B001FBDFA /* extendible-dynamic-ref.json in Copy JSONSchema/remotes */,
+				CCB465AD2BACDC8B001FBDFA /* format-assertion-false.json in Copy JSONSchema/remotes */,
+				CCB465AE2BACDC8B001FBDFA /* format-assertion-true.json in Copy JSONSchema/remotes */,
+				CCB465AF2BACDC8B001FBDFA /* integer.json in Copy JSONSchema/remotes */,
+				CCB465B02BACDC8B001FBDFA /* locationIndependentIdentifier.json in Copy JSONSchema/remotes */,
+				CCB465B12BACDC8B001FBDFA /* metaschema-no-validation.json in Copy JSONSchema/remotes */,
+				CCB465B22BACDC8B001FBDFA /* metaschema-optional-vocabulary.json in Copy JSONSchema/remotes */,
+				CCB465B32BACDC8B001FBDFA /* name-defs.json in Copy JSONSchema/remotes */,
+				CCB465B42BACDC8B001FBDFA /* prefixItems.json in Copy JSONSchema/remotes */,
+				CCB465B52BACDC8B001FBDFA /* ref-and-defs.json in Copy JSONSchema/remotes */,
+				CCB465B62BACDC8B001FBDFA /* subSchemas.json in Copy JSONSchema/remotes */,
+				CCB465B72BACDC8B001FBDFA /* tree.json in Copy JSONSchema/remotes */,
+			);
+			name = "Copy JSONSchema/remotes";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB465B82BACDCC0001FBDFA /* Copy JSONSchema/tests/optional */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/tests/optional;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465B92BACDD03001FBDFA /* anchor.json in Copy JSONSchema/tests/optional */,
+				CCB465BA2BACDD04001FBDFA /* bignum.json in Copy JSONSchema/tests/optional */,
+				CCB465BB2BACDD04001FBDFA /* cross-draft.json in Copy JSONSchema/tests/optional */,
+				CCB465BC2BACDD04001FBDFA /* dependencies-compatibility.json in Copy JSONSchema/tests/optional */,
+				CCB465BD2BACDD04001FBDFA /* ecmascript-regex.json in Copy JSONSchema/tests/optional */,
+				CCB465BE2BACDD04001FBDFA /* float-overflow.json in Copy JSONSchema/tests/optional */,
+				CCB465BF2BACDD04001FBDFA /* format-assertion.json in Copy JSONSchema/tests/optional */,
+				CCB465C02BACDD04001FBDFA /* id.json in Copy JSONSchema/tests/optional */,
+				CCB465C12BACDD04001FBDFA /* no-schema.json in Copy JSONSchema/tests/optional */,
+				CCB465C22BACDD04001FBDFA /* non-bmp-regex.json in Copy JSONSchema/tests/optional */,
+				CCB465C32BACDD04001FBDFA /* refOfUnknownKeyword.json in Copy JSONSchema/tests/optional */,
+				CCB465C42BACDD04001FBDFA /* unknownKeyword.json in Copy JSONSchema/tests/optional */,
+			);
+			name = "Copy JSONSchema/tests/optional";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB465C52BACDD1D001FBDFA /* Copy JSONSchema/tests/optional/format */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/tests/optional/format;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465C62BACDD43001FBDFA /* date-time.json in Copy JSONSchema/tests/optional/format */,
+				CCB465C72BACDD43001FBDFA /* date.json in Copy JSONSchema/tests/optional/format */,
+				CCB465C82BACDD43001FBDFA /* duration.json in Copy JSONSchema/tests/optional/format */,
+				CCB465C92BACDD43001FBDFA /* email.json in Copy JSONSchema/tests/optional/format */,
+				CCB465CA2BACDD43001FBDFA /* hostname.json in Copy JSONSchema/tests/optional/format */,
+				CCB465CB2BACDD43001FBDFA /* idn-email.json in Copy JSONSchema/tests/optional/format */,
+				CCB465CC2BACDD43001FBDFA /* idn-hostname.json in Copy JSONSchema/tests/optional/format */,
+				CCB465CD2BACDD43001FBDFA /* ipv4.json in Copy JSONSchema/tests/optional/format */,
+				CCB465CE2BACDD43001FBDFA /* ipv6.json in Copy JSONSchema/tests/optional/format */,
+				CCB465CF2BACDD43001FBDFA /* iri-reference.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D02BACDD43001FBDFA /* iri.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D12BACDD43001FBDFA /* json-pointer.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D22BACDD43001FBDFA /* regex.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D32BACDD43001FBDFA /* relative-json-pointer.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D42BACDD43001FBDFA /* time.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D52BACDD43001FBDFA /* unknown.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D62BACDD43001FBDFA /* uri-reference.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D72BACDD43001FBDFA /* uri-template.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D82BACDD43001FBDFA /* uri.json in Copy JSONSchema/tests/optional/format */,
+				CCB465D92BACDD43001FBDFA /* uuid.json in Copy JSONSchema/tests/optional/format */,
+			);
+			name = "Copy JSONSchema/tests/optional/format";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB465DA2BACDD5E001FBDFA /* Copy JSONSchema/remotes/nested */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/remotes/nested;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465DB2BACDDA6001FBDFA /* foo-ref-string.json in Copy JSONSchema/remotes/nested */,
+				CCB465DC2BACDDA6001FBDFA /* string.json in Copy JSONSchema/remotes/nested */,
+			);
+			name = "Copy JSONSchema/remotes/nested";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB465DD2BACDDB3001FBDFA /* Copy JSONSchema/remotes/baseUriChange */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/remotes/baseUriChange;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465DE2BACDDDE001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChange */,
+			);
+			name = "Copy JSONSchema/remotes/baseUriChange";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB465DF2BACDDEF001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolder */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/remotes/baseUriChangeFolder;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465E02BACDE0D001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolder */,
+			);
+			name = "Copy JSONSchema/remotes/baseUriChangeFolder";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/remotes/baseUriChangeFolderInSubschema;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB465E22BACDE72001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */,
+			);
+			name = "Copy JSONSchema/remotes/baseUriChangeFolderInSubschema";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -138,6 +419,110 @@
 		CCB464F72BA0FAA3001FBDFA /* JSONLocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONLocationTests.swift; sourceTree = "<group>"; };
 		CCB464F92BA5131A001FBDFA /* JSONTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONTypeTests.swift; sourceTree = "<group>"; };
 		CCB464FB2BA66D64001FBDFA /* LocatedJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocatedJSON.swift; sourceTree = "<group>"; };
+		CCB465002BA834D8001FBDFA /* JSONSchema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchema.swift; sourceTree = "<group>"; };
+		CCB465032BAA4D2D001FBDFA /* Indirect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Indirect.swift; sourceTree = "<group>"; };
+		CCB465082BAB907A001FBDFA /* date-time.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "date-time.json"; sourceTree = "<group>"; };
+		CCB465092BAB907A001FBDFA /* date.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = date.json; sourceTree = "<group>"; };
+		CCB4650A2BAB907A001FBDFA /* duration.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = duration.json; sourceTree = "<group>"; };
+		CCB4650B2BAB907A001FBDFA /* email.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = email.json; sourceTree = "<group>"; };
+		CCB4650C2BAB907A001FBDFA /* hostname.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = hostname.json; sourceTree = "<group>"; };
+		CCB4650D2BAB907A001FBDFA /* idn-email.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "idn-email.json"; sourceTree = "<group>"; };
+		CCB4650E2BAB907A001FBDFA /* idn-hostname.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "idn-hostname.json"; sourceTree = "<group>"; };
+		CCB4650F2BAB907A001FBDFA /* ipv4.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ipv4.json; sourceTree = "<group>"; };
+		CCB465102BAB907A001FBDFA /* ipv6.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ipv6.json; sourceTree = "<group>"; };
+		CCB465112BAB907A001FBDFA /* iri-reference.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "iri-reference.json"; sourceTree = "<group>"; };
+		CCB465122BAB907A001FBDFA /* iri.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = iri.json; sourceTree = "<group>"; };
+		CCB465132BAB907A001FBDFA /* json-pointer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "json-pointer.json"; sourceTree = "<group>"; };
+		CCB465142BAB907A001FBDFA /* regex.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = regex.json; sourceTree = "<group>"; };
+		CCB465152BAB907A001FBDFA /* relative-json-pointer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "relative-json-pointer.json"; sourceTree = "<group>"; };
+		CCB465162BAB907A001FBDFA /* time.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = time.json; sourceTree = "<group>"; };
+		CCB465172BAB907A001FBDFA /* unknown.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = unknown.json; sourceTree = "<group>"; };
+		CCB465182BAB907A001FBDFA /* uri-reference.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "uri-reference.json"; sourceTree = "<group>"; };
+		CCB465192BAB907A001FBDFA /* uri-template.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "uri-template.json"; sourceTree = "<group>"; };
+		CCB4651A2BAB907A001FBDFA /* uri.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = uri.json; sourceTree = "<group>"; };
+		CCB4651B2BAB907A001FBDFA /* uuid.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = uuid.json; sourceTree = "<group>"; };
+		CCB4651D2BAB907A001FBDFA /* anchor.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = anchor.json; sourceTree = "<group>"; };
+		CCB4651E2BAB907A001FBDFA /* bignum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bignum.json; sourceTree = "<group>"; };
+		CCB4651F2BAB907A001FBDFA /* cross-draft.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cross-draft.json"; sourceTree = "<group>"; };
+		CCB465202BAB907A001FBDFA /* dependencies-compatibility.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "dependencies-compatibility.json"; sourceTree = "<group>"; };
+		CCB465212BAB907A001FBDFA /* ecmascript-regex.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "ecmascript-regex.json"; sourceTree = "<group>"; };
+		CCB465222BAB907A001FBDFA /* float-overflow.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "float-overflow.json"; sourceTree = "<group>"; };
+		CCB465232BAB907A001FBDFA /* format-assertion.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "format-assertion.json"; sourceTree = "<group>"; };
+		CCB465242BAB907A001FBDFA /* id.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = id.json; sourceTree = "<group>"; };
+		CCB465252BAB907A001FBDFA /* no-schema.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "no-schema.json"; sourceTree = "<group>"; };
+		CCB465262BAB907A001FBDFA /* non-bmp-regex.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "non-bmp-regex.json"; sourceTree = "<group>"; };
+		CCB465272BAB907A001FBDFA /* refOfUnknownKeyword.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = refOfUnknownKeyword.json; sourceTree = "<group>"; };
+		CCB465282BAB907A001FBDFA /* unknownKeyword.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = unknownKeyword.json; sourceTree = "<group>"; };
+		CCB4652A2BAB907A001FBDFA /* additionalProperties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = additionalProperties.json; sourceTree = "<group>"; };
+		CCB4652B2BAB907A001FBDFA /* allOf.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = allOf.json; sourceTree = "<group>"; };
+		CCB4652C2BAB907A001FBDFA /* anchor.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = anchor.json; sourceTree = "<group>"; };
+		CCB4652D2BAB907A001FBDFA /* anyOf.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = anyOf.json; sourceTree = "<group>"; };
+		CCB4652E2BAB907A001FBDFA /* boolean_schema.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = boolean_schema.json; sourceTree = "<group>"; };
+		CCB4652F2BAB907A001FBDFA /* const.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = const.json; sourceTree = "<group>"; };
+		CCB465302BAB907A001FBDFA /* contains.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = contains.json; sourceTree = "<group>"; };
+		CCB465312BAB907A001FBDFA /* content.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = content.json; sourceTree = "<group>"; };
+		CCB465322BAB907A001FBDFA /* default.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = default.json; sourceTree = "<group>"; };
+		CCB465332BAB907A001FBDFA /* defs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = defs.json; sourceTree = "<group>"; };
+		CCB465342BAB907A001FBDFA /* dependentRequired.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dependentRequired.json; sourceTree = "<group>"; };
+		CCB465352BAB907A001FBDFA /* dependentSchemas.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dependentSchemas.json; sourceTree = "<group>"; };
+		CCB465362BAB907A001FBDFA /* dynamicRef.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dynamicRef.json; sourceTree = "<group>"; };
+		CCB465372BAB907A001FBDFA /* enum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = enum.json; sourceTree = "<group>"; };
+		CCB465382BAB907A001FBDFA /* exclusiveMaximum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = exclusiveMaximum.json; sourceTree = "<group>"; };
+		CCB465392BAB907A001FBDFA /* exclusiveMinimum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = exclusiveMinimum.json; sourceTree = "<group>"; };
+		CCB4653A2BAB907A001FBDFA /* format.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = format.json; sourceTree = "<group>"; };
+		CCB4653B2BAB907A001FBDFA /* id.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = id.json; sourceTree = "<group>"; };
+		CCB4653C2BAB907A001FBDFA /* if-then-else.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "if-then-else.json"; sourceTree = "<group>"; };
+		CCB4653D2BAB907A001FBDFA /* infinite-loop-detection.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "infinite-loop-detection.json"; sourceTree = "<group>"; };
+		CCB4653E2BAB907A001FBDFA /* items.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = items.json; sourceTree = "<group>"; };
+		CCB4653F2BAB907A001FBDFA /* maxContains.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maxContains.json; sourceTree = "<group>"; };
+		CCB465402BAB907A001FBDFA /* maximum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maximum.json; sourceTree = "<group>"; };
+		CCB465412BAB907A001FBDFA /* maxItems.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maxItems.json; sourceTree = "<group>"; };
+		CCB465422BAB907A001FBDFA /* maxLength.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maxLength.json; sourceTree = "<group>"; };
+		CCB465432BAB907A001FBDFA /* maxProperties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = maxProperties.json; sourceTree = "<group>"; };
+		CCB465442BAB907A001FBDFA /* minContains.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = minContains.json; sourceTree = "<group>"; };
+		CCB465452BAB907A001FBDFA /* minimum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = minimum.json; sourceTree = "<group>"; };
+		CCB465462BAB907A001FBDFA /* minItems.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = minItems.json; sourceTree = "<group>"; };
+		CCB465472BAB907A001FBDFA /* minLength.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = minLength.json; sourceTree = "<group>"; };
+		CCB465482BAB907A001FBDFA /* minProperties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = minProperties.json; sourceTree = "<group>"; };
+		CCB465492BAB907A001FBDFA /* multipleOf.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = multipleOf.json; sourceTree = "<group>"; };
+		CCB4654A2BAB907A001FBDFA /* not.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = not.json; sourceTree = "<group>"; };
+		CCB4654B2BAB907A001FBDFA /* oneOf.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = oneOf.json; sourceTree = "<group>"; };
+		CCB4654C2BAB907A001FBDFA /* pattern.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = pattern.json; sourceTree = "<group>"; };
+		CCB4654D2BAB907A001FBDFA /* patternProperties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = patternProperties.json; sourceTree = "<group>"; };
+		CCB4654E2BAB907A001FBDFA /* prefixItems.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = prefixItems.json; sourceTree = "<group>"; };
+		CCB4654F2BAB907A001FBDFA /* properties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = properties.json; sourceTree = "<group>"; };
+		CCB465502BAB907A001FBDFA /* propertyNames.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = propertyNames.json; sourceTree = "<group>"; };
+		CCB465512BAB907A001FBDFA /* ref.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ref.json; sourceTree = "<group>"; };
+		CCB465522BAB907A001FBDFA /* refRemote.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = refRemote.json; sourceTree = "<group>"; };
+		CCB465532BAB907A001FBDFA /* required.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = required.json; sourceTree = "<group>"; };
+		CCB465542BAB907A001FBDFA /* type.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = type.json; sourceTree = "<group>"; };
+		CCB465552BAB907A001FBDFA /* unevaluatedItems.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = unevaluatedItems.json; sourceTree = "<group>"; };
+		CCB465562BAB907A001FBDFA /* unevaluatedProperties.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = unevaluatedProperties.json; sourceTree = "<group>"; };
+		CCB465572BAB907A001FBDFA /* uniqueItems.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = uniqueItems.json; sourceTree = "<group>"; };
+		CCB465582BAB907A001FBDFA /* vocabulary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = vocabulary.json; sourceTree = "<group>"; };
+		CCB4655A2BAB90DC001FBDFA /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		CCB4655B2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaComplianceTest.swift; sourceTree = "<group>"; };
+		CCB4655D2BAB9828001FBDFA /* JSONSchemaTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaTestCase.swift; sourceTree = "<group>"; };
+		CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaComplianceSuite.swift; sourceTree = "<group>"; };
+		CCB465912BACDAC8001FBDFA /* folderInteger.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = folderInteger.json; sourceTree = "<group>"; };
+		CCB465932BACDAC8001FBDFA /* folderInteger.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = folderInteger.json; sourceTree = "<group>"; };
+		CCB465952BACDAC8001FBDFA /* folderInteger.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = folderInteger.json; sourceTree = "<group>"; };
+		CCB465972BACDAC8001FBDFA /* foo-ref-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "foo-ref-string.json"; sourceTree = "<group>"; };
+		CCB465982BACDAC8001FBDFA /* string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = string.json; sourceTree = "<group>"; };
+		CCB4659A2BACDAC8001FBDFA /* detached-dynamicref.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "detached-dynamicref.json"; sourceTree = "<group>"; };
+		CCB4659B2BACDAC8001FBDFA /* detached-ref.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "detached-ref.json"; sourceTree = "<group>"; };
+		CCB4659C2BACDAC8001FBDFA /* extendible-dynamic-ref.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "extendible-dynamic-ref.json"; sourceTree = "<group>"; };
+		CCB4659D2BACDAC8001FBDFA /* format-assertion-false.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "format-assertion-false.json"; sourceTree = "<group>"; };
+		CCB4659E2BACDAC8001FBDFA /* format-assertion-true.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "format-assertion-true.json"; sourceTree = "<group>"; };
+		CCB4659F2BACDAC8001FBDFA /* integer.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = integer.json; sourceTree = "<group>"; };
+		CCB465A02BACDAC8001FBDFA /* locationIndependentIdentifier.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = locationIndependentIdentifier.json; sourceTree = "<group>"; };
+		CCB465A12BACDAC8001FBDFA /* metaschema-no-validation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "metaschema-no-validation.json"; sourceTree = "<group>"; };
+		CCB465A22BACDAC8001FBDFA /* metaschema-optional-vocabulary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "metaschema-optional-vocabulary.json"; sourceTree = "<group>"; };
+		CCB465A32BACDAC8001FBDFA /* name-defs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "name-defs.json"; sourceTree = "<group>"; };
+		CCB465A42BACDAC8001FBDFA /* prefixItems.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = prefixItems.json; sourceTree = "<group>"; };
+		CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "ref-and-defs.json"; sourceTree = "<group>"; };
+		CCB465A62BACDAC8001FBDFA /* subSchemas.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subSchemas.json; sourceTree = "<group>"; };
+		CCB465A72BACDAC8001FBDFA /* tree.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tree.json; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -217,12 +602,11 @@
 				CC10ABE92B9D27F200746181 /* JSONReference.swift */,
 				CCD13B712B82536500307526 /* JSONLocation.swift */,
 				CC10ABE72B9CBB6100746181 /* JSONPointer.swift */,
-				CC2473E22B7C1BC80022800A /* JSONPath.swift */,
-				CC2473E62B7DF5040022800A /* JSONPathParser.swift */,
-				CC2473E82B8161A00022800A /* JSONPathEvaluator.swift */,
-				CC908A112B82A498003253DA /* JSONPathEnvironment.swift */,
+				CCB464FF2BA83485001FBDFA /* JSONPath */,
+				CCB464FE2BA83472001FBDFA /* JSONSchema */,
 				CC528E462B7B5392001E9E52 /* JSONExtensions.swift */,
 				CC528E402B797980001E9E52 /* NSNumber.swift */,
+				CCB465032BAA4D2D001FBDFA /* Indirect.swift */,
 				CC528E272B7975DC001E9E52 /* DynamicJSON.h */,
 				CC528E282B7975DC001E9E52 /* DynamicJSON.docc */,
 			);
@@ -238,11 +622,14 @@
 				CC528E442B7A15B1001E9E52 /* JSONConstructorTests.swift */,
 				CCB464F92BA5131A001FBDFA /* JSONTypeTests.swift */,
 				CCB464F72BA0FAA3001FBDFA /* JSONLocationTests.swift */,
+				CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */,
 				CC95DAF82B97D6DB00AC9D10 /* JSONPathComplianceTest.swift */,
 				CC95DB192B97DB8100AC9D10 /* JSONPathTestCase.swift */,
 				CC2473E42B7D466D0022800A /* JSONPathTests.swift */,
 				CC95DB1B2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift */,
-				CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */,
+				CCB4655B2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift */,
+				CCB4655D2BAB9828001FBDFA /* JSONSchemaTestCase.swift */,
+				CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */,
 			);
 			name = DynamicJSONTests;
 			path = Tests/DynamicJSONTests;
@@ -275,9 +662,199 @@
 		CC95DB092B97D96700AC9D10 /* ComplianceTests */ = {
 			isa = PBXGroup;
 			children = (
+				CCB465072BAB8F64001FBDFA /* JSONSchema */,
 				CC95DAE62B97D62400AC9D10 /* JSONPath */,
 			);
 			path = ComplianceTests;
+			sourceTree = "<group>";
+		};
+		CCB464FE2BA83472001FBDFA /* JSONSchema */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465002BA834D8001FBDFA /* JSONSchema.swift */,
+			);
+			path = JSONSchema;
+			sourceTree = "<group>";
+		};
+		CCB464FF2BA83485001FBDFA /* JSONPath */ = {
+			isa = PBXGroup;
+			children = (
+				CC2473E22B7C1BC80022800A /* JSONPath.swift */,
+				CC2473E62B7DF5040022800A /* JSONPathParser.swift */,
+				CC2473E82B8161A00022800A /* JSONPathEvaluator.swift */,
+				CC908A112B82A498003253DA /* JSONPathEnvironment.swift */,
+			);
+			path = JSONPath;
+			sourceTree = "<group>";
+		};
+		CCB465072BAB8F64001FBDFA /* JSONSchema */ = {
+			isa = PBXGroup;
+			children = (
+				CCB4655A2BAB90DC001FBDFA /* LICENSE */,
+				CCB465592BAB907A001FBDFA /* tests */,
+				CCB465A82BACDAC8001FBDFA /* remotes */,
+			);
+			path = JSONSchema;
+			sourceTree = "<group>";
+		};
+		CCB4651C2BAB907A001FBDFA /* format */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465082BAB907A001FBDFA /* date-time.json */,
+				CCB465092BAB907A001FBDFA /* date.json */,
+				CCB4650A2BAB907A001FBDFA /* duration.json */,
+				CCB4650B2BAB907A001FBDFA /* email.json */,
+				CCB4650C2BAB907A001FBDFA /* hostname.json */,
+				CCB4650D2BAB907A001FBDFA /* idn-email.json */,
+				CCB4650E2BAB907A001FBDFA /* idn-hostname.json */,
+				CCB4650F2BAB907A001FBDFA /* ipv4.json */,
+				CCB465102BAB907A001FBDFA /* ipv6.json */,
+				CCB465112BAB907A001FBDFA /* iri-reference.json */,
+				CCB465122BAB907A001FBDFA /* iri.json */,
+				CCB465132BAB907A001FBDFA /* json-pointer.json */,
+				CCB465142BAB907A001FBDFA /* regex.json */,
+				CCB465152BAB907A001FBDFA /* relative-json-pointer.json */,
+				CCB465162BAB907A001FBDFA /* time.json */,
+				CCB465172BAB907A001FBDFA /* unknown.json */,
+				CCB465182BAB907A001FBDFA /* uri-reference.json */,
+				CCB465192BAB907A001FBDFA /* uri-template.json */,
+				CCB4651A2BAB907A001FBDFA /* uri.json */,
+				CCB4651B2BAB907A001FBDFA /* uuid.json */,
+			);
+			path = format;
+			sourceTree = "<group>";
+		};
+		CCB465292BAB907A001FBDFA /* optional */ = {
+			isa = PBXGroup;
+			children = (
+				CCB4651C2BAB907A001FBDFA /* format */,
+				CCB4651D2BAB907A001FBDFA /* anchor.json */,
+				CCB4651E2BAB907A001FBDFA /* bignum.json */,
+				CCB4651F2BAB907A001FBDFA /* cross-draft.json */,
+				CCB465202BAB907A001FBDFA /* dependencies-compatibility.json */,
+				CCB465212BAB907A001FBDFA /* ecmascript-regex.json */,
+				CCB465222BAB907A001FBDFA /* float-overflow.json */,
+				CCB465232BAB907A001FBDFA /* format-assertion.json */,
+				CCB465242BAB907A001FBDFA /* id.json */,
+				CCB465252BAB907A001FBDFA /* no-schema.json */,
+				CCB465262BAB907A001FBDFA /* non-bmp-regex.json */,
+				CCB465272BAB907A001FBDFA /* refOfUnknownKeyword.json */,
+				CCB465282BAB907A001FBDFA /* unknownKeyword.json */,
+			);
+			path = optional;
+			sourceTree = "<group>";
+		};
+		CCB465592BAB907A001FBDFA /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465292BAB907A001FBDFA /* optional */,
+				CCB4652A2BAB907A001FBDFA /* additionalProperties.json */,
+				CCB4652B2BAB907A001FBDFA /* allOf.json */,
+				CCB4652C2BAB907A001FBDFA /* anchor.json */,
+				CCB4652D2BAB907A001FBDFA /* anyOf.json */,
+				CCB4652E2BAB907A001FBDFA /* boolean_schema.json */,
+				CCB4652F2BAB907A001FBDFA /* const.json */,
+				CCB465302BAB907A001FBDFA /* contains.json */,
+				CCB465312BAB907A001FBDFA /* content.json */,
+				CCB465322BAB907A001FBDFA /* default.json */,
+				CCB465332BAB907A001FBDFA /* defs.json */,
+				CCB465342BAB907A001FBDFA /* dependentRequired.json */,
+				CCB465352BAB907A001FBDFA /* dependentSchemas.json */,
+				CCB465362BAB907A001FBDFA /* dynamicRef.json */,
+				CCB465372BAB907A001FBDFA /* enum.json */,
+				CCB465382BAB907A001FBDFA /* exclusiveMaximum.json */,
+				CCB465392BAB907A001FBDFA /* exclusiveMinimum.json */,
+				CCB4653A2BAB907A001FBDFA /* format.json */,
+				CCB4653B2BAB907A001FBDFA /* id.json */,
+				CCB4653C2BAB907A001FBDFA /* if-then-else.json */,
+				CCB4653D2BAB907A001FBDFA /* infinite-loop-detection.json */,
+				CCB4653E2BAB907A001FBDFA /* items.json */,
+				CCB4653F2BAB907A001FBDFA /* maxContains.json */,
+				CCB465402BAB907A001FBDFA /* maximum.json */,
+				CCB465412BAB907A001FBDFA /* maxItems.json */,
+				CCB465422BAB907A001FBDFA /* maxLength.json */,
+				CCB465432BAB907A001FBDFA /* maxProperties.json */,
+				CCB465442BAB907A001FBDFA /* minContains.json */,
+				CCB465452BAB907A001FBDFA /* minimum.json */,
+				CCB465462BAB907A001FBDFA /* minItems.json */,
+				CCB465472BAB907A001FBDFA /* minLength.json */,
+				CCB465482BAB907A001FBDFA /* minProperties.json */,
+				CCB465492BAB907A001FBDFA /* multipleOf.json */,
+				CCB4654A2BAB907A001FBDFA /* not.json */,
+				CCB4654B2BAB907A001FBDFA /* oneOf.json */,
+				CCB4654C2BAB907A001FBDFA /* pattern.json */,
+				CCB4654D2BAB907A001FBDFA /* patternProperties.json */,
+				CCB4654E2BAB907A001FBDFA /* prefixItems.json */,
+				CCB4654F2BAB907A001FBDFA /* properties.json */,
+				CCB465502BAB907A001FBDFA /* propertyNames.json */,
+				CCB465512BAB907A001FBDFA /* ref.json */,
+				CCB465522BAB907A001FBDFA /* refRemote.json */,
+				CCB465532BAB907A001FBDFA /* required.json */,
+				CCB465542BAB907A001FBDFA /* type.json */,
+				CCB465552BAB907A001FBDFA /* unevaluatedItems.json */,
+				CCB465562BAB907A001FBDFA /* unevaluatedProperties.json */,
+				CCB465572BAB907A001FBDFA /* uniqueItems.json */,
+				CCB465582BAB907A001FBDFA /* vocabulary.json */,
+			);
+			path = tests;
+			sourceTree = "<group>";
+		};
+		CCB465922BACDAC8001FBDFA /* baseUriChange */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465912BACDAC8001FBDFA /* folderInteger.json */,
+			);
+			path = baseUriChange;
+			sourceTree = "<group>";
+		};
+		CCB465942BACDAC8001FBDFA /* baseUriChangeFolder */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465932BACDAC8001FBDFA /* folderInteger.json */,
+			);
+			path = baseUriChangeFolder;
+			sourceTree = "<group>";
+		};
+		CCB465962BACDAC8001FBDFA /* baseUriChangeFolderInSubschema */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465952BACDAC8001FBDFA /* folderInteger.json */,
+			);
+			path = baseUriChangeFolderInSubschema;
+			sourceTree = "<group>";
+		};
+		CCB465992BACDAC8001FBDFA /* nested */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465972BACDAC8001FBDFA /* foo-ref-string.json */,
+				CCB465982BACDAC8001FBDFA /* string.json */,
+			);
+			path = nested;
+			sourceTree = "<group>";
+		};
+		CCB465A82BACDAC8001FBDFA /* remotes */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465922BACDAC8001FBDFA /* baseUriChange */,
+				CCB465942BACDAC8001FBDFA /* baseUriChangeFolder */,
+				CCB465962BACDAC8001FBDFA /* baseUriChangeFolderInSubschema */,
+				CCB465992BACDAC8001FBDFA /* nested */,
+				CCB4659A2BACDAC8001FBDFA /* detached-dynamicref.json */,
+				CCB4659B2BACDAC8001FBDFA /* detached-ref.json */,
+				CCB4659C2BACDAC8001FBDFA /* extendible-dynamic-ref.json */,
+				CCB4659D2BACDAC8001FBDFA /* format-assertion-false.json */,
+				CCB4659E2BACDAC8001FBDFA /* format-assertion-true.json */,
+				CCB4659F2BACDAC8001FBDFA /* integer.json */,
+				CCB465A02BACDAC8001FBDFA /* locationIndependentIdentifier.json */,
+				CCB465A12BACDAC8001FBDFA /* metaschema-no-validation.json */,
+				CCB465A22BACDAC8001FBDFA /* metaschema-optional-vocabulary.json */,
+				CCB465A32BACDAC8001FBDFA /* name-defs.json */,
+				CCB465A42BACDAC8001FBDFA /* prefixItems.json */,
+				CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */,
+				CCB465A62BACDAC8001FBDFA /* subSchemas.json */,
+				CCB465A72BACDAC8001FBDFA /* tree.json */,
+			);
+			path = remotes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,6 +915,14 @@
 				CC528E2A2B7975DC001E9E52 /* Sources */,
 				CC528E2B2B7975DC001E9E52 /* Frameworks */,
 				CC528E2C2B7975DC001E9E52 /* Resources */,
+				CCB4655F2BAB987F001FBDFA /* Copy JSONSchema/tests */,
+				CCB465B82BACDCC0001FBDFA /* Copy JSONSchema/tests/optional */,
+				CCB465C52BACDD1D001FBDFA /* Copy JSONSchema/tests/optional/format */,
+				CCB465A92BACDC3C001FBDFA /* Copy JSONSchema/remotes */,
+				CCB465DA2BACDD5E001FBDFA /* Copy JSONSchema/remotes/nested */,
+				CCB465DD2BACDDB3001FBDFA /* Copy JSONSchema/remotes/baseUriChange */,
+				CCB465DF2BACDDEF001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolder */,
+				CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */,
 			);
 			buildRules = (
 			);
@@ -435,6 +1020,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCB465022BA83C44001FBDFA /* JSONSchema.swift in Sources */,
+				CCB465042BAA4D2D001FBDFA /* Indirect.swift in Sources */,
 				CC528E292B7975DC001E9E52 /* DynamicJSON.docc in Sources */,
 				CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */,
 				CC2473E72B7DF5040022800A /* JSONPathParser.swift in Sources */,
@@ -458,12 +1045,15 @@
 				CCB464F82BA0FAA3001FBDFA /* JSONLocationTests.swift in Sources */,
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
+				CCB4655C2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift in Sources */,
 				CC528E452B7A15B1001E9E52 /* JSONConstructorTests.swift in Sources */,
 				CCB464FA2BA5131A001FBDFA /* JSONTypeTests.swift in Sources */,
+				CCB465902BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift in Sources */,
 				CC95DB1A2B97DB8100AC9D10 /* JSONPathTestCase.swift in Sources */,
 				CC2473E52B7D466D0022800A /* JSONPathTests.swift in Sources */,
 				CC95DAF92B97D6DB00AC9D10 /* JSONPathComplianceTest.swift in Sources */,
 				CC528E342B7975DC001E9E52 /* DynamicJSONTests.swift in Sources */,
+				CCB4655E2BAB9828001FBDFA /* JSONSchemaTestCase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

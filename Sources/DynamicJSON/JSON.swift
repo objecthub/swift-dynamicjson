@@ -314,7 +314,7 @@ public enum JSON: Hashable,
       case .boolean(_):
         return .boolean
       case .integer(_):
-        return .number
+        return .integer
       case .float(_):
         return .number
       case .string(_):

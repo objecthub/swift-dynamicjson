@@ -14,6 +14,7 @@ final class JSONTypeTests: XCTestCase {
     XCTAssertEqual(JSONType.null.description, "null")
     XCTAssertEqual(JSONType.boolean.description, "boolean")
     XCTAssertEqual(JSONType.number.description, "number")
+    XCTAssertEqual(JSONType.integer.description, "integer")
     XCTAssertEqual(JSONType.string.description, "string")
     XCTAssertEqual(JSONType.array.description, "array")
     XCTAssertEqual(JSONType.object.description, "object")
@@ -25,6 +26,6 @@ final class JSONTypeTests: XCTestCase {
     type  = [.number, .string]
     XCTAssertEqual(type.description, "number or string")
     type = .all
-    XCTAssertEqual(type.description, "null, boolean, number, string, array or object")
+    XCTAssertEqual(type.description, "null, boolean, number, integer, string, array or object")
   }
 }

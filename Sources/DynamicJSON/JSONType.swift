@@ -55,6 +55,48 @@ public struct JSONType: OptionSet,
     self.name = name
   }
   
+  /// Decode the JSON type via the given decoder.
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    if let names = try? container.decode([String].self) {
+      var res: JSONType = []
+      for name in names {
+        if let type = JSONType.simpleType(name) {
+          res = res.union(type)
+        } else {
+          throw DecodingError.dataCorrupted(
+            DecodingError.Context(codingPath: decoder.codingPath,
+                                  debugDescription: "Unknown JSONType specifier"))
+        }
+      }
+      self = res
+    } else if let name = try? container.decode(String.self),
+              let type = JSONType.simpleType(name) {
+      self = type
+    } else {
+      throw DecodingError.dataCorrupted(
+        DecodingError.Context(codingPath: decoder.codingPath,
+                              debugDescription: "Invalid JSONType specifier"))
+    }
+  }
+  
+  /// Encode this JSON type using the given encoder.
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    switch self {
+      case .null, .boolean, .number, .string, .array, .object:
+        try container.encode(self.description)
+      default:
+        var names: [String] = []
+        for type in JSONType.types {
+          if self.contains(type) {
+            names.append(type.description)
+          }
+        }
+        try container.encode(names)
+    }
+  }
+  
   /// The JSON null type.
   public static let null = JSONType(rawValue: 1 << 0, name: "null")
   
@@ -64,20 +106,23 @@ public struct JSONType: OptionSet,
   /// The JSON number type, covering both integers and floating-point numbers.
   public static let number = JSONType(rawValue: 1 << 2, name: "number")
   
+  /// The JSON number type, covering integer numbers.
+  public static let integer = JSONType(rawValue: 1 << 3, name: "integer")
+  
   /// The JSON string type.
-  public static let string = JSONType(rawValue: 1 << 3, name: "string")
+  public static let string = JSONType(rawValue: 1 << 4, name: "string")
   
   /// The JSON array type, representing sequences of JSON values.
-  public static let array = JSONType(rawValue: 1 << 4, name: "array")
+  public static let array = JSONType(rawValue: 1 << 5, name: "array")
   
   /// The JSON object type, representing dictionaries/name-value pairs.
-  public static let object = JSONType(rawValue: 1 << 5, name: "object")
+  public static let object = JSONType(rawValue: 1 << 6, name: "object")
   
   /// A JSON type set including all JSON types.
-  public static let all: JSONType = [.null, .boolean, .number, .string, .array, .object]
+  public static let all: JSONType = [.null, .boolean, .number, .integer, .string, .array, .object]
   
   /// Internal array of basic JSON types.
-  private static let types: [JSONType] = [.null, .boolean, .number, .string, .array, .object]
+  private static let types: [JSONType] = [.null, .boolean, .number, .integer, .string, .array, .object]
   
   /// Returns a textual description of this type/type set.
   public var description: String {
@@ -108,5 +153,22 @@ public struct JSONType: OptionSet,
       }
     }
     return res.debugDescription
+  }
+  
+  private static func simpleType(_ name: String) -> JSONType? {
+    for type in JSONType.types {
+      if type.name == name {
+        return type
+      }
+    }
+    return nil
+  }
+  
+  public static func == (lhs: JSONType, rhs: JSONType) -> Bool {
+    return lhs.rawValue == rhs.rawValue
+  }
+  
+  public func hash(into hasher: inout Hasher) {
+    return hasher.combine(self.rawValue)
   }
 }
