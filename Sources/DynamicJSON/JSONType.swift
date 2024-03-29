@@ -155,6 +155,14 @@ public struct JSONType: OptionSet,
     return res.debugDescription
   }
   
+  public func included(in expected: JSONType) -> Bool {
+    var expanded = expected
+    if expected.contains(.number) {
+      expanded.insert(.integer)
+    }
+    return expanded.contains(self)
+  }
+  
   private static func simpleType(_ name: String) -> JSONType? {
     for type in JSONType.types {
       if type.name == name {

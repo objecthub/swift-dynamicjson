@@ -690,6 +690,18 @@ public enum JSON: Hashable,
     try self.mutate(object: try JSON.reference(from: ref), with: proc)
   }
   
+  // MARK: - Schema validation
+  
+  public func valid(for schema: JSONSchema, using registry: JSONSchemaRegistry = .default) -> Bool {
+    return (try? self.validate(with: schema, using: registry))?.isValid ?? false
+  }
+  
+  public func validate(with schema: JSONSchema,
+                       using registry: JSONSchemaRegistry = .default) throws -> ValidationResult {
+    let resource = try JSONSchemaResource(root: schema)
+    return try registry.validator(for: resource).validate(LocatedJSON(root: self))
+  }
+  
   // MARK: - String representations
   
   /// Returns a pretty-printed representation of this JSON value with sorted keys in

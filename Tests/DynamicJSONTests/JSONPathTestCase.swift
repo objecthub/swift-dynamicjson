@@ -50,9 +50,6 @@ class JSONPathTestCase: XCTestCase {
   }
   
   public func execute(name: String, tests: [JSONPathComplianceTest]) {
-    // print("───────────────────────────────────────────────────────────────────────")
-    // print(name)
-    // print("───────────────────────────────────────────────────────────────────────")
     for test in tests {
       do {
         print("✅ \(name)/\(test.name)")

@@ -55,10 +55,9 @@ class JSONSchemaTestCase: XCTestCase {
     return try? parser.parse()
   }
   
-  public func execute(name: String, tests: JSONSchemaComplianceTests) {
-    // print("───────────────────────────────────────────────────────────────────────")
-    // print(name)
-    // print("───────────────────────────────────────────────────────────────────────")
+  public func execute(name: String,
+                      tests: JSONSchemaComplianceTests,
+                      registry: JSONSchemaRegistry) {
     for test in tests {
       do {
         print("✅ \(name)/\(test.description)")
@@ -68,20 +67,27 @@ class JSONSchemaTestCase: XCTestCase {
           let schema = test.schema
           for testCase in test.tests {
             print("  • \(testCase.description)")
-            let document = testCase.data
-            // XCTAssertEqual(computed, result, "🛑 \(name)/\(test.name): value mismatch")
+            let result = try testCase.data.validate(with: schema, using: registry)
+            if testCase.valid != result.isValid {
+              if testCase.valid {
+                XCTFail("🛑 \(name)/\(test.description)/\(testCase.description): \(result)")
+              } else {
+                XCTFail("🛑 \(name)/\(test.description)/\(testCase.description): valid but should fail")
+              }
+            }
           }
         }
-      }// catch let e {
-      //  XCTFail("🛑 \(name)/\(test.name): query failed (\(e.localizedDescription))")
-      // }
+      } catch let e {
+        XCTFail("🛑 \(name)/\(test.description): validation failed (\(e.localizedDescription))")
+      }
     }
   }
   
-  public func execute(suite filename: String) {
+  public func execute(suite filename: String, registry: JSONSchemaRegistry? = nil) {
     do {
       let complianceTests = try self.loadComplianceTests(from: filename)
-      self.execute(name: filename, tests: complianceTests)
+      let registry = registry ?? JSONSchemaRegistry()
+      self.execute(name: filename, tests: complianceTests, registry: registry)
     } catch let e {
       XCTFail("🛑 \(filename): cannot load JSONSchema test suite (\(e.localizedDescription))")
     }

@@ -110,6 +110,19 @@ public indirect enum JSONLocation: JSONReference,
     )
   }
   
+  /// Initializes a `JSONLocation` reference by composing a relative location with
+  /// a `base` location.
+  public init(_ location: JSONLocation, relativeTo base: JSONLocation = .root) {
+    switch location {
+      case .root:
+        self = base
+      case .member(let parent, let member):
+        self = .member(.init(parent, relativeTo: base), member)
+      case .index(let parent, let index):
+        self = .index(.init(parent, relativeTo: base), index)
+    }
+  }
+  
   /// Initialize a `JSONLocation` reference using a decoder.
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
@@ -120,6 +133,24 @@ public indirect enum JSONLocation: JSONReference,
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.description)
+  }
+  
+  /// Returns true if this location is a prefix of `location`.
+  public func isPrefix(of location: JSONLocation, allowEqual: Bool = true) -> Bool {
+    let segments = self.segments
+    let locationSegments = location.segments
+    return locationSegments.starts(with: segments) &&
+           (allowEqual || segments.count < locationSegments.count)
+  }
+  
+  /// Returns a new location that, relative to `prefix` is equivalent to this location.
+  public func relative(to prefix: JSONLocation) -> JSONLocation? {
+    let segments = self.segments
+    let prefixSegments = prefix.segments
+    guard segments.starts(with: prefixSegments) else {
+      return nil
+    }
+    return JSONLocation(segments: self.segments.dropFirst(prefixSegments.count))
   }
   
   /// Returns a matching `JSONPointer` reference if possible. `JSONLocation` references
@@ -149,6 +180,18 @@ public indirect enum JSONLocation: JSONReference,
         return .select(location.path, .children([.member(member)]))
       case .index(let location, let index):
         return .select(location.path, .children([.index(index)]))
+    }
+  }
+  
+  /// Returns the number of segments of this `JSONLocation`
+  public var segmentCount: Int {
+    switch self {
+      case .root:
+        return 0
+      case .member(let location, _):
+        return location.segmentCount + 1
+      case .index(let location, _):
+        return location.segmentCount + 1
     }
   }
   

@@ -165,6 +165,30 @@ public struct JSONPointer: JSONReference,
     try container.encode(self.description)
   }
   
+  /// Returns JSON locations corresponding to this `JSONPointer`. For a given JSON document,
+  /// at most one location will determine a valid value.
+  public func locations() -> [JSONLocation] {
+    return self.locations(for: .root, from: ArraySlice(self.tokens))
+  }
+  
+  private func locations(for root: JSONLocation,
+                         from tokens: ArraySlice<ReferenceToken>) -> [JSONLocation] {
+    if let token = tokens.first {
+      switch token {
+        case .member(let member), .index(let member, nil):
+          return self.locations(for: .member(root, member),
+                                from: tokens[tokens.index(after: tokens.startIndex)...])
+        case .index(let member, let index):
+          return self.locations(for: .member(root, member),
+                                from: tokens[tokens.index(after: tokens.startIndex)...]) +
+                 self.locations(for: .index(root, index!),
+                                from: tokens[tokens.index(after: tokens.startIndex)...])
+      }
+    } else {
+      return [root]
+    }
+  }
+  
   /// Retrieve value at which this reference is pointing from JSON document `value`.
   /// If the reference does not match any value, `nil` is returned.
   public func get(from value: JSON) -> JSON? {

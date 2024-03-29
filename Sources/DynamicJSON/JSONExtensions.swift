@@ -27,7 +27,6 @@ extension Encodable {
   var jsonValue: JSON? {
     return try? JSON(encodable: self)
   }
-  
 }
 
 extension Decodable {
@@ -40,11 +39,23 @@ extension Decodable {
       return nil
     }
   }
+}
+
+extension KeyedDecodingContainer  {
   
+  /// This custom implementation of `decodeIfPresent` is needed to handle optional JSON
+  /// values correctly when decoding. The default implementation is not able to distinguish
+  /// between "key not present" and "key is null".
+  func decodeIfPresent(_ type: JSON.Type, forKey key: Key) throws -> JSON? {
+    if self.contains(key) {
+      return try self.decode(JSON.self, forKey: key)
+    } else {
+      return nil
+    }
+  }
 }
 
 extension Array<LocatedJSON> {
-  
   public var values: [JSON] {
     return self.map { res in res.value }
   }
@@ -52,11 +63,9 @@ extension Array<LocatedJSON> {
   public var locations: [JSONLocation] {
     return self.map { res in res.location }
   }
-  
 }
 
 extension Array<JSON> {
-  
   public func located(at location: JSONLocation) -> [LocatedJSON] {
     var res: [LocatedJSON] = []
     for i in self.indices {
@@ -64,11 +73,9 @@ extension Array<JSON> {
     }
     return res
   }
-  
 }
 
 extension Dictionary<String, JSON> {
-  
   public func located(at location: JSONLocation) -> [LocatedJSON] {
     var res: [LocatedJSON] = []
     for (key, val) in self {
@@ -76,5 +83,31 @@ extension Dictionary<String, JSON> {
     }
     return res
   }
+}
+
+extension URL {
   
+  public var isDirectory: Bool {
+    return (try? self.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true
+  }
+  
+  public var normalizedURL: URL {
+    let (url, fragment) = self.extractFragment()
+    return fragment == nil ? url : self
+  }
+  
+  /// Splits a URL that might have a fragment into the URL with the fragment removed
+  /// and the fragment text. If there is no fragment in the URL, this will return a URL
+  /// identical to the receiver and nil.
+  public func extractFragment() -> (URL, String?) {
+    guard var components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
+      return (self, nil)
+    }
+    let fragment = components.fragment
+    components.fragment = nil
+    guard let urlWithoutFragment = components.url else {
+      return (self, nil)
+    }
+    return (urlWithoutFragment, (fragment?.isEmpty ?? true) ? nil : fragment)
+  }
 }

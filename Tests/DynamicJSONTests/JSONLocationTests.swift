@@ -18,4 +18,20 @@ final class JSONLocationTests: XCTestCase {
     XCTAssertNotNil(try? JSONLocation("$.foo.bar[1].goo[2][0].too").pointer)
     XCTAssertNil(location.pointer)
   }
+  
+  func testPrefixes() throws {
+    let location = try JSONLocation("$.foo[2].bar.goo[4]")
+    let prefix0 = try JSONLocation("$.foo[2].bar")
+    let prefix1 = try JSONLocation("$.foo[2]")
+    let prefix2 = try JSONLocation("$.foo")
+    let prefix3 = try JSONLocation("$")
+    XCTAssert(prefix0.isPrefix(of: location))
+    XCTAssert(prefix1.isPrefix(of: location))
+    XCTAssert(prefix2.isPrefix(of: location))
+    XCTAssert(prefix3.isPrefix(of: location))
+    XCTAssertEqual(location.relative(to: prefix0), try JSONLocation("$.goo[4]"))
+    XCTAssertEqual(location.relative(to: prefix1), try JSONLocation("$.bar.goo[4]"))
+    XCTAssertEqual(location.relative(to: prefix2), try JSONLocation("$[2].bar.goo[4]"))
+    XCTAssertEqual(location.relative(to: prefix3), location)
+  }
 }

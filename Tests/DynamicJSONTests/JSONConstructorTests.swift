@@ -28,6 +28,23 @@ final class JSONConstructorTests: XCTestCase {
     let age: Int
     let children: [Person]
   }
+  
+  struct Test: Codable, Equatable {
+    let num: Int?
+    let obj: JSON?
+    
+    init(num: Int?, obj: JSON?) {
+      self.num = num
+      self.obj = obj
+    }
+    /*
+    init(from decoder: Decoder) throws {
+      let values = try decoder.container(keyedBy: CodingKeys.self)
+      self.num = try values.decodeIfPresent(Int.self, forKey: .num)
+      self.obj = try? values.decode(JSON.self, forKey: .obj)
+    }
+     */
+  }
 
   func testLiteralInit() {
     XCTAssertEqual(nil as JSON, .null)
@@ -52,8 +69,45 @@ final class JSONConstructorTests: XCTestCase {
     XCTAssertEqual(person, person2)
   }
   
-  func testExample() throws {
-    
+  func testOptCodableInit() throws {
+    let test = Test(num: 1, obj: .null)
+    let json = try JSON(test)
+    let json2 = try JSON(encoded: """
+      {
+        "num": 1,
+        "obj": null
+      }
+    """)
+    let test2: Test = try json2.coerce()
+    XCTAssertEqual(json, json2)
+    XCTAssertEqual(test, test2)
+  }
+  
+  func testNilCodableInit() throws {
+    let test = Test(num: 1, obj: nil)
+    let json = try JSON(test)
+    let json2 = try JSON(encoded: """
+      {
+        "num": 1
+      }
+    """)
+    let test2: Test = try json2.coerce()
+    XCTAssertEqual(json, json2)
+    XCTAssertEqual(test, test2)
+  }
+  
+  func testExampleWithNull() throws {
+    let json = try JSON(encoded: """
+      {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "const": null
+      }
+    """)
+    let json2: JSON = [
+      "$schema" : "https://json-schema.org/draft/2020-12/schema",
+      "const" : nil
+    ]
+    XCTAssertEqual(json, json2)
   }
 
 }

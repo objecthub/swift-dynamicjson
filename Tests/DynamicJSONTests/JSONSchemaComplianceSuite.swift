@@ -18,10 +18,39 @@
 //  limitations under the License.
 //
 
+import Foundation
+import DynamicJSON
+
 final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
   
   public override var directory: String? {
     return "JSONSchema/tests/"
+  }
+  
+  private func makeRegistry() -> JSONSchemaRegistry {
+    let testUri = URL(string: "http://localhost:1234/draft2020-12/")!
+    let schemaUri = URL(string: "https://json-schema.org/draft/2020-12/")!
+    let registry = JSONSchemaRegistry()
+    let bundle = Bundle(for: type(of: self))
+    if let dir = bundle.url(forResource: "remotes",
+                            withExtension: nil,
+                            subdirectory: "JSONSchema") {
+      registry.register(provider: .files(from: dir, base: testUri))
+    } else {
+      let dir = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONSchema/remotes/",
+                    isDirectory: true)
+      registry.register(provider: .files(from: dir, base: testUri))
+    }
+    if let dir = bundle.url(forResource: "2020-12",
+                            withExtension: nil,
+                            subdirectory: "JSONSchema") {
+      registry.register(provider: .files(from: dir, base: schemaUri))
+    } else {
+      let dir = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONSchema/2020-12/",
+                    isDirectory: true)
+      registry.register(provider: .files(from: dir, base: schemaUri))
+    }
+    return registry
   }
   
   func testAdditionalProperties() {
@@ -61,7 +90,7 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
   }
 
   func testDefs() {
-    self.execute(suite: "defs")
+    self.execute(suite: "defs", registry: self.makeRegistry())
   }
 
   func testDependentRequired() {
@@ -93,7 +122,7 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
   }
 
   func testId() {
-    self.execute(suite: "id")
+    self.execute(suite: "id", registry: self.makeRegistry())
   }
 
   func testIfThenElse() {
@@ -168,7 +197,7 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
     self.execute(suite: "patternProperties")
   }
 
-  func testprefixItems() {
+  func testPrefixItems() {
     self.execute(suite: "prefixItems")
   }
 
@@ -183,9 +212,9 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
   func testRef() {
     self.execute(suite: "ref")
   }
-
-  func testRefRemote() {
-    self.execute(suite: "refRemote")
+  
+  func testRefRemote() throws {
+    self.execute(suite: "refRemote", registry: self.makeRegistry())
   }
 
   func testRequired() {
@@ -196,7 +225,7 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
     self.execute(suite: "type")
   }
 
-  func testunevaluatedItems() {
+  func testUnevaluatedItems() {
     self.execute(suite: "unevaluatedItems")
   }
 

@@ -61,7 +61,6 @@
 		CCB465662BAB98EB001FBDFA /* contains.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465302BAB907A001FBDFA /* contains.json */; };
 		CCB465672BAB98EB001FBDFA /* content.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465312BAB907A001FBDFA /* content.json */; };
 		CCB465682BAB98EB001FBDFA /* default.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465322BAB907A001FBDFA /* default.json */; };
-		CCB465692BAB98EB001FBDFA /* defs.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465332BAB907A001FBDFA /* defs.json */; };
 		CCB4656A2BAB98EB001FBDFA /* dependentRequired.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465342BAB907A001FBDFA /* dependentRequired.json */; };
 		CCB4656B2BAB98EB001FBDFA /* dependentSchemas.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465352BAB907A001FBDFA /* dependentSchemas.json */; };
 		CCB4656C2BAB98EB001FBDFA /* dynamicRef.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465362BAB907A001FBDFA /* dynamicRef.json */; };
@@ -151,6 +150,32 @@
 		CCB465DE2BACDDDE001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChange */ = {isa = PBXBuildFile; fileRef = CCB465912BACDAC8001FBDFA /* folderInteger.json */; };
 		CCB465E02BACDE0D001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolder */ = {isa = PBXBuildFile; fileRef = CCB465932BACDAC8001FBDFA /* folderInteger.json */; };
 		CCB465E22BACDE72001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */ = {isa = PBXBuildFile; fileRef = CCB465952BACDAC8001FBDFA /* folderInteger.json */; };
+		CCB465E52BAD54D1001FBDFA /* JSONSchemaDialect.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465E32BAD543C001FBDFA /* JSONSchemaDialect.swift */; };
+		CCB465E82BAD693A001FBDFA /* JSONSchemaValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465E62BAD6932001FBDFA /* JSONSchemaValidator.swift */; };
+		CCB465EC2BAD6E30001FBDFA /* JSONSchemaRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465EB2BAD6E30001FBDFA /* JSONSchemaRegistry.swift */; };
+		CCB465ED2BAD82A8001FBDFA /* JSONSchemaDraft2020.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465E92BAD6C9D001FBDFA /* JSONSchemaDraft2020.swift */; };
+		CCB465EF2BB18816001FBDFA /* JSONSchemaResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465EE2BB18816001FBDFA /* JSONSchemaResource.swift */; };
+		CCB465F32BB6468E001FBDFA /* defs.json in Resources */ = {isa = PBXBuildFile; fileRef = CCB465F22BB6468E001FBDFA /* defs.json */; };
+		CCB465F52BB6FFAB001FBDFA /* JSONSchemaProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465F42BB6FFAB001FBDFA /* JSONSchemaProvider.swift */; };
+		CCB465F72BB7322D001FBDFA /* debug.json in Resources */ = {isa = PBXBuildFile; fileRef = CCB465F62BB7322D001FBDFA /* debug.json */; };
+		CCB465F82BB73253001FBDFA /* debug.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465F62BB7322D001FBDFA /* debug.json */; };
+		CCB465F92BB73253001FBDFA /* defs.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465F22BB6468E001FBDFA /* defs.json */; };
+		CCB465FC2BB732B5001FBDFA /* JSONSchemaDebugTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465FA2BB7328B001FBDFA /* JSONSchemaDebugTest.swift */; };
+		CCB466062BB75139001FBDFA /* core in Resources */ = {isa = PBXBuildFile; fileRef = CCB466052BB75139001FBDFA /* core */; };
+		CCB466082BB75147001FBDFA /* applicator in Resources */ = {isa = PBXBuildFile; fileRef = CCB466072BB75147001FBDFA /* applicator */; };
+		CCB4660A2BB75165001FBDFA /* unevaluated in Resources */ = {isa = PBXBuildFile; fileRef = CCB466092BB75165001FBDFA /* unevaluated */; };
+		CCB4660C2BB7516F001FBDFA /* validation in Resources */ = {isa = PBXBuildFile; fileRef = CCB4660B2BB7516F001FBDFA /* validation */; };
+		CCB4660E2BB75183001FBDFA /* meta-data in Resources */ = {isa = PBXBuildFile; fileRef = CCB4660D2BB75183001FBDFA /* meta-data */; };
+		CCB466102BB75195001FBDFA /* format-annotation in Resources */ = {isa = PBXBuildFile; fileRef = CCB4660F2BB75195001FBDFA /* format-annotation */; };
+		CCB466122BB751A3001FBDFA /* content in Resources */ = {isa = PBXBuildFile; fileRef = CCB466112BB751A3001FBDFA /* content */; };
+		CCB466142BB7538D001FBDFA /* schema in Copy JSONSchema/2020-12 */ = {isa = PBXBuildFile; fileRef = CCB466022BB74FFD001FBDFA /* schema */; };
+		CCB466162BB753C5001FBDFA /* core in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB466052BB75139001FBDFA /* core */; };
+		CCB466172BB753C5001FBDFA /* applicator in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB466072BB75147001FBDFA /* applicator */; };
+		CCB466182BB753C5001FBDFA /* unevaluated in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB466092BB75165001FBDFA /* unevaluated */; };
+		CCB466192BB753C5001FBDFA /* validation in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB4660B2BB7516F001FBDFA /* validation */; };
+		CCB4661A2BB753C5001FBDFA /* meta-data in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB4660D2BB75183001FBDFA /* meta-data */; };
+		CCB4661B2BB753C5001FBDFA /* format-annotation in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB4660F2BB75195001FBDFA /* format-annotation */; };
+		CCB4661C2BB753C5001FBDFA /* content in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB466112BB751A3001FBDFA /* content */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -198,6 +223,8 @@
 			dstPath = JSONSchema/tests;
 			dstSubfolderSpec = 7;
 			files = (
+				CCB465F82BB73253001FBDFA /* debug.json in Copy JSONSchema/tests */,
+				CCB465F92BB73253001FBDFA /* defs.json in Copy JSONSchema/tests */,
 				CCB465602BAB98EB001FBDFA /* additionalProperties.json in Copy JSONSchema/tests */,
 				CCB465612BAB98EB001FBDFA /* allOf.json in Copy JSONSchema/tests */,
 				CCB465622BAB98EB001FBDFA /* anchor.json in Copy JSONSchema/tests */,
@@ -207,7 +234,6 @@
 				CCB465662BAB98EB001FBDFA /* contains.json in Copy JSONSchema/tests */,
 				CCB465672BAB98EB001FBDFA /* content.json in Copy JSONSchema/tests */,
 				CCB465682BAB98EB001FBDFA /* default.json in Copy JSONSchema/tests */,
-				CCB465692BAB98EB001FBDFA /* defs.json in Copy JSONSchema/tests */,
 				CCB4656A2BAB98EB001FBDFA /* dependentRequired.json in Copy JSONSchema/tests */,
 				CCB4656B2BAB98EB001FBDFA /* dependentSchemas.json in Copy JSONSchema/tests */,
 				CCB4656C2BAB98EB001FBDFA /* dynamicRef.json in Copy JSONSchema/tests */,
@@ -370,6 +396,34 @@
 			name = "Copy JSONSchema/remotes/baseUriChangeFolderInSubschema";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCB466132BB7534D001FBDFA /* Copy JSONSchema/2020-12 */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "JSONSchema/2020-12";
+			dstSubfolderSpec = 7;
+			files = (
+				CCB466142BB7538D001FBDFA /* schema in Copy JSONSchema/2020-12 */,
+			);
+			name = "Copy JSONSchema/2020-12";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB466152BB75395001FBDFA /* Copy JSONSchema/2020-12/meta */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "JSONSchema/2020-12/meta";
+			dstSubfolderSpec = 7;
+			files = (
+				CCB466162BB753C5001FBDFA /* core in Copy JSONSchema/2020-12/meta */,
+				CCB466172BB753C5001FBDFA /* applicator in Copy JSONSchema/2020-12/meta */,
+				CCB466182BB753C5001FBDFA /* unevaluated in Copy JSONSchema/2020-12/meta */,
+				CCB466192BB753C5001FBDFA /* validation in Copy JSONSchema/2020-12/meta */,
+				CCB4661A2BB753C5001FBDFA /* meta-data in Copy JSONSchema/2020-12/meta */,
+				CCB4661B2BB753C5001FBDFA /* format-annotation in Copy JSONSchema/2020-12/meta */,
+				CCB4661C2BB753C5001FBDFA /* content in Copy JSONSchema/2020-12/meta */,
+			);
+			name = "Copy JSONSchema/2020-12/meta";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -462,7 +516,6 @@
 		CCB465302BAB907A001FBDFA /* contains.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = contains.json; sourceTree = "<group>"; };
 		CCB465312BAB907A001FBDFA /* content.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = content.json; sourceTree = "<group>"; };
 		CCB465322BAB907A001FBDFA /* default.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = default.json; sourceTree = "<group>"; };
-		CCB465332BAB907A001FBDFA /* defs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = defs.json; sourceTree = "<group>"; };
 		CCB465342BAB907A001FBDFA /* dependentRequired.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dependentRequired.json; sourceTree = "<group>"; };
 		CCB465352BAB907A001FBDFA /* dependentSchemas.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dependentSchemas.json; sourceTree = "<group>"; };
 		CCB465362BAB907A001FBDFA /* dynamicRef.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = dynamicRef.json; sourceTree = "<group>"; };
@@ -523,6 +576,23 @@
 		CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "ref-and-defs.json"; sourceTree = "<group>"; };
 		CCB465A62BACDAC8001FBDFA /* subSchemas.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = subSchemas.json; sourceTree = "<group>"; };
 		CCB465A72BACDAC8001FBDFA /* tree.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tree.json; sourceTree = "<group>"; };
+		CCB465E32BAD543C001FBDFA /* JSONSchemaDialect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaDialect.swift; sourceTree = "<group>"; };
+		CCB465E62BAD6932001FBDFA /* JSONSchemaValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaValidator.swift; sourceTree = "<group>"; };
+		CCB465E92BAD6C9D001FBDFA /* JSONSchemaDraft2020.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaDraft2020.swift; sourceTree = "<group>"; };
+		CCB465EB2BAD6E30001FBDFA /* JSONSchemaRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaRegistry.swift; sourceTree = "<group>"; };
+		CCB465EE2BB18816001FBDFA /* JSONSchemaResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaResource.swift; sourceTree = "<group>"; };
+		CCB465F22BB6468E001FBDFA /* defs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = defs.json; sourceTree = "<group>"; };
+		CCB465F42BB6FFAB001FBDFA /* JSONSchemaProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaProvider.swift; sourceTree = "<group>"; };
+		CCB465F62BB7322D001FBDFA /* debug.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
+		CCB465FA2BB7328B001FBDFA /* JSONSchemaDebugTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONSchemaDebugTest.swift; sourceTree = "<group>"; };
+		CCB466022BB74FFD001FBDFA /* schema */ = {isa = PBXFileReference; lastKnownFileType = text; path = schema; sourceTree = "<group>"; };
+		CCB466052BB75139001FBDFA /* core */ = {isa = PBXFileReference; lastKnownFileType = text; path = core; sourceTree = "<group>"; };
+		CCB466072BB75147001FBDFA /* applicator */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = applicator; sourceTree = "<group>"; };
+		CCB466092BB75165001FBDFA /* unevaluated */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = unevaluated; sourceTree = "<group>"; };
+		CCB4660B2BB7516F001FBDFA /* validation */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = validation; sourceTree = "<group>"; };
+		CCB4660D2BB75183001FBDFA /* meta-data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "meta-data"; sourceTree = "<group>"; };
+		CCB4660F2BB75195001FBDFA /* format-annotation */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "format-annotation"; sourceTree = "<group>"; };
+		CCB466112BB751A3001FBDFA /* content */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = content; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -630,6 +700,7 @@
 				CCB4655B2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift */,
 				CCB4655D2BAB9828001FBDFA /* JSONSchemaTestCase.swift */,
 				CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */,
+				CCB465FA2BB7328B001FBDFA /* JSONSchemaDebugTest.swift */,
 			);
 			name = DynamicJSONTests;
 			path = Tests/DynamicJSONTests;
@@ -672,6 +743,12 @@
 			isa = PBXGroup;
 			children = (
 				CCB465002BA834D8001FBDFA /* JSONSchema.swift */,
+				CCB465EE2BB18816001FBDFA /* JSONSchemaResource.swift */,
+				CCB465F42BB6FFAB001FBDFA /* JSONSchemaProvider.swift */,
+				CCB465E32BAD543C001FBDFA /* JSONSchemaDialect.swift */,
+				CCB465E62BAD6932001FBDFA /* JSONSchemaValidator.swift */,
+				CCB465EB2BAD6E30001FBDFA /* JSONSchemaRegistry.swift */,
+				CCB465E92BAD6C9D001FBDFA /* JSONSchemaDraft2020.swift */,
 			);
 			path = JSONSchema;
 			sourceTree = "<group>";
@@ -691,6 +768,7 @@
 			isa = PBXGroup;
 			children = (
 				CCB4655A2BAB90DC001FBDFA /* LICENSE */,
+				CCB466002BB74E18001FBDFA /* 2020-12 */,
 				CCB465592BAB907A001FBDFA /* tests */,
 				CCB465A82BACDAC8001FBDFA /* remotes */,
 			);
@@ -757,7 +835,7 @@
 				CCB465302BAB907A001FBDFA /* contains.json */,
 				CCB465312BAB907A001FBDFA /* content.json */,
 				CCB465322BAB907A001FBDFA /* default.json */,
-				CCB465332BAB907A001FBDFA /* defs.json */,
+				CCB465F22BB6468E001FBDFA /* defs.json */,
 				CCB465342BAB907A001FBDFA /* dependentRequired.json */,
 				CCB465352BAB907A001FBDFA /* dependentSchemas.json */,
 				CCB465362BAB907A001FBDFA /* dynamicRef.json */,
@@ -795,6 +873,7 @@
 				CCB465562BAB907A001FBDFA /* unevaluatedProperties.json */,
 				CCB465572BAB907A001FBDFA /* uniqueItems.json */,
 				CCB465582BAB907A001FBDFA /* vocabulary.json */,
+				CCB465F62BB7322D001FBDFA /* debug.json */,
 			);
 			path = tests;
 			sourceTree = "<group>";
@@ -855,6 +934,29 @@
 				CCB465A72BACDAC8001FBDFA /* tree.json */,
 			);
 			path = remotes;
+			sourceTree = "<group>";
+		};
+		CCB466002BB74E18001FBDFA /* 2020-12 */ = {
+			isa = PBXGroup;
+			children = (
+				CCB466042BB7502A001FBDFA /* meta */,
+				CCB466022BB74FFD001FBDFA /* schema */,
+			);
+			path = "2020-12";
+			sourceTree = "<group>";
+		};
+		CCB466042BB7502A001FBDFA /* meta */ = {
+			isa = PBXGroup;
+			children = (
+				CCB466052BB75139001FBDFA /* core */,
+				CCB466072BB75147001FBDFA /* applicator */,
+				CCB466092BB75165001FBDFA /* unevaluated */,
+				CCB4660B2BB7516F001FBDFA /* validation */,
+				CCB4660D2BB75183001FBDFA /* meta-data */,
+				CCB4660F2BB75195001FBDFA /* format-annotation */,
+				CCB466112BB751A3001FBDFA /* content */,
+			);
+			path = meta;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -923,6 +1025,8 @@
 				CCB465DD2BACDDB3001FBDFA /* Copy JSONSchema/remotes/baseUriChange */,
 				CCB465DF2BACDDEF001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolder */,
 				CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */,
+				CCB466132BB7534D001FBDFA /* Copy JSONSchema/2020-12 */,
+				CCB466152BB75395001FBDFA /* Copy JSONSchema/2020-12/meta */,
 			);
 			buildRules = (
 			);
@@ -980,6 +1084,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCB4660C2BB7516F001FBDFA /* validation in Resources */,
+				CCB4660A2BB75165001FBDFA /* unevaluated in Resources */,
+				CCB4660E2BB75183001FBDFA /* meta-data in Resources */,
+				CCB466062BB75139001FBDFA /* core in Resources */,
+				CCB465F32BB6468E001FBDFA /* defs.json in Resources */,
+				CCB466082BB75147001FBDFA /* applicator in Resources */,
+				CCB465F72BB7322D001FBDFA /* debug.json in Resources */,
+				CCB466102BB75195001FBDFA /* format-annotation in Resources */,
+				CCB466122BB751A3001FBDFA /* content in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1023,15 +1136,21 @@
 				CCB465022BA83C44001FBDFA /* JSONSchema.swift in Sources */,
 				CCB465042BAA4D2D001FBDFA /* Indirect.swift in Sources */,
 				CC528E292B7975DC001E9E52 /* DynamicJSON.docc in Sources */,
+				CCB465E52BAD54D1001FBDFA /* JSONSchemaDialect.swift in Sources */,
 				CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */,
 				CC2473E72B7DF5040022800A /* JSONPathParser.swift in Sources */,
 				CC9353012B840C2600E043A2 /* JSONType.swift in Sources */,
 				CC908A122B82A498003253DA /* JSONPathEnvironment.swift in Sources */,
 				CC528E412B797980001E9E52 /* NSNumber.swift in Sources */,
+				CCB465ED2BAD82A8001FBDFA /* JSONSchemaDraft2020.swift in Sources */,
+				CCB465EF2BB18816001FBDFA /* JSONSchemaResource.swift in Sources */,
 				CCB464FD2BA66DBD001FBDFA /* LocatedJSON.swift in Sources */,
 				CC2473E32B7C1BC80022800A /* JSONPath.swift in Sources */,
 				CC528E3F2B797811001E9E52 /* JSON.swift in Sources */,
+				CCB465E82BAD693A001FBDFA /* JSONSchemaValidator.swift in Sources */,
 				CC528E472B7B5392001E9E52 /* JSONExtensions.swift in Sources */,
+				CCB465F52BB6FFAB001FBDFA /* JSONSchemaProvider.swift in Sources */,
+				CCB465EC2BAD6E30001FBDFA /* JSONSchemaRegistry.swift in Sources */,
 				CCD13B722B82536500307526 /* JSONLocation.swift in Sources */,
 				CC2473E92B8161A00022800A /* JSONPathEvaluator.swift in Sources */,
 				CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */,
@@ -1046,6 +1165,7 @@
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
 				CCB4655C2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift in Sources */,
+				CCB465FC2BB732B5001FBDFA /* JSONSchemaDebugTest.swift in Sources */,
 				CC528E452B7A15B1001E9E52 /* JSONConstructorTests.swift in Sources */,
 				CCB464FA2BA5131A001FBDFA /* JSONTypeTests.swift in Sources */,
 				CCB465902BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift in Sources */,
@@ -1234,7 +1354,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -1243,7 +1363,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1273,7 +1393,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -1282,7 +1402,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1304,8 +1424,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.DynamicJSONTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1324,8 +1444,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.DynamicJSONTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
