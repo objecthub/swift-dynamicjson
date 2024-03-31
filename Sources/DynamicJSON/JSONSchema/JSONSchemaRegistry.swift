@@ -31,7 +31,7 @@ public class JSONSchemaRegistry {
   public private(set) var dialects: [URL : JSONSchemaDialect]
   
   /// Maps schema identifiers (i.e. $id) to schema
-  public private(set) var resources: [URL : JSONSchemaResource]
+  public private(set) var resources: [JSONSchemaIdentifier : JSONSchemaResource]
   
   /// Dynamic extension modules providing new JSON schema resources
   private var providers: [JSONSchemaProvider]
@@ -85,7 +85,7 @@ public class JSONSchemaRegistry {
     for dialect in dialects {
       dialectMap[dialect.uri] = dialect
     }
-    var resourceMap: [URL : JSONSchemaResource] = [:]
+    var resourceMap: [JSONSchemaIdentifier : JSONSchemaResource] = [:]
     for resource in resources {
       guard let id = resource.id else {
         throw Error.schemaWithoutId(resource.schema)
@@ -109,12 +109,16 @@ public class JSONSchemaRegistry {
     guard resource.isRoot else {
       throw Error.cannotRegisterNonRootResource(resource.schema)
     }
+    self.register(resource: resource, for: resource.id)
+  }
+  
+  private func register(resource: JSONSchemaResource, for id: JSONSchemaIdentifier?) {
     for nested in resource.nestedResources {
-      if let nestedId = nested.id?.normalizedURL {
+      if let nestedId = nested.id {
         self.resources[nestedId] = nested
       }
     }
-    if let id = resource.id {
+    if let id {
       self.resources[id] = resource
     }
   }
@@ -130,12 +134,12 @@ public class JSONSchemaRegistry {
     return resource
   }
   
-  public func resource(for baseUri: URL) -> JSONSchemaResource? {
+  public func resource(for baseUri: JSONSchemaIdentifier) -> JSONSchemaResource? {
     // Get JSON schema resource via the first matching provider, if it is not available yet
     if self.resources[baseUri] == nil {
       for provider in self.providers {
         if let resource = provider.resource(for: baseUri) {
-          self.resources[baseUri] = resource
+          self.register(resource: resource, for: baseUri)
           break
         }
       }

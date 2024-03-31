@@ -28,6 +28,6 @@ final class JSONSchemaDebugTest: JSONSchemaTestCase {
   }
 
   func testDebug() {
-    self.execute(suite: "debug")
+    self.execute(suite: "debug", registry: self.makeRegistry())
   }
 }

@@ -86,28 +86,7 @@ extension Dictionary<String, JSON> {
 }
 
 extension URL {
-  
   public var isDirectory: Bool {
     return (try? self.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true
-  }
-  
-  public var normalizedURL: URL {
-    let (url, fragment) = self.extractFragment()
-    return fragment == nil ? url : self
-  }
-  
-  /// Splits a URL that might have a fragment into the URL with the fragment removed
-  /// and the fragment text. If there is no fragment in the URL, this will return a URL
-  /// identical to the receiver and nil.
-  public func extractFragment() -> (URL, String?) {
-    guard var components = URLComponents(url: self, resolvingAgainstBaseURL: false) else {
-      return (self, nil)
-    }
-    let fragment = components.fragment
-    components.fragment = nil
-    guard let urlWithoutFragment = components.url else {
-      return (self, nil)
-    }
-    return (urlWithoutFragment, (fragment?.isEmpty ?? true) ? nil : fragment)
   }
 }

@@ -58,7 +58,7 @@ public indirect enum JSONSchema: Codable,
     }
   }
   
-  public var id: URL? {
+  public var id: JSONSchemaIdentifier? {
     switch self {
       case .boolean(_):
         return nil
@@ -107,13 +107,13 @@ public indirect enum JSONSchema: Codable,
   
   fileprivate func insert(into nested: inout [JSONLocation : JSONSchema],
                           at location: JSONLocation,
-                          uri base: URL?) {
+                          uri base: JSONSchemaIdentifier?) {
     switch self {
       case .boolean(_):
         nested[location] = self
       case .descriptor(var descriptor):
         if let id = descriptor.id {
-          descriptor.id = URL(string: id.relativeString, relativeTo: base)?.absoluteURL
+          descriptor.id = id.relative(to: base)
         }
         nested[location] = .descriptor(descriptor)
         descriptor.insert(into: &nested, at: location, uri: descriptor.id ?? base)
@@ -126,11 +126,11 @@ public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvert
   // Core vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/core
   
-  public var id: URL?
+  public var id: JSONSchemaIdentifier?
   public let schema: URL?
   public let anchor: String?
-  public let ref: URL?
-  public let dynamicRef: URL?
+  public let ref: JSONSchemaIdentifier?
+  public let dynamicRef: JSONSchemaIdentifier?
   public let dynamicAnchor: String?
   public let vocabulary: [String : Bool]?
   public let comment: String?
@@ -221,12 +221,12 @@ public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvert
       }
     } catch {
     }
-    return "{ id = \(self.id?.absoluteString ?? "nil"), ... }"
+    return "{ id = \(self.id?.string ?? "nil"), ... }"
   }
   
   fileprivate func insert(into nested: inout [JSONLocation : JSONSchema],
                           at location: JSONLocation,
-                          uri base: URL?) {
+                          uri base: JSONSchemaIdentifier?) {
     self.defs?.insert(into: &nested, at: .member(location, "$defs"), uri: base)
     self.prefixItems?.insert(into: &nested, at: .member(location, "prefixItems"), uri: base)
     self.items?.insert(into: &nested, at: .member(location, "items"), uri: base)
@@ -344,7 +344,7 @@ public indirect enum JSONSchemaDependency: Codable, Equatable {
 extension Array<JSONSchema> {
   fileprivate func insert(into nested: inout [JSONLocation : JSONSchema],
                           at location: JSONLocation,
-                          uri base: URL?) {
+                          uri base: JSONSchemaIdentifier?) {
     for i in self.indices {
       self[i].insert(into: &nested, at: .index(location, i), uri: base)
     }
@@ -354,7 +354,7 @@ extension Array<JSONSchema> {
 extension Dictionary<String, JSONSchema> {
   fileprivate func insert(into nested: inout [JSONLocation : JSONSchema],
                           at location: JSONLocation,
-                          uri base: URL?) {
+                          uri base: JSONSchemaIdentifier?) {
     for (key, value) in self {
       value.insert(into: &nested, at: .member(location, key), uri: base)
     }
@@ -364,7 +364,7 @@ extension Dictionary<String, JSONSchema> {
 extension Dictionary<String, JSONSchemaDependency> {
   fileprivate func insert(into nested: inout [JSONLocation : JSONSchema],
                           at location: JSONLocation,
-                          uri base: URL?) {
+                          uri base: JSONSchemaIdentifier?) {
     for (key, value) in self {
       switch value {
         case .array(_):

@@ -99,20 +99,20 @@
 		CCB4658D2BAB98EC001FBDFA /* uniqueItems.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465572BAB907A001FBDFA /* uniqueItems.json */; };
 		CCB4658E2BAB98EC001FBDFA /* vocabulary.json in Copy JSONSchema/tests */ = {isa = PBXBuildFile; fileRef = CCB465582BAB907A001FBDFA /* vocabulary.json */; };
 		CCB465902BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */; };
-		CCB465AA2BACDC8B001FBDFA /* detached-dynamicref.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659A2BACDAC8001FBDFA /* detached-dynamicref.json */; };
-		CCB465AB2BACDC8B001FBDFA /* detached-ref.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659B2BACDAC8001FBDFA /* detached-ref.json */; };
-		CCB465AC2BACDC8B001FBDFA /* extendible-dynamic-ref.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659C2BACDAC8001FBDFA /* extendible-dynamic-ref.json */; };
-		CCB465AD2BACDC8B001FBDFA /* format-assertion-false.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659D2BACDAC8001FBDFA /* format-assertion-false.json */; };
-		CCB465AE2BACDC8B001FBDFA /* format-assertion-true.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659E2BACDAC8001FBDFA /* format-assertion-true.json */; };
-		CCB465AF2BACDC8B001FBDFA /* integer.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB4659F2BACDAC8001FBDFA /* integer.json */; };
-		CCB465B02BACDC8B001FBDFA /* locationIndependentIdentifier.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A02BACDAC8001FBDFA /* locationIndependentIdentifier.json */; };
-		CCB465B12BACDC8B001FBDFA /* metaschema-no-validation.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A12BACDAC8001FBDFA /* metaschema-no-validation.json */; };
-		CCB465B22BACDC8B001FBDFA /* metaschema-optional-vocabulary.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A22BACDAC8001FBDFA /* metaschema-optional-vocabulary.json */; };
-		CCB465B32BACDC8B001FBDFA /* name-defs.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A32BACDAC8001FBDFA /* name-defs.json */; };
-		CCB465B42BACDC8B001FBDFA /* prefixItems.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A42BACDAC8001FBDFA /* prefixItems.json */; };
-		CCB465B52BACDC8B001FBDFA /* ref-and-defs.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */; };
-		CCB465B62BACDC8B001FBDFA /* subSchemas.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A62BACDAC8001FBDFA /* subSchemas.json */; };
-		CCB465B72BACDC8B001FBDFA /* tree.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB465A72BACDAC8001FBDFA /* tree.json */; };
+		CCB465AA2BACDC8B001FBDFA /* detached-dynamicref.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB4659A2BACDAC8001FBDFA /* detached-dynamicref.json */; };
+		CCB465AB2BACDC8B001FBDFA /* detached-ref.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB4659B2BACDAC8001FBDFA /* detached-ref.json */; };
+		CCB465AC2BACDC8B001FBDFA /* extendible-dynamic-ref.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB4659C2BACDAC8001FBDFA /* extendible-dynamic-ref.json */; };
+		CCB465AD2BACDC8B001FBDFA /* format-assertion-false.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB4659D2BACDAC8001FBDFA /* format-assertion-false.json */; };
+		CCB465AE2BACDC8B001FBDFA /* format-assertion-true.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB4659E2BACDAC8001FBDFA /* format-assertion-true.json */; };
+		CCB465AF2BACDC8B001FBDFA /* integer.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB4659F2BACDAC8001FBDFA /* integer.json */; };
+		CCB465B02BACDC8B001FBDFA /* locationIndependentIdentifier.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A02BACDAC8001FBDFA /* locationIndependentIdentifier.json */; };
+		CCB465B12BACDC8B001FBDFA /* metaschema-no-validation.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A12BACDAC8001FBDFA /* metaschema-no-validation.json */; };
+		CCB465B22BACDC8B001FBDFA /* metaschema-optional-vocabulary.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A22BACDAC8001FBDFA /* metaschema-optional-vocabulary.json */; };
+		CCB465B32BACDC8B001FBDFA /* name-defs.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A32BACDAC8001FBDFA /* name-defs.json */; };
+		CCB465B42BACDC8B001FBDFA /* prefixItems.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A42BACDAC8001FBDFA /* prefixItems.json */; };
+		CCB465B52BACDC8B001FBDFA /* ref-and-defs.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */; };
+		CCB465B62BACDC8B001FBDFA /* subSchemas.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A62BACDAC8001FBDFA /* subSchemas.json */; };
+		CCB465B72BACDC8B001FBDFA /* tree.json in Copy JSONSchema/remotes/draft2020-12 */ = {isa = PBXBuildFile; fileRef = CCB465A72BACDAC8001FBDFA /* tree.json */; };
 		CCB465B92BACDD03001FBDFA /* anchor.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB4651D2BAB907A001FBDFA /* anchor.json */; };
 		CCB465BA2BACDD04001FBDFA /* bignum.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB4651E2BAB907A001FBDFA /* bignum.json */; };
 		CCB465BB2BACDD04001FBDFA /* cross-draft.json in Copy JSONSchema/tests/optional */ = {isa = PBXBuildFile; fileRef = CCB4651F2BAB907A001FBDFA /* cross-draft.json */; };
@@ -145,11 +145,11 @@
 		CCB465D72BACDD43001FBDFA /* uri-template.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB465192BAB907A001FBDFA /* uri-template.json */; };
 		CCB465D82BACDD43001FBDFA /* uri.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4651A2BAB907A001FBDFA /* uri.json */; };
 		CCB465D92BACDD43001FBDFA /* uuid.json in Copy JSONSchema/tests/optional/format */ = {isa = PBXBuildFile; fileRef = CCB4651B2BAB907A001FBDFA /* uuid.json */; };
-		CCB465DB2BACDDA6001FBDFA /* foo-ref-string.json in Copy JSONSchema/remotes/nested */ = {isa = PBXBuildFile; fileRef = CCB465972BACDAC8001FBDFA /* foo-ref-string.json */; };
-		CCB465DC2BACDDA6001FBDFA /* string.json in Copy JSONSchema/remotes/nested */ = {isa = PBXBuildFile; fileRef = CCB465982BACDAC8001FBDFA /* string.json */; };
-		CCB465DE2BACDDDE001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChange */ = {isa = PBXBuildFile; fileRef = CCB465912BACDAC8001FBDFA /* folderInteger.json */; };
-		CCB465E02BACDE0D001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolder */ = {isa = PBXBuildFile; fileRef = CCB465932BACDAC8001FBDFA /* folderInteger.json */; };
-		CCB465E22BACDE72001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */ = {isa = PBXBuildFile; fileRef = CCB465952BACDAC8001FBDFA /* folderInteger.json */; };
+		CCB465DB2BACDDA6001FBDFA /* foo-ref-string.json in Copy JSONSchema/remotes/draft2020-12/nested */ = {isa = PBXBuildFile; fileRef = CCB465972BACDAC8001FBDFA /* foo-ref-string.json */; };
+		CCB465DC2BACDDA6001FBDFA /* string.json in Copy JSONSchema/remotes/draft2020-12/nested */ = {isa = PBXBuildFile; fileRef = CCB465982BACDAC8001FBDFA /* string.json */; };
+		CCB465DE2BACDDDE001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/draft2020-12/baseUriChange */ = {isa = PBXBuildFile; fileRef = CCB465912BACDAC8001FBDFA /* folderInteger.json */; };
+		CCB465E02BACDE0D001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolder */ = {isa = PBXBuildFile; fileRef = CCB465932BACDAC8001FBDFA /* folderInteger.json */; };
+		CCB465E22BACDE72001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolderInSubschema */ = {isa = PBXBuildFile; fileRef = CCB465952BACDAC8001FBDFA /* folderInteger.json */; };
 		CCB465E52BAD54D1001FBDFA /* JSONSchemaDialect.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465E32BAD543C001FBDFA /* JSONSchemaDialect.swift */; };
 		CCB465E82BAD693A001FBDFA /* JSONSchemaValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465E62BAD6932001FBDFA /* JSONSchemaValidator.swift */; };
 		CCB465EC2BAD6E30001FBDFA /* JSONSchemaRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB465EB2BAD6E30001FBDFA /* JSONSchemaRegistry.swift */; };
@@ -177,6 +177,10 @@
 		CCB4661B2BB753C5001FBDFA /* format-annotation in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB4660F2BB75195001FBDFA /* format-annotation */; };
 		CCB4661C2BB753C5001FBDFA /* content in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB466112BB751A3001FBDFA /* content */; };
 		CCB4661F2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4661E2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift */; };
+		CCB466222BB9D9C1001FBDFA /* JSONSchemaIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB466202BB978FB001FBDFA /* JSONSchemaIdentifier.swift */; };
+		CCB466282BB9FF59001FBDFA /* different-id-ref-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466242BB9FD63001FBDFA /* different-id-ref-string.json */; };
+		CCB466292BB9FF59001FBDFA /* nested-absolute-ref-to-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */; };
+		CCB4662A2BB9FF59001FBDFA /* urn-ref-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -276,28 +280,28 @@
 			name = "Copy JSONSchema/tests";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CCB465A92BACDC3C001FBDFA /* Copy JSONSchema/remotes */ = {
+		CCB465A92BACDC3C001FBDFA /* Copy JSONSchema/remotes/draft2020-12 */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = JSONSchema/remotes;
+			dstPath = "JSONSchema/remotes/draft2020-12";
 			dstSubfolderSpec = 7;
 			files = (
-				CCB465AA2BACDC8B001FBDFA /* detached-dynamicref.json in Copy JSONSchema/remotes */,
-				CCB465AB2BACDC8B001FBDFA /* detached-ref.json in Copy JSONSchema/remotes */,
-				CCB465AC2BACDC8B001FBDFA /* extendible-dynamic-ref.json in Copy JSONSchema/remotes */,
-				CCB465AD2BACDC8B001FBDFA /* format-assertion-false.json in Copy JSONSchema/remotes */,
-				CCB465AE2BACDC8B001FBDFA /* format-assertion-true.json in Copy JSONSchema/remotes */,
-				CCB465AF2BACDC8B001FBDFA /* integer.json in Copy JSONSchema/remotes */,
-				CCB465B02BACDC8B001FBDFA /* locationIndependentIdentifier.json in Copy JSONSchema/remotes */,
-				CCB465B12BACDC8B001FBDFA /* metaschema-no-validation.json in Copy JSONSchema/remotes */,
-				CCB465B22BACDC8B001FBDFA /* metaschema-optional-vocabulary.json in Copy JSONSchema/remotes */,
-				CCB465B32BACDC8B001FBDFA /* name-defs.json in Copy JSONSchema/remotes */,
-				CCB465B42BACDC8B001FBDFA /* prefixItems.json in Copy JSONSchema/remotes */,
-				CCB465B52BACDC8B001FBDFA /* ref-and-defs.json in Copy JSONSchema/remotes */,
-				CCB465B62BACDC8B001FBDFA /* subSchemas.json in Copy JSONSchema/remotes */,
-				CCB465B72BACDC8B001FBDFA /* tree.json in Copy JSONSchema/remotes */,
+				CCB465AA2BACDC8B001FBDFA /* detached-dynamicref.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465AB2BACDC8B001FBDFA /* detached-ref.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465AC2BACDC8B001FBDFA /* extendible-dynamic-ref.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465AD2BACDC8B001FBDFA /* format-assertion-false.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465AE2BACDC8B001FBDFA /* format-assertion-true.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465AF2BACDC8B001FBDFA /* integer.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B02BACDC8B001FBDFA /* locationIndependentIdentifier.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B12BACDC8B001FBDFA /* metaschema-no-validation.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B22BACDC8B001FBDFA /* metaschema-optional-vocabulary.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B32BACDC8B001FBDFA /* name-defs.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B42BACDC8B001FBDFA /* prefixItems.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B52BACDC8B001FBDFA /* ref-and-defs.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B62BACDC8B001FBDFA /* subSchemas.json in Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465B72BACDC8B001FBDFA /* tree.json in Copy JSONSchema/remotes/draft2020-12 */,
 			);
-			name = "Copy JSONSchema/remotes";
+			name = "Copy JSONSchema/remotes/draft2020-12";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CCB465B82BACDCC0001FBDFA /* Copy JSONSchema/tests/optional */ = {
@@ -352,49 +356,49 @@
 			name = "Copy JSONSchema/tests/optional/format";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CCB465DA2BACDD5E001FBDFA /* Copy JSONSchema/remotes/nested */ = {
+		CCB465DA2BACDD5E001FBDFA /* Copy JSONSchema/remotes/draft2020-12/nested */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = JSONSchema/remotes/nested;
+			dstPath = "JSONSchema/remotes/draft2020-12/nested";
 			dstSubfolderSpec = 7;
 			files = (
-				CCB465DB2BACDDA6001FBDFA /* foo-ref-string.json in Copy JSONSchema/remotes/nested */,
-				CCB465DC2BACDDA6001FBDFA /* string.json in Copy JSONSchema/remotes/nested */,
+				CCB465DB2BACDDA6001FBDFA /* foo-ref-string.json in Copy JSONSchema/remotes/draft2020-12/nested */,
+				CCB465DC2BACDDA6001FBDFA /* string.json in Copy JSONSchema/remotes/draft2020-12/nested */,
 			);
-			name = "Copy JSONSchema/remotes/nested";
+			name = "Copy JSONSchema/remotes/draft2020-12/nested";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CCB465DD2BACDDB3001FBDFA /* Copy JSONSchema/remotes/baseUriChange */ = {
+		CCB465DD2BACDDB3001FBDFA /* Copy JSONSchema/remotes/draft2020-12/baseUriChange */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = JSONSchema/remotes/baseUriChange;
+			dstPath = "JSONSchema/remotes/draft2020-12/baseUriChange";
 			dstSubfolderSpec = 7;
 			files = (
-				CCB465DE2BACDDDE001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChange */,
+				CCB465DE2BACDDDE001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/draft2020-12/baseUriChange */,
 			);
-			name = "Copy JSONSchema/remotes/baseUriChange";
+			name = "Copy JSONSchema/remotes/draft2020-12/baseUriChange";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CCB465DF2BACDDEF001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolder */ = {
+		CCB465DF2BACDDEF001FBDFA /* Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolder */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = JSONSchema/remotes/baseUriChangeFolder;
+			dstPath = "JSONSchema/remotes/draft2020-12/baseUriChangeFolder";
 			dstSubfolderSpec = 7;
 			files = (
-				CCB465E02BACDE0D001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolder */,
+				CCB465E02BACDE0D001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolder */,
 			);
-			name = "Copy JSONSchema/remotes/baseUriChangeFolder";
+			name = "Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolder";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */ = {
+		CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolderInSubschema */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = JSONSchema/remotes/baseUriChangeFolderInSubschema;
+			dstPath = "JSONSchema/remotes/draft2020-12/baseUriChangeFolderInSubschema";
 			dstSubfolderSpec = 7;
 			files = (
-				CCB465E22BACDE72001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */,
+				CCB465E22BACDE72001FBDFA /* folderInteger.json in Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolderInSubschema */,
 			);
-			name = "Copy JSONSchema/remotes/baseUriChangeFolderInSubschema";
+			name = "Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolderInSubschema";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CCB466132BB7534D001FBDFA /* Copy JSONSchema/2020-12 */ = {
@@ -423,6 +427,19 @@
 				CCB4661C2BB753C5001FBDFA /* content in Copy JSONSchema/2020-12/meta */,
 			);
 			name = "Copy JSONSchema/2020-12/meta";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCB466272BB9FF32001FBDFA /* Copy JSONSchema/remotes */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONSchema/remotes;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB466282BB9FF59001FBDFA /* different-id-ref-string.json in Copy JSONSchema/remotes */,
+				CCB466292BB9FF59001FBDFA /* nested-absolute-ref-to-string.json in Copy JSONSchema/remotes */,
+				CCB4662A2BB9FF59001FBDFA /* urn-ref-string.json in Copy JSONSchema/remotes */,
+			);
+			name = "Copy JSONSchema/remotes";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -595,6 +612,10 @@
 		CCB4660F2BB75195001FBDFA /* format-annotation */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "format-annotation"; sourceTree = "<group>"; };
 		CCB466112BB751A3001FBDFA /* content */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = content; sourceTree = "<group>"; };
 		CCB4661E2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaValidationContext.swift; sourceTree = "<group>"; };
+		CCB466202BB978FB001FBDFA /* JSONSchemaIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaIdentifier.swift; sourceTree = "<group>"; };
+		CCB466242BB9FD63001FBDFA /* different-id-ref-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "different-id-ref-string.json"; sourceTree = "<group>"; };
+		CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nested-absolute-ref-to-string.json"; sourceTree = "<group>"; };
+		CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "urn-ref-string.json"; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -743,6 +764,7 @@
 			isa = PBXGroup;
 			children = (
 				CCB465002BA834D8001FBDFA /* JSONSchema.swift */,
+				CCB466202BB978FB001FBDFA /* JSONSchemaIdentifier.swift */,
 				CCB465EE2BB18816001FBDFA /* JSONSchemaResource.swift */,
 				CCB465F42BB6FFAB001FBDFA /* JSONSchemaProvider.swift */,
 				CCB465E32BAD543C001FBDFA /* JSONSchemaDialect.swift */,
@@ -915,24 +937,10 @@
 		CCB465A82BACDAC8001FBDFA /* remotes */ = {
 			isa = PBXGroup;
 			children = (
-				CCB465922BACDAC8001FBDFA /* baseUriChange */,
-				CCB465942BACDAC8001FBDFA /* baseUriChangeFolder */,
-				CCB465962BACDAC8001FBDFA /* baseUriChangeFolderInSubschema */,
-				CCB465992BACDAC8001FBDFA /* nested */,
-				CCB4659A2BACDAC8001FBDFA /* detached-dynamicref.json */,
-				CCB4659B2BACDAC8001FBDFA /* detached-ref.json */,
-				CCB4659C2BACDAC8001FBDFA /* extendible-dynamic-ref.json */,
-				CCB4659D2BACDAC8001FBDFA /* format-assertion-false.json */,
-				CCB4659E2BACDAC8001FBDFA /* format-assertion-true.json */,
-				CCB4659F2BACDAC8001FBDFA /* integer.json */,
-				CCB465A02BACDAC8001FBDFA /* locationIndependentIdentifier.json */,
-				CCB465A12BACDAC8001FBDFA /* metaschema-no-validation.json */,
-				CCB465A22BACDAC8001FBDFA /* metaschema-optional-vocabulary.json */,
-				CCB465A32BACDAC8001FBDFA /* name-defs.json */,
-				CCB465A42BACDAC8001FBDFA /* prefixItems.json */,
-				CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */,
-				CCB465A62BACDAC8001FBDFA /* subSchemas.json */,
-				CCB465A72BACDAC8001FBDFA /* tree.json */,
+				CCB466232BB9FB7C001FBDFA /* 2020-12 */,
+				CCB466242BB9FD63001FBDFA /* different-id-ref-string.json */,
+				CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */,
+				CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */,
 			);
 			path = remotes;
 			sourceTree = "<group>";
@@ -968,6 +976,31 @@
 				CCB465032BAA4D2D001FBDFA /* Indirect.swift */,
 			);
 			path = Util;
+			sourceTree = "<group>";
+		};
+		CCB466232BB9FB7C001FBDFA /* 2020-12 */ = {
+			isa = PBXGroup;
+			children = (
+				CCB465922BACDAC8001FBDFA /* baseUriChange */,
+				CCB465942BACDAC8001FBDFA /* baseUriChangeFolder */,
+				CCB465962BACDAC8001FBDFA /* baseUriChangeFolderInSubschema */,
+				CCB465992BACDAC8001FBDFA /* nested */,
+				CCB4659A2BACDAC8001FBDFA /* detached-dynamicref.json */,
+				CCB4659B2BACDAC8001FBDFA /* detached-ref.json */,
+				CCB4659C2BACDAC8001FBDFA /* extendible-dynamic-ref.json */,
+				CCB4659D2BACDAC8001FBDFA /* format-assertion-false.json */,
+				CCB4659E2BACDAC8001FBDFA /* format-assertion-true.json */,
+				CCB4659F2BACDAC8001FBDFA /* integer.json */,
+				CCB465A02BACDAC8001FBDFA /* locationIndependentIdentifier.json */,
+				CCB465A12BACDAC8001FBDFA /* metaschema-no-validation.json */,
+				CCB465A22BACDAC8001FBDFA /* metaschema-optional-vocabulary.json */,
+				CCB465A32BACDAC8001FBDFA /* name-defs.json */,
+				CCB465A42BACDAC8001FBDFA /* prefixItems.json */,
+				CCB465A52BACDAC8001FBDFA /* ref-and-defs.json */,
+				CCB465A62BACDAC8001FBDFA /* subSchemas.json */,
+				CCB465A72BACDAC8001FBDFA /* tree.json */,
+			);
+			path = "2020-12";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1031,11 +1064,12 @@
 				CCB4655F2BAB987F001FBDFA /* Copy JSONSchema/tests */,
 				CCB465B82BACDCC0001FBDFA /* Copy JSONSchema/tests/optional */,
 				CCB465C52BACDD1D001FBDFA /* Copy JSONSchema/tests/optional/format */,
-				CCB465A92BACDC3C001FBDFA /* Copy JSONSchema/remotes */,
-				CCB465DA2BACDD5E001FBDFA /* Copy JSONSchema/remotes/nested */,
-				CCB465DD2BACDDB3001FBDFA /* Copy JSONSchema/remotes/baseUriChange */,
-				CCB465DF2BACDDEF001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolder */,
-				CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/baseUriChangeFolderInSubschema */,
+				CCB466272BB9FF32001FBDFA /* Copy JSONSchema/remotes */,
+				CCB465A92BACDC3C001FBDFA /* Copy JSONSchema/remotes/draft2020-12 */,
+				CCB465DA2BACDD5E001FBDFA /* Copy JSONSchema/remotes/draft2020-12/nested */,
+				CCB465DD2BACDDB3001FBDFA /* Copy JSONSchema/remotes/draft2020-12/baseUriChange */,
+				CCB465DF2BACDDEF001FBDFA /* Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolder */,
+				CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolderInSubschema */,
 				CCB466132BB7534D001FBDFA /* Copy JSONSchema/2020-12 */,
 				CCB466152BB75395001FBDFA /* Copy JSONSchema/2020-12/meta */,
 			);
@@ -1160,6 +1194,7 @@
 				CC528E3F2B797811001E9E52 /* JSON.swift in Sources */,
 				CCB465E82BAD693A001FBDFA /* JSONSchemaValidator.swift in Sources */,
 				CC528E472B7B5392001E9E52 /* JSONExtensions.swift in Sources */,
+				CCB466222BB9D9C1001FBDFA /* JSONSchemaIdentifier.swift in Sources */,
 				CCB465F52BB6FFAB001FBDFA /* JSONSchemaProvider.swift in Sources */,
 				CCB465EC2BAD6E30001FBDFA /* JSONSchemaRegistry.swift in Sources */,
 				CCD13B722B82536500307526 /* JSONLocation.swift in Sources */,

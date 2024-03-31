@@ -12,7 +12,7 @@ public struct JSONSchemaValidationContext {
   /// Collection of errors raised by functionality provided by `JSONSchemaRegistry`.
   public enum Error: LocalizedError, CustomStringConvertible {
     case unknownDialect(URL)
-    case unknownResource(URL)
+    case unknownResource(JSONSchemaIdentifier)
     case validationDepthExhausted(JSONLocation)
     
     public var description: String {
@@ -76,13 +76,14 @@ public struct JSONSchemaValidationContext {
   /// Return validator for a schema referenced by `uri` in the context of JSON schema
   /// resource `base` at `location` (relative to the root JSON schema). `dialect` is the
   /// default schema dialect to be used.
-  public func validator(for uri: URL,
+  public func validator(for uri: JSONSchemaIdentifier,
                         at location: JSONLocation = .root,
                         dynamic: Bool = false,
                         dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
     // Determine base URI and fragment
     let id = resource?.uri(relative: uri) ?? uri
-    let (baseUri, fragment) = id.extractFragment()
+    let baseUri = id.baseIdentifier
+    let fragment = id.fragment
     // Determine base
     var base = self.resource
     if base == nil || !baseUri.lastPathComponent.isEmpty {
@@ -95,6 +96,7 @@ public struct JSONSchemaValidationContext {
         case .static(let target):
           return try self.validator(for: target, at: location, dialect: dialect)
         case .dynamic(let target):
+          // print("@@@ resolving \(fragment) to \(target)")
           if dynamic {
             return try self.validator(for: self.dynamicResolve(fragment: fragment) ?? target,
                                       at: location,
@@ -113,10 +115,13 @@ public struct JSONSchemaValidationContext {
       return nil
     }
     for resource in self.active {
+      // print(" try finding '\(fragment)' in \(resource) | \(resource.dynamicSelfAnchor)")
       if resource.dynamicSelfAnchor == fragment {
+        // print("--- dynamic resolution found \(resource)")
         return resource
       } else if let anchors = resource.anchors,
          case .some(.dynamic(let target)) = anchors[fragment] {
+        // print("~~~ dynamic resolution found \(target)")
         return target
       }
     }
@@ -158,7 +163,8 @@ public struct JSONSchemaValidationContext {
     if let id = schema.id {
       // Determine base URI and fragment
       let global = resource?.uri(relative: id) ?? id
-      let (baseUri, fragment) = global.extractFragment()
+      let baseUri = global.baseIdentifier
+      let fragment = global.fragment
       // TODO: Flag if fragment is not nil?
       base = self.registry.resource(for: baseUri) ?? base
     }

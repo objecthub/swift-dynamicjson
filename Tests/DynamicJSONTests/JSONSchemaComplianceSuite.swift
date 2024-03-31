@@ -27,32 +27,6 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
     return "JSONSchema/tests/"
   }
   
-  private func makeRegistry() -> JSONSchemaRegistry {
-    let testUri = URL(string: "http://localhost:1234/draft2020-12/")!
-    let schemaUri = URL(string: "https://json-schema.org/draft/2020-12/")!
-    let registry = JSONSchemaRegistry()
-    let bundle = Bundle(for: type(of: self))
-    if let dir = bundle.url(forResource: "remotes",
-                            withExtension: nil,
-                            subdirectory: "JSONSchema") {
-      registry.register(provider: .files(from: dir, base: testUri))
-    } else {
-      let dir = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONSchema/remotes/",
-                    isDirectory: true)
-      registry.register(provider: .files(from: dir, base: testUri))
-    }
-    if let dir = bundle.url(forResource: "2020-12",
-                            withExtension: nil,
-                            subdirectory: "JSONSchema") {
-      registry.register(provider: .files(from: dir, base: schemaUri))
-    } else {
-      let dir = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONSchema/2020-12/",
-                    isDirectory: true)
-      registry.register(provider: .files(from: dir, base: schemaUri))
-    }
-    return registry
-  }
-  
   func testAdditionalProperties() {
     self.execute(suite: "additionalProperties")
   }

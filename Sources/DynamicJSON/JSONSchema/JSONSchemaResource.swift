@@ -101,7 +101,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
         return
       case .descriptor(var descriptor):
         if descriptor.id == nil {
-          descriptor.id = URL(string: UUID().uuidString)
+          descriptor.id = JSONSchemaIdentifier(string: UUID().uuidString)
         }
         self.init(nested: .descriptor(descriptor))
     }
@@ -138,6 +138,14 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
         }
       }
     }
+    if case .descriptor(let descriptor) = self.schema, descriptor.id != nil {
+      if let anchor = descriptor.anchor {
+        self.selfAnchor = anchor
+      }
+      if let anchor = descriptor.dynamicAnchor {
+        self.dynamicSelfAnchor = anchor
+      }
+    }
     // print(self.debugDescription)
   }
   
@@ -166,16 +174,16 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   }
   
   /// Returns the id of this schema resource
-  public var id: URL? {
+  public var id: JSONSchemaIdentifier? {
     return self.schema.id
   }
   
   /// Returns a resource map for all internal, nested schema resources.
-  public var resources: [URL : JSONSchemaResource] {
+  public var resources: [JSONSchemaIdentifier : JSONSchemaResource] {
     guard let nested else {
       return [:]
     }
-    var res: [URL : JSONSchemaResource] = [:]
+    var res: [JSONSchemaIdentifier : JSONSchemaResource] = [:]
     for nested in nested.values {
       if let nestedId = nested.id {
         res[nestedId] = nested
@@ -193,14 +201,8 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   }
   
   /// Returns an absolute URI for the given relative URI
-  public func uri(relative: URL) -> URL {
-    let uri: URL
-    if let id {
-      uri = URL(string: relative.relativeString, relativeTo: id)?.absoluteURL ?? relative
-    } else {
-      uri = relative
-    }
-    return uri.normalizedURL
+  public func uri(relative: JSONSchemaIdentifier) -> JSONSchemaIdentifier {
+    return relative.relative(to: self.id)
   }
   
   /// Resolves a fragment relative to this schema resource.

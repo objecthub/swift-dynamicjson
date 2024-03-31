@@ -8,20 +8,21 @@
 import Foundation
 
 public protocol JSONSchemaProvider {
-  func resource(for id: URL) -> JSONSchemaResource?
+  func resource(for id: JSONSchemaIdentifier) -> JSONSchemaResource?
 }
 
 extension JSONSchemaProvider where Self == StaticJSONSchemaFileProvider {
-  public static func files(from directory: URL, base uri: URL) -> StaticJSONSchemaFileProvider {
+  public static func files(from directory: URL,
+                           base uri: JSONSchemaIdentifier) -> StaticJSONSchemaFileProvider {
     return StaticJSONSchemaFileProvider(directory: directory, base: uri)
   }
 }
 
 public struct StaticJSONSchemaFileProvider: JSONSchemaProvider, CustomStringConvertible {
-  public let fileUrls: [URL : URL]
+  public let fileUrls: [JSONSchemaIdentifier : URL]
   
-  public init(directory dir: URL, base uri: URL) {
-    var fileUrls: [URL : URL] = [:]
+  public init(directory dir: URL, base uri: JSONSchemaIdentifier) {
+    var fileUrls: [JSONSchemaIdentifier : URL] = [:]
     var content: [(String, URL, Bool)] = Self.contents(of: dir)
     var i = 0
     while i < content.count {
@@ -30,15 +31,15 @@ public struct StaticJSONSchemaFileProvider: JSONSchemaProvider, CustomStringConv
         let url = URL(fileURLWithPath: path, isDirectory: isDir, relativeTo: base)
         content.append(contentsOf: Self.contents(of: url, path: path, base: base))
       } else {
-        let id = URL(fileURLWithPath: path, relativeTo: uri)
-        fileUrls[id.absoluteURL] = URL(fileURLWithPath: path, relativeTo: base).absoluteURL
+        let id = JSONSchemaIdentifier(path: path).relative(to: uri)
+        fileUrls[id] = URL(fileURLWithPath: path, relativeTo: base).absoluteURL
       }
       i += 1
     }
     self.fileUrls = fileUrls
   }
   
-  public func resource(for id: URL) -> JSONSchemaResource? {
+  public func resource(for id: JSONSchemaIdentifier) -> JSONSchemaResource? {
     guard let url = self.fileUrls[id] else {
       return nil
     }

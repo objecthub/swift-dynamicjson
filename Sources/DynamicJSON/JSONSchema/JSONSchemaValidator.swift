@@ -82,7 +82,7 @@ public struct ValidationError: CustomStringConvertible {
   
   public var description: String {
     return "value \(self.value.value) at \(value.location) not matching " +
-           "schema \(self.schema.id?.relativeString ?? ""); reason: \(self.reason)"
+           "schema \(self.schema.id?.string ?? ""); reason: \(self.reason)"
   }
 }
 
