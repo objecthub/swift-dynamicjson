@@ -61,14 +61,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
     
     public func validator(for schema: JSONSchema,
-                          at location: JSONLocation,
-                          base resource: JSONSchemaResource,
-                          using registry: JSONSchemaRegistry) -> JSONSchemaValidator {
-      return JSONSchemaDraft2020(dialect: self,
-                                 registry: registry,
-                                 location: location,
-                                 resource: resource,
-                                 schema: schema)
+                          in context: JSONSchemaValidationContext) -> JSONSchemaValidator {
+      return JSONSchemaDraft2020(dialect: self, context: context, schema: schema)
     }
   }
   
@@ -177,26 +171,18 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   public let dialect: Dialect
-  public let registry: JSONSchemaRegistry
-  public let location: JSONLocation
-  public let resource: JSONSchemaResource
+  public let context: JSONSchemaValidationContext
   public let schema: JSONSchema
   
-  public init(dialect: Dialect,
-              registry: JSONSchemaRegistry,
-              location: JSONLocation,
-              resource: JSONSchemaResource,
-              schema: JSONSchema) {
+  public init(dialect: Dialect, context: JSONSchemaValidationContext, schema: JSONSchema) {
     self.dialect = dialect
-    self.registry = registry
-    self.location = location
-    self.resource = resource
+    self.context = context
     self.schema = schema
   }
   
   open func validateCore(instance: LocatedJSON, result: inout ValidationResult) {
     func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.location, member))
+      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
     guard case .descriptor(let descriptor) = self.schema else {
       return
@@ -206,49 +192,49 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     // if let anchor = descriptor.anchor {}
     if let ref = descriptor.ref {
       do {
-        let validator = try self.registry.validator(for: ref,
-                                                    at: .member(self.location, "$ref"),
-                                                    base: self.resource,
-                                                    dialect: self.dialect)
+        let validator = try self.context.validator(for: ref,
+                                                   at: .member(self.context.location, "$ref"),
+                                                   dialect: dialect)
         result.include(validator.validate(instance))
       } catch let e {
         flag(.validationError(e), for: "$ref")
       }
     }
     if let dynamicRef = descriptor.dynamicRef {
-      
+      do {
+        let validator = try self.context.validator(for: dynamicRef,
+                                                   at: .member(self.context.location, "$dynamicRef"),
+                                                   dynamic: true,
+                                                   dialect: dialect)
+        result.include(validator.validate(instance))
+      } catch let e {
+        flag(.validationError(e), for: "$dynamicRef")
+      }
     }
-    if let dynamicAnchor = descriptor.dynamicAnchor {
-      
-    }
+    // if let dynamicAnchor = descriptor.dynamicAnchor {}
     if let vocabulary = descriptor.vocabulary {
       
     }
     // if let comment = descriptor.comment {}
-    if let defs = descriptor.defs {
-      
-    }
+    // if let defs = descriptor.defs {}
   }
   
   open func validateApplicator(instance: LocatedJSON, result: inout ValidationResult) {
     func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.location, member))
+      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
     func validator(for schema: JSONSchema,
                    at member: String, _ member2: String? = nil,
                    index: Int? = nil) -> JSONSchemaValidator? {
       do {
-        var location: JSONLocation = .member(self.location, member)
+        var location: JSONLocation = .member(self.context.location, member)
         if let member2 {
           location = .member(location, member2)
         }
         if let index, index >= 0 {
           location = .index(location, index)
         }
-        return try self.registry.validator(for: schema,
-                                           at: location,
-                                           base: self.resource,
-                                           dialect: self.dialect)
+        return try self.context.validator(for: schema, at: location, dialect: self.dialect)
       } catch let e {
         flag(.validationError(e), for: member)
         return nil
@@ -259,12 +245,11 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
     if let prefixItems = descriptor.prefixItems, case .array(let arr) = instance.value {
       do {
-        let location: JSONLocation = .member(self.location, "prefixItems")
+        let location: JSONLocation = .member(self.context.location, "prefixItems")
         for i in 0..<min(prefixItems.count, arr.count) {
-          let validator = try self.registry.validator(for: prefixItems[i],
-                                                      at: .index(location, i),
-                                                      base: self.resource,
-                                                      dialect: self.dialect)
+          let validator = try self.context.validator(for: prefixItems[i],
+                                                     at: .index(location, i),
+                                                     dialect: self.dialect)
           if let item = instance.index(i) {
             result.include(validator.validate(item))
           }
@@ -408,7 +393,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   open func validateValidation(instance: LocatedJSON, result: inout ValidationResult) {
     func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.location, member))
+      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
     guard case .descriptor(let descriptor) = self.schema else {
       return
@@ -583,7 +568,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     // Check if this schema always suceeds or fails
     if case .boolean(let bool) = self.schema {
       if !bool {
-        result.flag(Reason.alwaysFails, for: instance, schema: self.schema, at: self.location)
+        result.flag(Reason.alwaysFails, for: instance, schema: self.schema, at: self.context.location)
       }
       return result
     }

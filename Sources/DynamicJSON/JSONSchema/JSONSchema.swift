@@ -110,7 +110,7 @@ public indirect enum JSONSchema: Codable,
                           uri base: URL?) {
     switch self {
       case .boolean(_):
-        break
+        nested[location] = self
       case .descriptor(var descriptor):
         if let id = descriptor.id {
           descriptor.id = URL(string: id.relativeString, relativeTo: base)?.absoluteURL

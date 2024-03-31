@@ -38,28 +38,23 @@ public class JSONSchemaRegistry {
   
   /// Collection of errors raised by functionality provided by `JSONSchemaRegistry`.
   public enum Error: LocalizedError, CustomStringConvertible {
-    case cannotRegisterNonRootResource
-    case unknownDialect(URL)
-    case unknownResource(URL)
+    case cannotRegisterNonRootResource(JSONSchema)
     case schemaWithoutId(JSONSchema)
-    case validationDepthExhausted(JSONLocation)
     
     public var description: String {
       switch self {
-        case .cannotRegisterNonRootResource:
-          return "cannot register non-root JSON schema resource"
-        case .unknownDialect(let uri):
-          return "unsupported dialect \(uri)"
-        case .unknownResource(let uri):
-          return "unknown JSON schema resource \(uri)"
+        case .cannotRegisterNonRootResource(let schema):
+          if let title = schema.title {
+            return "cannot register non-root JSON schema resource \'\(title)\'"
+          } else {
+            return "cannot register non-root JSON schema resource"
+          }
         case .schemaWithoutId(let schema):
           if let title = schema.title {
             return "schema \"\(title)\" does not provide an id"
           } else {
             return "schema does not provide an id"
           }
-        case .validationDepthExhausted(let location):
-          return "validation depth exhausted at location \(location)"
       }
     }
     
@@ -69,12 +64,8 @@ public class JSONSchemaRegistry {
     
     public var failureReason: String? {
       switch self {
-        case .unknownDialect(_):
-          return "dialect error"
-        case .unknownResource(_), .cannotRegisterNonRootResource, .schemaWithoutId(_):
+        case .cannotRegisterNonRootResource(_), .schemaWithoutId(_):
           return "schema error"
-        case .validationDepthExhausted(_):
-          return "validation error"
       }
     }
   }
@@ -116,12 +107,15 @@ public class JSONSchemaRegistry {
       return
     }
     guard resource.isRoot else {
-      throw Error.schemaWithoutId(resource.schema)
+      throw Error.cannotRegisterNonRootResource(resource.schema)
     }
     for nested in resource.nestedResources {
       if let nestedId = nested.id?.normalizedURL {
         self.resources[nestedId] = nested
       }
+    }
+    if let id = resource.id {
+      self.resources[id] = resource
     }
   }
   
@@ -136,116 +130,27 @@ public class JSONSchemaRegistry {
     return resource
   }
   
+  public func resource(for baseUri: URL) -> JSONSchemaResource? {
+    // Get JSON schema resource via the first matching provider, if it is not available yet
+    if self.resources[baseUri] == nil {
+      for provider in self.providers {
+        if let resource = provider.resource(for: baseUri) {
+          self.resources[baseUri] = resource
+          break
+        }
+      }
+    }
+    // Return the resource
+    return self.resources[baseUri]
+  }
+  
   /// Entry point for a new validator for on a given JSON schema resource. `dialect` is
   /// the default dialect used if a schema resource does not define one.
   public func validator(for root: JSONSchemaResource,
                         dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
     try self.register(resource: root)
-    //print(root.debugDescription)
-    return try self.validator(at: .root, base: root, dialect: dialect)
-  }
-  
-  /// Return validator for a schema referenced by `uri` in the context of JSON schema
-  /// resource `base` at `location` (relative to the root JSON schema). `dialect` is the
-  /// default schema dialect to be used.
-  public func validator(for uri: URL,
-                        at location: JSONLocation = .root,
-                        base resource: JSONSchemaResource?,
-                        dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
-    var base = resource
-    // Determine base URI and fragment
-    let id = resource?.uri(relative: uri) ?? uri
-    let (baseUri, fragment) = id.extractFragment()
-    if resource == nil || !baseUri.lastPathComponent.isEmpty {
-      // Get JSON schema resource via the first matching provider, if it is not available yet
-      if self.resources[baseUri] == nil {
-        for provider in self.providers {
-          if let resource = provider.resource(for: baseUri) {
-            self.resources[baseUri] = resource
-            break
-          }
-        }
-      }
-      // Verify that a resource is available
-      guard let resource = self.resources[baseUri] else {
-        throw Error.unknownResource(id)
-      }
-      base = resource
-    }
-    // Resolve fragment
-    if let resource = base {
-      let target = try resource.resolve(fragment: fragment)
-      // Return validator for the resolved schema resource
-      return try self.validator(at: location, base: target, dialect: dialect)
-    } else {
-      throw Error.unknownResource(id)
-    }
-  }
-  
-  /// Return validator for `schema` at `location` (relative to the root JSON schema) within
-  /// the context of JSON schema resource `base`. `dialect` is the default schema dialect
-  /// to be used.
-  public func validator(at location: JSONLocation = .root,
-                        base: JSONSchemaResource,
-                        dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
-    guard location.segmentCount < 100 else {
-      throw Error.validationDepthExhausted(location)
-    }
-    let schema = base.schema
-    if let dialect, schema.schema == nil {
-      return dialect.validator(for: schema, at: location, base: base, using: self)
-    } else {
-      let dialectUri = schema.schema ?? self.defaultDialect.uri
-      guard let dialect = self.dialects[dialectUri] else {
-        throw Error.unknownDialect(dialectUri)
-      }
-      return dialect.validator(for: schema, at: location, base: base, using: self)
-    }
-  }
-  
-  /// Return validator for `schema` at `location` (relative to the root JSON schema) within
-  /// the context of JSON schema resource `base`. `dialect` is the default schema dialect
-  /// to be used.
-  public func validator(for schema: JSONSchema,
-                        at location: JSONLocation = .root,
-                        base resource: JSONSchemaResource?,
-                        dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
-    guard location.segmentCount < 100 else {
-      throw Error.validationDepthExhausted(location)
-    }
-    var base = resource
-    // Determine a potentially new base schema resource
-    if let id = schema.id {
-      // Determine base URI and fragment
-      let global = resource?.uri(relative: id) ?? id
-      let (baseUri, fragment) = global.extractFragment()
-      // TODO: Flag if fragment is not nil?
-      if let resource = self.resources[baseUri] {
-        base = resource
-      } else {
-        for provider in self.providers {
-          if let resource = provider.resource(for: baseUri) {
-            self.resources[baseUri] = resource
-            base = self.resources[baseUri] ?? base
-            break
-          }
-        }
-      }
-    }
-    if let dialect, schema.schema == nil {
-      return dialect.validator(for: schema,
-                               at: location,
-                               base: base ?? JSONSchemaResource(nested: schema),
-                               using: self)
-    } else {
-      let dialectUri = schema.schema ?? self.defaultDialect.uri
-      guard let dialect = self.dialects[dialectUri] else {
-        throw Error.unknownDialect(dialectUri)
-      }
-      return dialect.validator(for: schema,
-                               at: location,
-                               base: base ?? JSONSchemaResource(nested: schema),
-                               using: self)
-    }
+    // print(root.debugDescription)
+    return try JSONSchemaValidationContext(registry: self)
+                 .validator(for: root, at: .root, dialect: dialect)
   }
 }

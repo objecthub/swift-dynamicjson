@@ -22,31 +22,11 @@ import Foundation
 
 public protocol JSONSchemaDialect {
   var uri: URL { get }
-  func validator(for schema: JSONSchema,
-                 at location: JSONLocation,
-                 base resource: JSONSchemaResource,
-                 using registry: JSONSchemaRegistry) -> JSONSchemaValidator
+  func validator(for: JSONSchema, in: JSONSchemaValidationContext) -> JSONSchemaValidator
 }
 
 extension JSONSchemaDialect where Self == JSONSchemaDraft2020.Dialect {
   public static var draft2020: JSONSchemaDraft2020.Dialect {
     return JSONSchemaDraft2020.Dialect.default
-  }
-}
-
-public struct JSONValidationContext {
-  let location: JSONLocation
-  let resource: JSONSchemaResource
-  let registry: JSONSchemaRegistry
-  let depth: Int
-  
-  public init(location: JSONLocation,
-              resource: JSONSchemaResource,
-              registry: JSONSchemaRegistry,
-              depth: Int) {
-    self.location = location
-    self.resource = resource
-    self.registry = registry
-    self.depth = depth
   }
 }

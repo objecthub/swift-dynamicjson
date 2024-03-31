@@ -12,8 +12,32 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   private var distance: Int = .max
   public private(set) weak var outer: JSONSchemaResource? = nil
   public private(set) var nested: [JSONLocation : JSONSchemaResource]?
-  public private(set) var anchors: [String : JSONSchemaResource]?
+  public private(set) var anchors: [String : Anchor]?
   public private(set) var selfAnchor: String? = nil
+  public private(set) var dynamicSelfAnchor: String? = nil
+  
+  public enum Anchor {
+    case `static`(JSONSchemaResource)
+    case `dynamic`(JSONSchemaResource)
+    
+    var isStatic: Bool {
+      switch self {
+        case .static(_):
+          return true
+        case .dynamic(_):
+          return false
+      }
+    }
+    
+    var resource: JSONSchemaResource {
+      switch self {
+        case .static(let resource):
+          return resource
+        case .dynamic(let resource):
+          return resource
+      }
+    }
+  }
   
   /// Collection of errors raised by functionality provided by `JSONSchemaResource`.
   public enum Error: LocalizedError, CustomStringConvertible {
@@ -97,11 +121,20 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
       if resource.outer == nil {
         resource.outer = self
       }
-      if case .descriptor(let descriptor) = resource.schema, let anchor = descriptor.anchor {
-        if descriptor.id != nil {
-          resource.selfAnchor = anchor
-        } else if let outer = resource.outer, !outer.schema.isBoolean {
-          outer.anchors![anchor] = resource
+      if case .descriptor(let descriptor) = resource.schema {
+        if let anchor = descriptor.anchor {
+          if descriptor.id != nil {
+            resource.selfAnchor = anchor
+          } else if let outer = resource.outer, !outer.schema.isBoolean {
+            outer.anchors![anchor] = .static(resource)
+          }
+        }
+        if let anchor = descriptor.dynamicAnchor {
+          if descriptor.id != nil {
+            resource.dynamicSelfAnchor = anchor
+          } else if let outer = resource.outer, !outer.schema.isBoolean {
+            outer.anchors![anchor] = .dynamic(resource)
+          }
         }
       }
     }
@@ -171,28 +204,30 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   }
   
   /// Resolves a fragment relative to this schema resource.
-  public func resolve(fragment: String?) throws -> JSONSchemaResource {
+  public func resolve(fragment: String?) throws -> Anchor {
     if self.isAnonymous, let outer = self.outer {
       return try outer.resolve(fragment: fragment)
     }
     guard let fragment else {
-      return self
+      return .static(self)
     }
     if fragment.isEmpty {
-      return self
+      return .static(self)
     } else if fragment.starts(with: "/") {
       if let nested = self.nested {
         let locations = try JSONPointer(fragment).locations()
         for location in locations {
           if let subschema = nested[location] {
-            return subschema
+            return .static(subschema)
           }
         }
       }
     } else if let anchors = self.anchors, let subschema = anchors[fragment] {
       return subschema
     } else if self.selfAnchor == fragment {
-      return self
+      return .static(self)
+    } else if self.dynamicSelfAnchor == fragment {
+      return .dynamic(self)
     }
     // print("----\(fragment)----------------------------------------")
     // print(self.debugDescription)
@@ -235,11 +270,18 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     if let anchors = self.anchors {
       res += "ANCHORS\n"
       for (key, value) in anchors {
-        res += "  \(key) -> \(value.description)\n"
+        if value.isStatic {
+          res += "  static \(key) -> \(value.resource.description)\n"
+        } else {
+          res += "  dynamic \(key) -> \(value.resource.description)\n"
+        }
       }
     }
     if let selfAnchor = self.selfAnchor {
       res += "SELF ANCHOR = '\(selfAnchor)'\n"
+    }
+    if let selfAnchor = self.dynamicSelfAnchor {
+      res += "DYNAMIC SELF ANCHOR = '\(selfAnchor)'\n"
     }
     return res
   }

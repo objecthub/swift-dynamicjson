@@ -176,6 +176,7 @@
 		CCB4661A2BB753C5001FBDFA /* meta-data in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB4660D2BB75183001FBDFA /* meta-data */; };
 		CCB4661B2BB753C5001FBDFA /* format-annotation in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB4660F2BB75195001FBDFA /* format-annotation */; };
 		CCB4661C2BB753C5001FBDFA /* content in Copy JSONSchema/2020-12/meta */ = {isa = PBXBuildFile; fileRef = CCB466112BB751A3001FBDFA /* content */; };
+		CCB4661F2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4661E2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -593,6 +594,7 @@
 		CCB4660D2BB75183001FBDFA /* meta-data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "meta-data"; sourceTree = "<group>"; };
 		CCB4660F2BB75195001FBDFA /* format-annotation */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "format-annotation"; sourceTree = "<group>"; };
 		CCB466112BB751A3001FBDFA /* content */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = content; sourceTree = "<group>"; };
+		CCB4661E2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaValidationContext.swift; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -674,9 +676,7 @@
 				CC10ABE72B9CBB6100746181 /* JSONPointer.swift */,
 				CCB464FF2BA83485001FBDFA /* JSONPath */,
 				CCB464FE2BA83472001FBDFA /* JSONSchema */,
-				CC528E462B7B5392001E9E52 /* JSONExtensions.swift */,
-				CC528E402B797980001E9E52 /* NSNumber.swift */,
-				CCB465032BAA4D2D001FBDFA /* Indirect.swift */,
+				CCB4661D2BB783C7001FBDFA /* Util */,
 				CC528E272B7975DC001E9E52 /* DynamicJSON.h */,
 				CC528E282B7975DC001E9E52 /* DynamicJSON.docc */,
 			);
@@ -747,6 +747,7 @@
 				CCB465F42BB6FFAB001FBDFA /* JSONSchemaProvider.swift */,
 				CCB465E32BAD543C001FBDFA /* JSONSchemaDialect.swift */,
 				CCB465E62BAD6932001FBDFA /* JSONSchemaValidator.swift */,
+				CCB4661E2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift */,
 				CCB465EB2BAD6E30001FBDFA /* JSONSchemaRegistry.swift */,
 				CCB465E92BAD6C9D001FBDFA /* JSONSchemaDraft2020.swift */,
 			);
@@ -959,6 +960,16 @@
 			path = meta;
 			sourceTree = "<group>";
 		};
+		CCB4661D2BB783C7001FBDFA /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				CC528E462B7B5392001E9E52 /* JSONExtensions.swift */,
+				CC528E402B797980001E9E52 /* NSNumber.swift */,
+				CCB465032BAA4D2D001FBDFA /* Indirect.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1153,6 +1164,7 @@
 				CCB465EC2BAD6E30001FBDFA /* JSONSchemaRegistry.swift in Sources */,
 				CCD13B722B82536500307526 /* JSONLocation.swift in Sources */,
 				CC2473E92B8161A00022800A /* JSONPathEvaluator.swift in Sources */,
+				CCB4661F2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift in Sources */,
 				CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

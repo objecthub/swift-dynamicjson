@@ -102,7 +102,7 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
   }
 
   func testDynamicRef() {
-    self.execute(suite: "dynamicRef")
+    self.execute(suite: "dynamicRef", registry: self.makeRegistry())
   }
 
   func testEnum() {
@@ -210,7 +210,7 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
   }
 
   func testRef() {
-    self.execute(suite: "ref")
+    self.execute(suite: "ref", registry: self.makeRegistry())
   }
   
   func testRefRemote() throws {
@@ -238,6 +238,6 @@ final class JSONSchemaComplianceSuite: JSONSchemaTestCase {
   }
 
   func testVocabulary() {
-    self.execute(suite: "vocabulary")
+    self.execute(suite: "vocabulary", registry: self.makeRegistry())
   }
 }
