@@ -22,6 +22,9 @@ import Foundation
 
 public class JSONSchemaRegistry {
   
+  /// This is a shared, non-thread safe registry that can be used as a quick alternative
+  /// for non-production usage to the default of `JSON.validate(with:, using:))` (which
+  /// creates a new empty registry for every invocation).
   public static let `default` = JSONSchemaRegistry()
   
   /// The default dialect used by this registry
@@ -153,7 +156,6 @@ public class JSONSchemaRegistry {
   public func validator(for root: JSONSchemaResource,
                         dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
     try self.register(resource: root)
-    print(root.debugDescription)
     return try JSONSchemaValidationContext(registry: self)
                  .validator(for: root, at: .root, dialect: dialect)
   }

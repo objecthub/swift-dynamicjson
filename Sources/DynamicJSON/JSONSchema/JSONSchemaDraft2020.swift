@@ -66,7 +66,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  public enum Reason: ValidationReason, CustomStringConvertible {
+  public enum Reason: JSONSchemaValidationResults.Reason, CustomStringConvertible {
     case validationError(Error)
     case alwaysFails
     case schemaValidatesButShouldFail
@@ -180,7 +180,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     self.schema = schema
   }
   
-  open func validateCore(instance: LocatedJSON, result: inout ValidationResult) {
+  open func validateCore(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     func flag(_ reason: Reason, for member: String) {
       result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
@@ -212,14 +212,14 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       }
     }
     // if let dynamicAnchor = descriptor.dynamicAnchor {}
-    if let vocabulary = descriptor.vocabulary {
-      
-    }
+    // if let vocabulary = descriptor.vocabulary {
+    //
+    // }
     // if let comment = descriptor.comment {}
     // if let defs = descriptor.defs {}
   }
   
-  open func validateApplicator(instance: LocatedJSON, result: inout ValidationResult) {
+  open func validateApplicator(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     func flag(_ reason: Reason, for member: String) {
       result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
@@ -273,9 +273,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
         var numContains: UInt = 0
         for i in arr.indices {
           if let item = instance.index(i) {
-            let res = validator.validate(item)
-            if res.isValid {
-              result.include(res, for: i)
+            if result.include(ifValid: validator.validate(item), for: i) {
               numContains += 1
             }
           }
@@ -338,9 +336,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       }
     }
     if let `if` = descriptor.if, let condition = validator(for: `if`, at: "if") {
-      let res = condition.validate(instance)
-      if res.isValid {
-        result.include(res)
+      if result.include(ifValid: condition.validate(instance)) {
         if let then = descriptor.then, let validator = validator(for: then, at: "then") {
           result.include(validator.validate(instance))
         }
@@ -359,9 +355,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       var valid = false
       for i in anyOf.indices {
         if let validator = validator(for: anyOf[i], at: "anyOf", index: i) {
-          let res = validator.validate(instance)
-          if res.isValid {
-            result.include(res)
+          if result.include(ifValid: validator.validate(instance)) {
             valid = true
           }
         }
@@ -375,9 +369,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       var flagged = false
       for i in oneOf.indices {
         if let validator = validator(for: oneOf[i], at: "oneOf", index: i) {
-          let res = validator.validate(instance)
-          if res.isValid {
-            result.include(res)
+          if result.include(ifValid: validator.validate(instance)) {
             if valid && !flagged {
               flag(.tooManySchemaValidate, for: "oneOf")
               flagged = true
@@ -391,15 +383,13 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       }
     }
     if let not = descriptor.not, let validator = validator(for: not, at: "not") {
-      let res = validator.validate(instance)
-      if res.isValid {
-        result.include(res)
+      if result.include(ifValid: validator.validate(instance)) {
         flag(.schemaValidatesButShouldFail, for: "not")
       }
     }
   }
   
-  open func validateUnevaluated(instance: LocatedJSON, result: inout ValidationResult) {
+  open func validateUnevaluated(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     func flag(_ reason: Reason, for member: String) {
       result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
@@ -443,7 +433,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  open func validateValidation(instance: LocatedJSON, result: inout ValidationResult) {
+  open func validateValidation(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     func flag(_ reason: Reason, for member: String) {
       result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
@@ -603,20 +593,20 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  open func validateMetadata(instance: LocatedJSON, result: inout ValidationResult) {
+  open func validateMetadata(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     
   }
   
-  open func validateFormat(instance: LocatedJSON, result: inout ValidationResult) {
+  open func validateFormat(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     
   }
   
-  open func validateContent(instance: LocatedJSON, result: inout ValidationResult) {
+  open func validateContent(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     
   }
   
-  open func validate(_ instance: LocatedJSON) -> ValidationResult {
-    var result = ValidationResult(for: instance.location)
+  open func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResults {
+    var result = JSONSchemaValidationResults(for: instance.location)
     // Check if this schema always suceeds or fails
     if case .boolean(let bool) = self.schema {
       if !bool {

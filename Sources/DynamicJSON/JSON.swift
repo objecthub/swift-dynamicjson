@@ -692,13 +692,14 @@ public enum JSON: Hashable,
   
   // MARK: - Schema validation
   
-  public func valid(for schema: JSONSchema, using registry: JSONSchemaRegistry = .default) -> Bool {
+  public func valid(for schema: JSONSchema, using registry: JSONSchemaRegistry? = nil) -> Bool {
     return (try? self.validate(with: schema, using: registry))?.isValid ?? false
   }
   
-  public func validate(with schema: JSONSchema,
-                       using registry: JSONSchemaRegistry = .default) throws -> ValidationResult {
+  public func validate(with schema: JSONSchema, using registry: JSONSchemaRegistry? = nil) throws
+                -> JSONSchemaValidationResults {
     let resource = try JSONSchemaResource(root: schema)
+    let registry = registry ?? JSONSchemaRegistry()
     return try registry.validator(for: resource).validate(LocatedJSON(root: self))
   }
   

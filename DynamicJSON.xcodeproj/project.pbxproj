@@ -181,6 +181,7 @@
 		CCB466282BB9FF59001FBDFA /* different-id-ref-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466242BB9FD63001FBDFA /* different-id-ref-string.json */; };
 		CCB466292BB9FF59001FBDFA /* nested-absolute-ref-to-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */; };
 		CCB4662A2BB9FF59001FBDFA /* urn-ref-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */; };
+		CCB4662C2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4662B2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -616,6 +617,7 @@
 		CCB466242BB9FD63001FBDFA /* different-id-ref-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "different-id-ref-string.json"; sourceTree = "<group>"; };
 		CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nested-absolute-ref-to-string.json"; sourceTree = "<group>"; };
 		CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "urn-ref-string.json"; sourceTree = "<group>"; };
+		CCB4662B2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaValidationResults.swift; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -769,6 +771,7 @@
 				CCB465F42BB6FFAB001FBDFA /* JSONSchemaProvider.swift */,
 				CCB465E32BAD543C001FBDFA /* JSONSchemaDialect.swift */,
 				CCB465E62BAD6932001FBDFA /* JSONSchemaValidator.swift */,
+				CCB4662B2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift */,
 				CCB4661E2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift */,
 				CCB465EB2BAD6E30001FBDFA /* JSONSchemaRegistry.swift */,
 				CCB465E92BAD6C9D001FBDFA /* JSONSchemaDraft2020.swift */,
@@ -1190,6 +1193,7 @@
 				CCB465ED2BAD82A8001FBDFA /* JSONSchemaDraft2020.swift in Sources */,
 				CCB465EF2BB18816001FBDFA /* JSONSchemaResource.swift in Sources */,
 				CCB464FD2BA66DBD001FBDFA /* LocatedJSON.swift in Sources */,
+				CCB4662C2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift in Sources */,
 				CC2473E32B7C1BC80022800A /* JSONPath.swift in Sources */,
 				CC528E3F2B797811001E9E52 /* JSON.swift in Sources */,
 				CCB465E82BAD693A001FBDFA /* JSONSchemaValidator.swift in Sources */,
