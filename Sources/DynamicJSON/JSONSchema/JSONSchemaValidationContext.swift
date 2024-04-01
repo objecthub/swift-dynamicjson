@@ -98,22 +98,16 @@ public struct JSONSchemaValidationContext {
                         dynamic: Bool = false,
                         dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
     // Determine base URI and fragment
-    let id = resource?.uri(relative: uri) ?? uri
+    let id = uri.relative(to: self.resource?.id)
     let baseUri = id.baseIdentifier
     let fragment = id.fragment
-    // Determine base
-    var base = self.resource
-    if base == nil || !baseUri.lastPathComponent.isEmpty {
-      base = self.registry.resource(for: baseUri)
-    }
-    // Resolve fragment
-    if let resource = base {
+    // Determine base resource and resolve fragment
+    if let resource = self.registry.resource(for: baseUri) ?? self.resource {
       // Return validator for the resolved schema resource
       switch try resource.resolve(fragment: fragment) {
         case .static(let target):
           return try self.validator(for: target, at: location, dialect: dialect)
         case .dynamic(let target):
-          // print("@@@ resolving \(fragment) to \(target)")
           if dynamic {
             return try self.validator(for: self.dynamicResolve(fragment: fragment) ?? target,
                                       at: location,
@@ -132,13 +126,10 @@ public struct JSONSchemaValidationContext {
       return nil
     }
     for resource in self.active {
-      // print(" try finding '\(fragment)' in \(resource) | \(resource.dynamicSelfAnchor)")
       if resource.dynamicSelfAnchor == fragment {
-        // print("--- dynamic resolution found \(resource)")
         return resource
       } else if let anchors = resource.anchors,
          case .some(.dynamic(let target)) = anchors[fragment] {
-        // print("~~~ dynamic resolution found \(target)")
         return target
       }
     }
@@ -148,13 +139,25 @@ public struct JSONSchemaValidationContext {
   /// Return validator for `schema` at `location` (relative to the root JSON schema) within
   /// the context of JSON schema resource `base`. `dialect` is the default schema dialect
   /// to be used.
-  public func validator(for base: JSONSchemaResource,
+  public func validator(for resource: JSONSchemaResource,
                         at location: JSONLocation = .root,
+                        dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
+    return try self.validator(for: resource.schema,
+                              at: location,
+                              base: resource.nonAnonymousResource,
+                              dialect: dialect)
+  }
+  
+  /// Return validator for `schema` at `location` (relative to the root JSON schema) within
+  /// the context of JSON schema resource `base`. `dialect` is the default schema dialect
+  /// to be used.
+  public func validator(for schema: JSONSchema,
+                        at location: JSONLocation = .root,
+                        base: JSONSchemaResource,
                         dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
     guard location.segmentCount < 100 else {
       throw Error.validationDepthExhausted(location)
     }
-    let schema = base.schema
     if let dialect, schema.schema == nil {
       return dialect.validator(for: schema, in: self.context(for: base, at: location))
     } else {
@@ -167,7 +170,7 @@ public struct JSONSchemaValidationContext {
   }
   
   /// Return validator for `schema` at `location` (relative to the root JSON schema) within
-  /// the context of JSON schema resource `base`. `dialect` is the default schema dialect
+  /// the context of the current JSON schema resource. `dialect` is the default schema dialect
   /// to be used.
   public func validator(for schema: JSONSchema,
                         at location: JSONLocation = .root,
@@ -179,9 +182,9 @@ public struct JSONSchemaValidationContext {
     // Determine a potentially new base schema resource
     if let id = schema.id {
       // Determine base URI and fragment
-      let global = resource?.uri(relative: id) ?? id
+      let global = id.relative(to: resource?.id)
       let baseUri = global.baseIdentifier
-      let fragment = global.fragment
+      // let fragment = global.fragment
       // TODO: Flag if fragment is not nil?
       base = self.registry.resource(for: baseUri) ?? base
     }

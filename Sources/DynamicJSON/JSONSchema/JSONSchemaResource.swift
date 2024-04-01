@@ -157,10 +157,15 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     try self.init(root: .descriptor(JSONDecoder().decode(JSONSchemaDescriptor.self, from: data)))
   }
   
-  /// Initializes a schema resource from a URL.
-  public convenience init(url: URL) throws {
-    try self.init(root: .descriptor(try JSONDecoder().decode(JSONSchemaDescriptor.self,
-                                                             from: try Data(contentsOf: url))))
+  /// Initializes a schema resource from a URL for the given default JSON schema identifier.
+  /// The given schema identifier is only used if the schema does not define one itself
+  public convenience init(url: URL, id: JSONSchemaIdentifier?) throws {
+    var descriptor = try JSONDecoder().decode(JSONSchemaDescriptor.self,
+                                              from: try Data(contentsOf: url))
+    if descriptor.id == nil {
+      descriptor.id = id
+    }
+    try self.init(root: .descriptor(descriptor))
   }
   
   /// Returns true if this is an anonymous schema resource
@@ -176,6 +181,14 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   /// Returns the id of this schema resource
   public var id: JSONSchemaIdentifier? {
     return self.schema.id
+  }
+  
+  public var nonAnonymousResource: JSONSchemaResource {
+    var res: JSONSchemaResource? = self
+    while res?.isAnonymous ?? false {
+      res = res?.outer
+    }
+    return res ?? self
   }
   
   /// Returns a resource map for all internal, nested schema resources.
@@ -201,9 +214,9 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   }
   
   /// Returns an absolute URI for the given relative URI
-  public func uri(relative: JSONSchemaIdentifier) -> JSONSchemaIdentifier {
-    return relative.relative(to: self.id)
-  }
+  // public func uri(relative: JSONSchemaIdentifier) -> JSONSchemaIdentifier {
+  //  return relative.relative(to: self.id)
+  //}
   
   /// Resolves a fragment relative to this schema resource.
   public func resolve(fragment: String?) throws -> Anchor {

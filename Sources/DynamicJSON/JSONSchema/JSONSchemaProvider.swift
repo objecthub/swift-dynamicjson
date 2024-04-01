@@ -44,7 +44,7 @@ public struct StaticJSONSchemaFileProvider: JSONSchemaProvider, CustomStringConv
       return nil
     }
     do {
-      return try JSONSchemaResource(url: url)
+      return try JSONSchemaResource(url: url, id: id)
     } catch {
       return nil
     }

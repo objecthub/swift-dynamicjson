@@ -114,11 +114,11 @@ public class JSONSchemaRegistry {
   
   private func register(resource: JSONSchemaResource, for id: JSONSchemaIdentifier?) {
     for nested in resource.nestedResources {
-      if let nestedId = nested.id {
+      if let nestedId = nested.id, !nestedId.isEmpty {
         self.resources[nestedId] = nested
       }
     }
-    if let id {
+    if let id = id ?? resource.id, !id.isEmpty {
       self.resources[id] = resource
     }
   }
@@ -128,8 +128,8 @@ public class JSONSchemaRegistry {
   }
   
   @discardableResult
-  public func loadSchema(from url: URL) throws -> JSONSchemaResource {
-    let resource = try JSONSchemaResource(url: url)
+  public func loadSchema(from url: URL, id: JSONSchemaIdentifier?) throws -> JSONSchemaResource {
+    let resource = try JSONSchemaResource(url: url, id: id)
     try self.register(resource: resource)
     return resource
   }

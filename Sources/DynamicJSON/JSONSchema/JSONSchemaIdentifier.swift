@@ -70,6 +70,11 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     return self.uri.fragment == nil
   }
   
+  public var isEmpty: Bool {
+    return self.uri.scheme == nil && self.uri.host == nil && self.uri.port == nil &&
+           self.uri.path.isEmpty && self.uri.fragment == nil
+  }
+  
   public var path: String {
     return self.uri.path
   }
@@ -106,11 +111,14 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     guard let base, !self.isAbsolute else {
       return self
     }
+    guard !self.isEmpty else {
+      return base
+    }
     var res = self.uri
     res.scheme = base.uri.scheme
     res.host = base.uri.host
     res.port = base.uri.port
-    if self.uri.percentEncodedPath.first != "/" {
+    if let first = self.uri.percentEncodedPath.first, first != "/" {
       var path = base.uri.percentEncodedPath
       if path.isEmpty {
         path.append("/")
