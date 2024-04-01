@@ -43,21 +43,37 @@ public struct JSONSchemaValidationContext {
   }
   
   public let registry: JSONSchemaRegistry
-  public let location: JSONLocation
+  public let path: [JSONLocation]
   public let active: [JSONSchemaResource]
   
   public init(registry: JSONSchemaRegistry, resource: JSONSchemaResource? = nil) {
-    self.init(registry: registry, location: .root, active: resource == nil ? [] : [resource!])
+    self.init(registry: registry,
+              location: .root,
+              path: [],
+              active: resource == nil ? [] : [resource!])
   }
   
-  public init(registry: JSONSchemaRegistry, location: JSONLocation, active: [JSONSchemaResource]) {
+  private init(registry: JSONSchemaRegistry,
+              location: JSONLocation,
+              path: [JSONLocation],
+              active: [JSONSchemaResource]) {
+    var path = path
+    path.append(location)
     self.registry = registry
-    self.location = location
+    self.path = path
     self.active = active
+  }
+  
+  public var isDelegated: Bool {
+    return self.path.count > 1 && self.path[self.path.count - 1] == self.path[self.path.count - 2]
   }
   
   public var resource: JSONSchemaResource? {
     return self.active.last
+  }
+  
+  public var location: JSONLocation {
+    return self.path.last!
   }
   
   public func memberLocation(_ member: String) -> JSONLocation {
@@ -70,6 +86,7 @@ public struct JSONSchemaValidationContext {
     extended.append(resource)
     return JSONSchemaValidationContext(registry: self.registry,
                                        location: location,
+                                       path: self.path,
                                        active: extended)
   }
   

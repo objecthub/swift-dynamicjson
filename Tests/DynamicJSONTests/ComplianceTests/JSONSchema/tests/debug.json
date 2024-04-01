@@ -1,32 +1,61 @@
 [
   {
-      "description": "strict-tree schema, guards against misspelled properties",
+      "description": "base URI change - change folder",
       "schema": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "http://localhost:1234/draft2020-12/strict-tree.json",
-          "$dynamicAnchor": "node",
-
-          "$ref": "tree.json",
-          "unevaluatedProperties": false
+          "$id": "http://localhost:1234/draft2020-12/scope_change_defs1.json",
+          "type" : "object",
+          "properties": {"list": {"$ref": "baseUriChangeFolder/"}},
+          "$defs": {
+              "baz": {
+                  "$id": "baseUriChangeFolder/",
+                  "type": "array",
+                  "items": {"$ref": "folderInteger.json"}
+              }
+          }
       },
       "tests": [
           {
-              "description": "instance with misspelled field",
-              "data": {
-                  "children": [{
-                          "daat": 1
-                      }]
-              },
-              "valid": false
+              "description": "number is valid",
+              "data": {"list": [1]},
+              "valid": true
           },
           {
-              "description": "instance with correct field",
-              "data": {
-                  "children": [{
-                          "data": 1
-                      }]
-              },
+              "description": "string is invalid",
+              "data": {"list": ["a"]},
+              "valid": false
+          }
+      ]
+  },
+  {
+      "description": "base URI change - change folder in subschema",
+      "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "http://localhost:1234/draft2020-12/scope_change_defs2.json",
+          "type" : "object",
+          "properties": {"list": {"$ref": "baseUriChangeFolderInSubschema/#/$defs/bar"}},
+          "$defs": {
+              "baz": {
+                  "$id": "baseUriChangeFolderInSubschema/",
+                  "$defs": {
+                      "bar": {
+                          "type": "array",
+                          "items": {"$ref": "folderInteger.json"}
+                      }
+                  }
+              }
+          }
+      },
+      "tests": [
+          {
+              "description": "number is valid",
+              "data": {"list": [1]},
               "valid": true
+          },
+          {
+              "description": "string is invalid",
+              "data": {"list": ["a"]},
+              "valid": false
           }
       ]
   }

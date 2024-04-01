@@ -153,7 +153,7 @@ public class JSONSchemaRegistry {
   public func validator(for root: JSONSchemaResource,
                         dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
     try self.register(resource: root)
-    // print(root.debugDescription)
+    print(root.debugDescription)
     return try JSONSchemaValidationContext(registry: self)
                  .validator(for: root, at: .root, dialect: dialect)
   }

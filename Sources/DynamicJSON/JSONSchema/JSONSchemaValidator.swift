@@ -25,10 +25,16 @@ public protocol JSONSchemaValidator {
 }
 
 public struct ValidationResult: CustomStringConvertible {
+  public let location: JSONLocation
   public private(set) var errors: [ValidationError]
+  public private(set) var evaluatedProperties: Set<String>
+  public private(set) var evaluatedItems: Set<Int>
   
-  public init() {
+  public init(for location: JSONLocation) {
+    self.location = location
     self.errors = []
+    self.evaluatedProperties = []
+    self.evaluatedItems = []
   }
   
   public var isValid: Bool {
@@ -45,8 +51,35 @@ public struct ValidationResult: CustomStringConvertible {
                                        reason: reason))
   }
   
-  public mutating func include(_ other: ValidationResult) {
-    self.errors.append(contentsOf: other.errors)
+  public mutating func evaluted(property: String) {
+    self.evaluatedProperties.insert(property)
+  }
+  
+  public mutating func evaluted(item: Int) {
+    self.evaluatedItems.insert(item)
+  }
+  
+  public mutating func include(_ other: ValidationResult, for item: Int) {
+    self.include(other)
+    self.evaluted(item: item)
+  }
+  
+  public mutating func include(_ other: ValidationResult, for member: String) {
+    self.include(other)
+    self.evaluted(property: member)
+  }
+  
+  @discardableResult
+  public mutating func include(_ other: ValidationResult,
+                               propagateErrors: Bool = true) -> ValidationResult {
+    if propagateErrors {
+      self.errors.append(contentsOf: other.errors)
+    }
+    if self.location == other.location {
+      self.evaluatedProperties.formUnion(other.evaluatedProperties)
+      self.evaluatedItems.formUnion(other.evaluatedItems)
+    }
+    return other
   }
   
   public var description: String {
