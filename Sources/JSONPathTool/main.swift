@@ -110,7 +110,7 @@ let jsonStr3 = """
 }
 """
 
-let json = try JSON(encoded: jsonStr)
+let json = try JSON(string: jsonStr)
 
 while true {
   print("> ", terminator: "")

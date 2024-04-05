@@ -1,8 +1,8 @@
 //
-//  JSONSchemaComplianceTest.swift
-//  DynamicJSONTests
+//  JSONPatchComplianceTest.swift
+//  DynamicJSON
 //
-//  Created by Matthias Zenger on 20/03/2024.
+//  Created by Matthias Zenger on 04/04/2024.
 //  Copyright © 2024 Matthias Zenger. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,18 +21,13 @@
 import Foundation
 import DynamicJSON
 
-struct JSONSchemaComplianceTest: Codable {
-  let description: String
-  let schema: JSONSchema
-  let tests: [JSONSchemaVerificationTest]
-  let ignore: Bool?
+struct JSONPatchComplianceTest: Codable {
+  let comment: String?
+  let doc: JSON
+  let patch: JSON
+  let expected: JSON?
+  let error: String?
+  let disabled: Bool?
 }
 
-struct JSONSchemaVerificationTest: Codable {
-  let description: String
-  let data: JSON
-  let valid: Bool
-  let ignore: Bool?
-}
-
-typealias JSONSchemaComplianceTests = [JSONSchemaComplianceTest]
+typealias JSONPatchComplianceTests = [JSONPatchComplianceTest]

@@ -32,7 +32,7 @@ class DynamicJSONTests: XCTestCase {
   func testConversion() throws {
     let person = Person(name: "John", age: 34, children: [Person(name: "Sofia", age: 5, children: [])])
     let json2 = try JSON(encodable: person)
-    let json3 = try JSON(encoded: """
+    let json3 = try JSON(string: """
       {
         "age" : 34,
         "children" : [
@@ -59,7 +59,7 @@ class DynamicJSONTests: XCTestCase {
         "obj": [ "x" : 17.6 ]
       ]
     ]
-    let json1 = try JSON(encoded: """
+    let json1 = try JSON(string: """
       {
         "foo": true,
         "bar": 123,
@@ -104,7 +104,7 @@ class DynamicJSONTests: XCTestCase {
   }
   
   func testKeyPath2() throws {
-    let json = try JSON(encoded: """
+    let json = try JSON(string: """
           {
             "string2": "foo bar",
             "boolean": true,

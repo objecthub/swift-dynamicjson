@@ -26,15 +26,28 @@ import Foundation
 /// in terms of a sequence of reference tokens used to navigate through the
 /// structure of a JSON document.
 ///
-public struct JSONPointer: JSONReference,
+public struct JSONPointer: SegmentableJSONReference,
                            Codable,
                            Hashable,
                            CustomStringConvertible {
   private let tokens: [ReferenceToken]
   
-  private enum ReferenceToken: Hashable, CustomStringConvertible {
+  public enum ReferenceToken: JSONReferenceSegment, Hashable, CustomStringConvertible {
     case member(String)
     case index(String, Int?)
+    
+    public var index: JSONReferenceSegmentIndex? {
+      switch self {
+        case .member(_):
+          return nil
+        case .index(_, let index):
+          return index == nil ? .fromEnd(0) : (index! < 0 ? .fromEnd(-index!) : .fromStart(index!))
+      }
+    }
+    
+    public var member: String? {
+      return self.string
+    }
     
     public var string: String {
       switch self {
@@ -144,15 +157,6 @@ public struct JSONPointer: JSONReference,
     )
   }
   
-  /// The reference tokens defining this `JSONPointer` value.
-  public var components: [String] {
-    var components: [String] = []
-    for token in tokens {
-      components.append(token.string)
-    }
-    return components
-  }
-  
   /// Initialize a `JSONPointer` reference using a decoder.
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
@@ -163,6 +167,52 @@ public struct JSONPointer: JSONReference,
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.description)
+  }
+  
+  /// Returns a new JSONPointer with the given member selected.
+  public func select(member: String) -> JSONPointer {
+    var tokens = self.tokens
+    tokens.append(.member(member))
+    return JSONPointer(tokens: tokens)
+  }
+  
+  /// Returns a new JSONPointer with the given index selected.
+  public func select(index: Int) -> JSONPointer {
+    var tokens = self.tokens
+    tokens.append(.index(String(index), index))
+    return JSONPointer(tokens: tokens)
+  }
+  
+  /// Returns this JSONPointer as an array of reference tokens.
+  public var segments: [ReferenceToken] {
+    return self.tokens
+  }
+  
+  /// Constructs a new JSONPointer by appending the given segment to this pointer.
+  public func select(segment: ReferenceToken) -> JSONPointer {
+    var tokens = self.tokens
+    tokens.append(segment)
+    return JSONPointer(tokens: tokens)
+  }
+  
+  /// Decomposes this JSONPointer into a parent pointer and a selector reference token.
+  public var deselect: (JSONPointer, ReferenceToken)? {
+    if self.tokens.isEmpty {
+      return nil
+    } else {
+      var tokens = self.tokens
+      let last = tokens.removeLast()
+      return (JSONPointer(tokens: tokens), last)
+    }
+  }
+  
+  /// The reference tokens defining this `JSONPointer` value.
+  public var components: [String] {
+    var components: [String] = []
+    for token in tokens {
+      components.append(token.string)
+    }
+    return components
   }
   
   /// Returns JSON locations corresponding to this `JSONPointer`. For a given JSON document,

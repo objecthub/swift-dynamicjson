@@ -50,11 +50,6 @@ class JSONSchemaTestCase: XCTestCase {
     }
   }
   
-  private func parse(_ str: String) -> JSONPath? {
-    var parser = JSONPathParser(string: str)
-    return try? parser.parse()
-  }
-  
   public func execute(name: String,
                       tests: JSONSchemaComplianceTests,
                       registry: JSONSchemaRegistry) {

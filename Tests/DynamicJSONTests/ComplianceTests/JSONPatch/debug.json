@@ -1,0 +1,8 @@
+[
+  {
+    "comment": "Removing nonexistent field",
+    "doc": {"foo" : "bar"},
+    "patch": [{"op": "remove", "path": "/baz"}],
+    "error": "removing a nonexistent field should fail"
+  }
+]

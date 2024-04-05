@@ -27,7 +27,7 @@ import Foundation
 /// As opposed to `JSONPath` queries, `JSONLocation` references refer to at most one
 /// value within a JSON document.
 ///
-public indirect enum JSONLocation: JSONReference,
+public indirect enum JSONLocation: SegmentableJSONReference,
                                    Codable,
                                    Hashable,
                                    CustomStringConvertible {
@@ -60,9 +60,27 @@ public indirect enum JSONLocation: JSONReference,
   
   /// Representation of a segment of singular JSONPath queries (which are the
   /// foundation of `JSONLocation` references).
-  public enum Segment: Codable, Hashable, CustomStringConvertible {
+  public enum Segment: JSONReferenceSegment, Codable, Hashable, CustomStringConvertible {
     case member(String)
     case index(Int)
+    
+    public var index: JSONReferenceSegmentIndex? {
+      switch self {
+        case .member(_):
+          return nil
+        case .index(let index):
+          return index < 0 ? .fromEnd(-index) : .fromStart(index)
+      }
+    }
+    
+    public var member: String? {
+      switch self {
+        case .member(let member):
+          return member
+        case .index(let index):
+          return String(index)
+      }
+    }
     
     public var description: String {
       switch self {
@@ -135,6 +153,71 @@ public indirect enum JSONLocation: JSONReference,
     try container.encode(self.description)
   }
   
+  /// Returns a new JSONLocation with the given member selected.
+  public func select(member: String) -> JSONLocation {
+    return .member(self, member)
+  }
+  
+  /// Returns a new JSONLocation with the given index selected.
+  public func select(index: Int) -> JSONLocation {
+    return .index(self, index)
+  }
+  
+  /// The segments defining this `JSONLocation`.
+  public var segments: [Segment] {
+    var res: [Segment] = []
+    self.insert(into: &res)
+    return res
+  }
+  
+  private func insert(into segments: inout [Segment]) {
+    switch self {
+      case .member(let location, let member):
+        location.insert(into: &segments)
+        segments.append(.member(member))
+      case .index(let location, let member):
+        location.insert(into: &segments)
+        segments.append(.index(member))
+      default:
+        break
+    }
+  }
+  
+  /// Returns the number of segments of this JSONLocation.
+  public var segmentCount: Int {
+    switch self {
+      case .root:
+        return 0
+      case .member(let location, _):
+        return location.segmentCount + 1
+      case .index(let location, _):
+        return location.segmentCount + 1
+    }
+  }
+  
+  /// Returns a new JSONLocation by appending the given segment.
+  public func select(segment: Segment) -> JSONLocation {
+    switch segment {
+      case .member(let member):
+        return .member(self, member)
+      case .index(let index):
+        return .index(self, index)
+    }
+  }
+  
+  /// Decomposes this JSONLocation into a parent location and the last segment of this
+  /// JSONLocation.
+  public var deselect: (JSONLocation, Segment)? {
+    switch self {
+      case .root:
+        return nil
+      case .member(let parent, let member):
+        return (parent, .member(member))
+      case .index(let parent, let index):
+        return (parent, .index(index))
+    }
+  }
+  
   /// Returns true if this location is a prefix of `location`.
   public func isPrefix(of location: JSONLocation, allowEqual: Bool = true) -> Bool {
     let segments = self.segments
@@ -180,38 +263,6 @@ public indirect enum JSONLocation: JSONReference,
         return .select(location.path, .children([.member(member)]))
       case .index(let location, let index):
         return .select(location.path, .children([.index(index)]))
-    }
-  }
-  
-  /// Returns the number of segments of this `JSONLocation`
-  public var segmentCount: Int {
-    switch self {
-      case .root:
-        return 0
-      case .member(let location, _):
-        return location.segmentCount + 1
-      case .index(let location, _):
-        return location.segmentCount + 1
-    }
-  }
-  
-  /// The segments defining this `JSONLocation`.
-  public var segments: [Segment] {
-    var res: [Segment] = []
-    self.insert(into: &res)
-    return res
-  }
-  
-  private func insert(into segments: inout [Segment]) {
-    switch self {
-      case .member(let location, let member):
-        location.insert(into: &segments)
-        segments.append(.member(member))
-      case .index(let location, let member):
-        location.insert(into: &segments)
-        segments.append(.index(member))
-      default:
-        break
     }
   }
   

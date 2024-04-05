@@ -39,7 +39,6 @@ import Foundation
 ///
 @dynamicMemberLookup
 public enum JSON: Hashable,
-                  Equatable,
                   Codable,
                   CustomStringConvertible,
                   CustomDebugStringConvertible,
@@ -216,7 +215,7 @@ public enum JSON: Hashable,
   
   /// This initializer decodes the provided data with the given decoding strategies
   /// into a JSON value.
-  public init(encoded: Data,
+  public init(data: Data,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
               userInfo: [CodingUserInfoKey : Any]? = nil) throws {
@@ -227,22 +226,34 @@ public enum JSON: Hashable,
     if let userInfo {
       decoder.userInfo = userInfo
     }
-    self = try decoder.decode(JSON.self, from: encoded)
+    self = try decoder.decode(JSON.self, from: data)
   }
   
   /// This initializer decodes the provided string with the given decoding strategies
   /// into a JSON value.
-  public init(encoded: String,
+  public init(string: String,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
               userInfo: [CodingUserInfoKey : Any]? = nil) throws {
-    guard let data = encoded.data(using: .utf8) else {
+    guard let data = string.data(using: .utf8) else {
       throw Error.erroneousEncoding
     }
-    self = try .init(encoded: data,
+    self = try .init(data: data,
                      dateDecodingStrategy: dateDecodingStrategy,
                      floatDecodingStrategy: floatDecodingStrategy,
                      userInfo: userInfo)
+  }
+  
+  /// This initializer decodes the content at the provided URL with the given
+  /// decoding strategies into a JSON value.
+  public init(url: URL,
+              dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
+              floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
+              userInfo: [CodingUserInfoKey : Any]? = nil) throws {
+    try self.init(data: try Data(contentsOf: url),
+                  dateDecodingStrategy: dateDecodingStrategy,
+                  floatDecodingStrategy: floatDecodingStrategy,
+                  userInfo: userInfo)
   }
   
   // MARK: - Exporting and interchanging data
@@ -543,6 +554,14 @@ public enum JSON: Hashable,
     return try JSON.reference(from: ref).set(to: json, in: self)
   }
   
+  /// Applies the given JSON patch object to this JSON document and returns the result
+  /// as a separate JSON document.
+  public func applying(patch: JSONPatch) throws -> JSON {
+    var value = self
+    try patch.apply(to: &value)
+    return value
+  }
+  
   // MARK: - Mutating data
   
   /// Mutates this JSON value if it represents either an array or a string by appending
@@ -598,10 +617,6 @@ public enum JSON: Hashable,
     }
   }
   
-    /// Returns a new JSON value in which the value referenced by `ref` (any abstraction
-    /// implementing the `JSONReference` procotol, such as `JSONLocation` and `JSONPointer`)
-    /// was replaced with `json`.
-  
   /// Replaces the value the location reference `ref` is referring to with `json`. The
   /// replacement is done in place, i.e. it mutates this JSON value. `ref` can be
   /// implemented by any abstraction implementing the `JSONReference` procotol, such as
@@ -626,42 +641,17 @@ public enum JSON: Hashable,
     try ref.mutate(&self, with: proc)
   }
   
-  /// Mutates the JSON array the reference `ref` is referring to with function `proc`.
-  /// `proc` receives a reference to the array, allowing efficient in place mutations
+  /// Mutates the JSON value the reference `ref` is referring to with function `arrProc`
+  /// if the value is an array or `objProc` if the value is an object. For all other
+  /// cases, an error is thrown. This method allows for efficient in place mutations
   /// without automatically doing any copying. `ref` can be implemented by any abstraction
   /// implementing the `JSONReference` procotol, such as `JSONLocation` (for singular JSON
   /// path queries) and `JSONPointer`.
-  public mutating func mutate(array ref: JSONReference,
-                              with proc: (inout [JSON]) throws -> Void) throws {
-    try ref.mutate(&self) { value in
-      guard case .array(var arr) = value else {
-        throw JSON.Error.typeMismatch(.array, value)
-      }
-      value = .null
-      defer {
-        value = .array(arr)
-      }
-      try proc(&arr)
-    }
-  }
-  
-  /// Mutates the JSON object the reference `ref` is referring to with function `proc`.
-  /// `proc` receives a reference to the dictionary of the object, allowing efficient in
-  /// place mutations without automatically doing any copying. `ref` can be implemented
-  /// by any abstraction implementing the `JSONReference` procotol, such as `JSONLocation`
-  /// (for singular JSON path queries) and `JSONPointer`.
-  public mutating func mutate(object ref: JSONReference,
-                              with proc: (inout [String : JSON]) throws -> Void) throws {
-    try ref.mutate(&self) { value in
-      guard case .object(var dict) = value else {
-        throw JSON.Error.typeMismatch(.object, value)
-      }
-      value = .null
-      defer {
-        value = .object(dict)
-      }
-      try proc(&dict)
-    }
+  public mutating func mutate(_ ref: JSONReference,
+                              array arrProc: ((inout [JSON]) throws -> Void)? = nil,
+                              object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
+                              other proc: ((inout JSON) throws -> Void)? = nil) throws {
+    try ref.mutate(&self, with: Self.mutator(array: arrProc, object: objProc, other: proc))
   }
   
   /// Mutates the JSON value the reference string `ref` is referring to with function `proc`.
@@ -672,30 +662,38 @@ public enum JSON: Hashable,
     try self.mutate(try JSON.reference(from: ref), with: proc)
   }
   
-  /// Mutates the JSON array the reference string `ref` is referring to with function `proc`.
-  /// `proc` receives a reference to the array, allowing efficient in place mutations
+  /// Mutates the JSON array the reference string `ref` is referring to with function
+  /// `arrProc` if the value is an array or `objProc` if the value is an object. For
+  /// all other cases, an error is thrown. This method allows for efficient in place mutations
   /// without automatically doing any copying. `ref` is a string representation of either
   /// `JSONLocation` or `JSONPointer` references.
-  public mutating func mutate(array ref: String,
-                              with proc: (inout [JSON]) throws -> Void) throws {
-    try self.mutate(array: try JSON.reference(from: ref), with: proc)
+  public mutating func mutate(_ ref: String,
+                              array arrProc: ((inout [JSON]) throws -> Void)? = nil,
+                              object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
+                              other proc: ((inout JSON) throws -> Void)? = nil) throws {
+    try self.mutate(try JSON.reference(from: ref), array: arrProc, object: objProc, other: proc)
   }
   
-  /// Mutates the JSON object the reference string `ref` is referring to with function `proc`.
-  /// `proc` receives a reference to the dictionary of the object, allowing efficient in
-  /// place mutations without automatically doing any copying. `ref` is a string
-  /// representation of either `JSONLocation` or `JSONPointer` references.
-  public mutating func mutate(object ref: String,
-                              with proc: (inout [String : JSON]) throws -> Void) throws {
-    try self.mutate(object: try JSON.reference(from: ref), with: proc)
+  /// Applies the given JSON Patch operations to this JSON document, mutating this JSON
+  /// document atomically (with transactional semantics), i.e. if there is a failure during
+  /// the processing of the patch operation, this JSON document remains unchanged.
+  public mutating func apply(patch: JSONPatch) throws {
+    var value = self
+    try patch.apply(to: &value)
+    self = value
   }
   
   // MARK: - Schema validation
   
+  /// Returns true if this JSON document is valid for the given JSON schema (using
+  /// `registry` for resolving references to schema referred to from `schema`).
   public func valid(for schema: JSONSchema, using registry: JSONSchemaRegistry? = nil) -> Bool {
     return (try? self.validate(with: schema, using: registry))?.isValid ?? false
   }
   
+  /// Returns a schema validation result for this JSON document validated against the
+  /// JSON schema `schema` (using`registry` for resolving references to schema referred to
+  /// from `schema`).
   public func validate(with schema: JSONSchema, using registry: JSONSchemaRegistry? = nil) throws
                 -> JSONSchemaValidationResults {
     let resource = try JSONSchemaResource(root: schema)
@@ -765,6 +763,34 @@ public enum JSON: Hashable,
       }
     } else {
       return try JSONLocation("$")
+    }
+  }
+  
+  /// Combines the three given closures into one mutator closure. This is useful to create
+  /// JSON document mutators with minimal copying.
+  public static func mutator(array arrProc: ((inout [JSON]) throws -> Void)? = nil,
+                             object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
+                             other otherProc: ((inout JSON) throws -> Void)? = nil)
+                                                                  -> ((inout JSON) throws -> Void) {
+    return { value in
+      switch value {
+        case .array(var arr) where arrProc != nil:
+          value = .null
+          defer {
+            value = .array(arr)
+          }
+          try arrProc!(&arr)
+        case .object(var dict) where objProc != nil:
+          value = .null
+          defer {
+            value = .object(dict)
+          }
+          try objProc!(&dict)
+        default:
+          if let otherProc {
+            try otherProc(&value)
+          }
+      }
     }
   }
 }

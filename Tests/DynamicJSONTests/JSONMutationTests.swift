@@ -122,22 +122,22 @@ final class JSONMutationTests: XCTestCase {
             ]
         ]
     ]
-    XCTAssertNoThrow(try json.mutate(array: "$.object.obj.z") { arr in
+    XCTAssertNoThrow(try json.mutate("$.object.obj.z") { arr in
       arr.removeFirst()
       arr.append("three")
     })
     XCTAssertEqual(json, result1)
     XCTAssertNoThrow(try json.update("$.object.arr[1]", with: "two"))
     XCTAssertEqual(json, result2)
-    XCTAssertNoThrow(try json.mutate("$.object.arr[2].two") { value in
+    XCTAssertNoThrow(try json.mutate("$.object.arr[2].two", with: { value in
       guard case .integer(let x) = value else {
         throw JSON.Error.typeMismatch(.number, value)
       }
       value = .integer(2 * x)
-    })
-    XCTAssertNoThrow(try json.mutate(object: "/object/arr/2") { dict in
+    }))
+    XCTAssertNoThrow(try json.mutate("/object/arr/2", object: { dict in
       dict["three"] = 3
-    })
+    }))
     XCTAssertEqual(json, result3)
     XCTAssertNoThrow(try json.mutate("$.boolean") { $0 = .boolean(false) })
     XCTAssertNoThrow(try json.mutate("/object/obj/z/2") { value in

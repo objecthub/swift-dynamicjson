@@ -72,7 +72,7 @@ final class JSONConstructorTests: XCTestCase {
   func testOptCodableInit() throws {
     let test = Test(num: 1, obj: .null)
     let json = try JSON(test)
-    let json2 = try JSON(encoded: """
+    let json2 = try JSON(string: """
       {
         "num": 1,
         "obj": null
@@ -86,7 +86,7 @@ final class JSONConstructorTests: XCTestCase {
   func testNilCodableInit() throws {
     let test = Test(num: 1, obj: nil)
     let json = try JSON(test)
-    let json2 = try JSON(encoded: """
+    let json2 = try JSON(string: """
       {
         "num": 1
       }
@@ -97,7 +97,7 @@ final class JSONConstructorTests: XCTestCase {
   }
   
   func testExampleWithNull() throws {
-    let json = try JSON(encoded: """
+    let json = try JSON(string: """
       {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "const": null

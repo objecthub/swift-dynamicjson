@@ -29,7 +29,7 @@ import Foundation
 public struct JSONPathParser {
   
   /// Is strict mode enabled?
-  let strict: Bool
+  private let strict: Bool
   
   /// Was there trailing space (determined initially)?
   private let trailingSpace: Bool

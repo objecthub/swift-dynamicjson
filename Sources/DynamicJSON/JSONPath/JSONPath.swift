@@ -26,7 +26,9 @@ import Foundation
 /// for selecting and extracting JSON (RFC 8259) values from within a given
 /// JSON value.
 ///
-public indirect enum JSONPath: Hashable, CustomStringConvertible {
+public indirect enum JSONPath: Codable,
+                               Hashable,
+                               CustomStringConvertible {
   case `self`
   case current
   case select(JSONPath, Segment)
@@ -49,6 +51,18 @@ public indirect enum JSONPath: Hashable, CustomStringConvertible {
   public init(query: String, strict: Bool = true) throws {
     var parser = JSONPathParser(string: query, strict: strict)
     self = try parser.parse()
+  }
+  
+  /// Initialize a `JSONPath` reference using a decoder.
+  public init(from decoder: Decoder) throws {
+    let container = try decoder.singleValueContainer()
+    try self.init(query: try container.decode(String.self))
+  }
+  
+  /// Encode a `JSONPath` reference using the given encoder.
+  public func encode(to encoder: Encoder) throws {
+    var container = encoder.singleValueContainer()
+    try container.encode(self.description)
   }
   
   /// Returns true if this JSONPath value represents a singular query.

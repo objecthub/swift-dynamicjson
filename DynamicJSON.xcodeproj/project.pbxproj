@@ -182,6 +182,19 @@
 		CCB466292BB9FF59001FBDFA /* nested-absolute-ref-to-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */; };
 		CCB4662A2BB9FF59001FBDFA /* urn-ref-string.json in Copy JSONSchema/remotes */ = {isa = PBXBuildFile; fileRef = CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */; };
 		CCB4662C2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4662B2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift */; };
+		CCB466312BBB8511001FBDFA /* JSONPatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB466302BBB8511001FBDFA /* JSONPatch.swift */; };
+		CCB466372BBCB999001FBDFA /* JSONPatchOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB466362BBCB999001FBDFA /* JSONPatchOperation.swift */; };
+		CCB4663A2BBF3445001FBDFA /* JSONPatchComplianceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB466382BBF3374001FBDFA /* JSONPatchComplianceTest.swift */; };
+		CCB4663D2BBF34E4001FBDFA /* JSONPatchTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4663B2BBF34D7001FBDFA /* JSONPatchTestCase.swift */; };
+		CCB4663F2BBF38D6001FBDFA /* spec_tests.json in Copy JSONPatch */ = {isa = PBXBuildFile; fileRef = CCB466342BBBE63D001FBDFA /* spec_tests.json */; };
+		CCB466402BBF38D6001FBDFA /* tests.json in Copy JSONPatch */ = {isa = PBXBuildFile; fileRef = CCB466352BBBE63D001FBDFA /* tests.json */; };
+		CCB466432BBF3D8D001FBDFA /* JSONPatchComplianceSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB466412BBF3D88001FBDFA /* JSONPatchComplianceSuite.swift */; };
+		CCB466452BBF528C001FBDFA /* debug.json in Copy JSONPatch */ = {isa = PBXBuildFile; fileRef = CCB466442BBF5242001FBDFA /* debug.json */; };
+		CCB466492BBF6652001FBDFA /* bigpatch.json in Copy JSONPatch */ = {isa = PBXBuildFile; fileRef = CCB466482BBF6631001FBDFA /* bigpatch.json */; };
+		CCB4664A2BBF6662001FBDFA /* bigexample1.json in Copy JSONPatch */ = {isa = PBXBuildFile; fileRef = CCB466462BBF661D001FBDFA /* bigexample1.json */; };
+		CCB4664B2BBF6662001FBDFA /* bigexample2.json in Copy JSONPatch */ = {isa = PBXBuildFile; fileRef = CCB466472BBF6626001FBDFA /* bigexample2.json */; };
+		CCB4664D2BBF66C7001FBDFA /* JSONPatchLargeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */; };
+		CCB466B82BBFCDCA001FBDFA /* README-BIG in Resources */ = {isa = PBXBuildFile; fileRef = CCB466B72BBFCDCA001FBDFA /* README-BIG */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 /* End PBXBuildFile section */
 
@@ -443,6 +456,22 @@
 			name = "Copy JSONSchema/remotes";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCB4663E2BBF38B1001FBDFA /* Copy JSONPatch */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONPatch;
+			dstSubfolderSpec = 7;
+			files = (
+				CCB4664A2BBF6662001FBDFA /* bigexample1.json in Copy JSONPatch */,
+				CCB4664B2BBF6662001FBDFA /* bigexample2.json in Copy JSONPatch */,
+				CCB466492BBF6652001FBDFA /* bigpatch.json in Copy JSONPatch */,
+				CCB466452BBF528C001FBDFA /* debug.json in Copy JSONPatch */,
+				CCB4663F2BBF38D6001FBDFA /* spec_tests.json in Copy JSONPatch */,
+				CCB466402BBF38D6001FBDFA /* tests.json in Copy JSONPatch */,
+			);
+			name = "Copy JSONPatch";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -618,6 +647,20 @@
 		CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "nested-absolute-ref-to-string.json"; sourceTree = "<group>"; };
 		CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "urn-ref-string.json"; sourceTree = "<group>"; };
 		CCB4662B2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaValidationResults.swift; sourceTree = "<group>"; };
+		CCB466302BBB8511001FBDFA /* JSONPatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatch.swift; sourceTree = "<group>"; };
+		CCB466332BBBE629001FBDFA /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		CCB466342BBBE63D001FBDFA /* spec_tests.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = spec_tests.json; sourceTree = "<group>"; };
+		CCB466352BBBE63D001FBDFA /* tests.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = tests.json; sourceTree = "<group>"; };
+		CCB466362BBCB999001FBDFA /* JSONPatchOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONPatchOperation.swift; sourceTree = "<group>"; };
+		CCB466382BBF3374001FBDFA /* JSONPatchComplianceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchComplianceTest.swift; sourceTree = "<group>"; };
+		CCB4663B2BBF34D7001FBDFA /* JSONPatchTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchTestCase.swift; sourceTree = "<group>"; };
+		CCB466412BBF3D88001FBDFA /* JSONPatchComplianceSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchComplianceSuite.swift; sourceTree = "<group>"; };
+		CCB466442BBF5242001FBDFA /* debug.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
+		CCB466462BBF661D001FBDFA /* bigexample1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bigexample1.json; sourceTree = "<group>"; };
+		CCB466472BBF6626001FBDFA /* bigexample2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bigexample2.json; sourceTree = "<group>"; };
+		CCB466482BBF6631001FBDFA /* bigpatch.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bigpatch.json; sourceTree = "<group>"; };
+		CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchLargeTest.swift; sourceTree = "<group>"; };
+		CCB466B72BBFCDCA001FBDFA /* README-BIG */ = {isa = PBXFileReference; lastKnownFileType = text; path = "README-BIG"; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -699,6 +742,7 @@
 				CC10ABE72B9CBB6100746181 /* JSONPointer.swift */,
 				CCB464FF2BA83485001FBDFA /* JSONPath */,
 				CCB464FE2BA83472001FBDFA /* JSONSchema */,
+				CCB4662D2BBB4AB9001FBDFA /* JSONPatch */,
 				CCB4661D2BB783C7001FBDFA /* Util */,
 				CC528E272B7975DC001E9E52 /* DynamicJSON.h */,
 				CC528E282B7975DC001E9E52 /* DynamicJSON.docc */,
@@ -724,6 +768,10 @@
 				CCB4655D2BAB9828001FBDFA /* JSONSchemaTestCase.swift */,
 				CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */,
 				CCB465FA2BB7328B001FBDFA /* JSONSchemaDebugTest.swift */,
+				CCB466382BBF3374001FBDFA /* JSONPatchComplianceTest.swift */,
+				CCB4663B2BBF34D7001FBDFA /* JSONPatchTestCase.swift */,
+				CCB466412BBF3D88001FBDFA /* JSONPatchComplianceSuite.swift */,
+				CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */,
 			);
 			name = DynamicJSONTests;
 			path = Tests/DynamicJSONTests;
@@ -756,8 +804,9 @@
 		CC95DB092B97D96700AC9D10 /* ComplianceTests */ = {
 			isa = PBXGroup;
 			children = (
-				CCB465072BAB8F64001FBDFA /* JSONSchema */,
 				CC95DAE62B97D62400AC9D10 /* JSONPath */,
+				CCB465072BAB8F64001FBDFA /* JSONSchema */,
+				CCB466322BBBE23A001FBDFA /* JSONPatch */,
 			);
 			path = ComplianceTests;
 			sourceTree = "<group>";
@@ -1006,6 +1055,30 @@
 			path = "2020-12";
 			sourceTree = "<group>";
 		};
+		CCB4662D2BBB4AB9001FBDFA /* JSONPatch */ = {
+			isa = PBXGroup;
+			children = (
+				CCB466302BBB8511001FBDFA /* JSONPatch.swift */,
+				CCB466362BBCB999001FBDFA /* JSONPatchOperation.swift */,
+			);
+			path = JSONPatch;
+			sourceTree = "<group>";
+		};
+		CCB466322BBBE23A001FBDFA /* JSONPatch */ = {
+			isa = PBXGroup;
+			children = (
+				CCB466332BBBE629001FBDFA /* README.md */,
+				CCB466B72BBFCDCA001FBDFA /* README-BIG */,
+				CCB466352BBBE63D001FBDFA /* tests.json */,
+				CCB466342BBBE63D001FBDFA /* spec_tests.json */,
+				CCB466442BBF5242001FBDFA /* debug.json */,
+				CCB466482BBF6631001FBDFA /* bigpatch.json */,
+				CCB466462BBF661D001FBDFA /* bigexample1.json */,
+				CCB466472BBF6626001FBDFA /* bigexample2.json */,
+			);
+			path = JSONPatch;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1075,6 +1148,7 @@
 				CCB465E12BACDE57001FBDFA /* Copy JSONSchema/remotes/draft2020-12/baseUriChangeFolderInSubschema */,
 				CCB466132BB7534D001FBDFA /* Copy JSONSchema/2020-12 */,
 				CCB466152BB75395001FBDFA /* Copy JSONSchema/2020-12/meta */,
+				CCB4663E2BBF38B1001FBDFA /* Copy JSONPatch */,
 			);
 			buildRules = (
 			);
@@ -1152,6 +1226,7 @@
 				CC95DB0B2B97D99F00AC9D10 /* slice_selector.json in Resources */,
 				CC95DB0C2B97D99F00AC9D10 /* index_selector.json in Resources */,
 				CC95DB0D2B97D99F00AC9D10 /* ws_filter.json in Resources */,
+				CCB466B82BBFCDCA001FBDFA /* README-BIG in Resources */,
 				CC95DB0E2B97D99F00AC9D10 /* ws_operators.json in Resources */,
 				CC95DB0F2B97D99F00AC9D10 /* ws_selectors.json in Resources */,
 				CC95DB102B97D99F00AC9D10 /* ws_slice.json in Resources */,
@@ -1192,7 +1267,9 @@
 				CC528E412B797980001E9E52 /* NSNumber.swift in Sources */,
 				CCB465ED2BAD82A8001FBDFA /* JSONSchemaDraft2020.swift in Sources */,
 				CCB465EF2BB18816001FBDFA /* JSONSchemaResource.swift in Sources */,
+				CCB466312BBB8511001FBDFA /* JSONPatch.swift in Sources */,
 				CCB464FD2BA66DBD001FBDFA /* LocatedJSON.swift in Sources */,
+				CCB466372BBCB999001FBDFA /* JSONPatchOperation.swift in Sources */,
 				CCB4662C2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift in Sources */,
 				CC2473E32B7C1BC80022800A /* JSONPath.swift in Sources */,
 				CC528E3F2B797811001E9E52 /* JSON.swift in Sources */,
@@ -1215,14 +1292,18 @@
 				CCB464F82BA0FAA3001FBDFA /* JSONLocationTests.swift in Sources */,
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
+				CCB4664D2BBF66C7001FBDFA /* JSONPatchLargeTest.swift in Sources */,
 				CCB4655C2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift in Sources */,
 				CCB465FC2BB732B5001FBDFA /* JSONSchemaDebugTest.swift in Sources */,
+				CCB4663A2BBF3445001FBDFA /* JSONPatchComplianceTest.swift in Sources */,
 				CC528E452B7A15B1001E9E52 /* JSONConstructorTests.swift in Sources */,
 				CCB464FA2BA5131A001FBDFA /* JSONTypeTests.swift in Sources */,
+				CCB466432BBF3D8D001FBDFA /* JSONPatchComplianceSuite.swift in Sources */,
 				CCB465902BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift in Sources */,
 				CC95DB1A2B97DB8100AC9D10 /* JSONPathTestCase.swift in Sources */,
 				CC2473E52B7D466D0022800A /* JSONPathTests.swift in Sources */,
 				CC95DAF92B97D6DB00AC9D10 /* JSONPathComplianceTest.swift in Sources */,
+				CCB4663D2BBF34E4001FBDFA /* JSONPatchTestCase.swift in Sources */,
 				CC528E342B7975DC001E9E52 /* DynamicJSONTests.swift in Sources */,
 				CCB4655E2BAB9828001FBDFA /* JSONSchemaTestCase.swift in Sources */,
 			);
