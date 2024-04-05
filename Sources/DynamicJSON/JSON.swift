@@ -516,27 +516,43 @@ public enum JSON: Hashable,
   
   // MARK: - Transforming data
   
-  /// Merges this JSON value with the given JSON value `other` recursively. Objects are
-  /// merged key by key with values from `other` overriding values of the object represented
-  /// by this JSON value. All other types of JSON values are not merged and `other` overrides
-  /// this JSON value.
-  public func merging(with other: JSON) -> JSON {
-    if case .object(let lhs) = self,
-       case .object(let rhs) = other {
-      var res: [String : JSON] = [:]
-      for (key, lhsval) in lhs {
-        if let rhsval = rhs[key] {
-          res[key] = lhsval.merging(with: rhsval)
+  /// Merges this JSON value with the given JSON value `patch` recursively. Objects are
+  /// merged key by key with values from `patch` overriding values of the object represented
+  /// by this JSON value. All other types of JSON values are not merged and `patch` overrides
+  /// this JSON value. This implements the following algorithm as specified in RFC 7396 on
+  /// JSON Merge Patch.
+  ///
+  /// define MergePatch(Target, Patch):
+  ///   if Patch is an Object:
+  ///     if Target is not an Object:
+  ///       Target = {} // Ignore the contents and set it to an empty Object
+  ///     for each Name/Value pair in Patch:
+  ///       if Value is null:
+  ///         if Name exists in Target:
+  ///           remove the Name/Value pair from Target
+  ///       else:
+  ///         Target[Name] = MergePatch(Target[Name], Value)
+  ///     return Target
+  ///   else:
+  ///     return Patch
+  public func merging(patch: JSON) -> JSON {
+    if case .object(let patch) = patch {
+      var result: [String : JSON]
+      if case .object(let target) = self {
+        result = target
+      } else {
+        result = [:]
+      }
+      for (member, value) in patch {
+        if value == .null {
+          result.removeValue(forKey: member)
         } else {
-          res[key] = lhsval
+          result[member] = (result[member] ?? .null).merging(patch: value)
         }
       }
-      for (key, rhsval) in rhs where lhs[key] == nil {
-        res[key] = rhsval
-      }
-      return .object(res)
+      return .object(result)
     } else {
-      return other
+      return patch
     }
   }
   

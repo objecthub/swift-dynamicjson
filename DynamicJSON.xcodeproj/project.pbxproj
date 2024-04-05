@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC0A59F02BC0854800F155FE /* JSONMergingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59EF2BC0854800F155FE /* JSONMergingTests.swift */; };
 		CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE72B9CBB6100746181 /* JSONPointer.swift */; };
 		CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE92B9D27F200746181 /* JSONReference.swift */; };
 		CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */; };
@@ -475,6 +476,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CC0A59EF2BC0854800F155FE /* JSONMergingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMergingTests.swift; sourceTree = "<group>"; };
 		CC10ABE72B9CBB6100746181 /* JSONPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointer.swift; sourceTree = "<group>"; };
 		CC10ABE92B9D27F200746181 /* JSONReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONReference.swift; sourceTree = "<group>"; };
 		CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMutationTests.swift; sourceTree = "<group>"; };
@@ -760,6 +762,7 @@
 				CCB464F92BA5131A001FBDFA /* JSONTypeTests.swift */,
 				CCB464F72BA0FAA3001FBDFA /* JSONLocationTests.swift */,
 				CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */,
+				CC0A59EF2BC0854800F155FE /* JSONMergingTests.swift */,
 				CC95DAF82B97D6DB00AC9D10 /* JSONPathComplianceTest.swift */,
 				CC95DB192B97DB8100AC9D10 /* JSONPathTestCase.swift */,
 				CC2473E42B7D466D0022800A /* JSONPathTests.swift */,
@@ -1290,6 +1293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCB464F82BA0FAA3001FBDFA /* JSONLocationTests.swift in Sources */,
+				CC0A59F02BC0854800F155FE /* JSONMergingTests.swift in Sources */,
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
 				CCB4664D2BBF66C7001FBDFA /* JSONPatchLargeTest.swift in Sources */,
