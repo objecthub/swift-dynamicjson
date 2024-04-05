@@ -674,6 +674,14 @@ public enum JSON: Hashable,
     try self.mutate(try JSON.reference(from: ref), array: arrProc, object: objProc, other: proc)
   }
   
+  /// Applies the given JSON Patch operation to this JSON document, mutating this JSON
+  /// document atomically (with transactional semantics).
+  public mutating func apply(operation: JSONPatchOperation) throws {
+    var value = self
+    try operation.apply(to: &value)
+    self = value
+  }
+  
   /// Applies the given JSON Patch operations to this JSON document, mutating this JSON
   /// document atomically (with transactional semantics), i.e. if there is a failure during
   /// the processing of the patch operation, this JSON document remains unchanged.

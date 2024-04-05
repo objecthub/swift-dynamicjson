@@ -20,18 +20,37 @@
 
 import Foundation
 
+///
+/// Enumeration of individual JSONPatch operations.
+///
 public enum JSONPatchOperation: Codable,
                                 Hashable,
                                 CustomStringConvertible,
                                 CustomDebugStringConvertible {
+  
+  /// *add(path, value)*: Add `value` to the JSON value at `path`
   case add(JSONPointer, JSON)
+  
+  /// *remove(path)*: Remove the value at location `path` in a JSON value.
   case remove(JSONPointer)
+  
+  /// *replace(path, value)*: Replace the value at location `path` with `value`.
   case replace(JSONPointer, JSON)
+  
+  /// *move(path, from)*: Move the value at `from` to `path`. This is equivalent
+  /// to first removing the value at `from` and then adding it to `path`.
   case move(JSONPointer, JSONPointer)
+  
+  /// *copy(path, from)*: Copy the value at `from` to `path`. This is equivalent
+  /// to looking up the value at `from` and then adding it to `path`.
   case copy(JSONPointer, JSONPointer)
+  
+  /// *test(path, value)*: Compares value at `path` with `value` and fails if the
+  /// two are different.
   case test(JSONPointer, JSON)
   
-  /// Collection of errors raised by functionality provided by `JSONSchemaRegistry`.
+  
+  /// Collection of errors raised by functionality provided by `JSONPatchOperation`.
   public enum Error: LocalizedError, CustomStringConvertible {
     case indexOutOfBounds(Int, Int)
     case cannotRemoveRoot
@@ -86,6 +105,7 @@ public enum JSONPatchOperation: Codable,
     }
   }
 
+  /// Enumeration of JSON Patch operation types.
   public enum OperationType: String {
     case add
     case remove
@@ -159,6 +179,7 @@ public enum JSONPatchOperation: Codable,
     }
   }
   
+  /// Returns the operation type of this JSON patch operation.
   public var op: OperationType {
     switch self {
       case .add(_, _):
@@ -176,6 +197,7 @@ public enum JSONPatchOperation: Codable,
     }
   }
   
+  /// Returns the `path` property of this JSON patch operation.
   public var path: JSONPointer {
     switch self {
       case .add(let path, _):
@@ -223,6 +245,8 @@ public enum JSONPatchOperation: Codable,
                   encoding: .utf8)
   }
   
+  /// Applies this JSON patch operation to the given JSON document, mutating this JSON
+  /// document in place.
   public func apply(to json: inout JSON) throws {
     switch self {
       case .add(let path, let value):
@@ -361,7 +385,7 @@ public enum JSONPatchOperation: Codable,
     }
   }
   
-  /// Returns a pretty-printed representation of this JSONPatch value with sorted keys in
+  /// Returns a pretty-printed representation of this JSONPatch operation with sorted keys in
   /// object representations. Dates are encoded using ISO 8601. Floating-point numbers
   /// denoting infinity are represented with the term "Infinity" respectively "-Infinity".
   /// NaN values are denoted with "NaN".
@@ -374,6 +398,7 @@ public enum JSONPatchOperation: Codable,
                                                      nan: "NaN"))) ?? "<invalid JSON>"
   }
   
+  /// Description for debugging purposes.
   public var debugDescription: String {
     switch self {
       case .add(let path, let value):

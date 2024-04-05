@@ -20,18 +20,26 @@
 
 import Foundation
 
+///
+/// Representation of a sequence of mutations applicable to JSON documents
+/// based on RFC 6902. JSON Patch defines a JSON-based document structure
+/// for expressing a sequence of operations to apply to JSON data.
+///
 public struct JSONPatch: Codable,
                          Hashable,
                          CustomStringConvertible,
                          CustomDebugStringConvertible {
+  
+  /// Sequence of operations.
   public let operations: [JSONPatchOperation]
   
+  /// Initializer based on a sequence of operations
   public init(operations: [JSONPatchOperation]) {
     self.operations = operations
   }
   
   /// This initializer decodes the provided data with the given decoding strategies
-  /// into a JSON value.
+  /// into a JSON patch object.
   public init(data: Data,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
@@ -47,7 +55,7 @@ public struct JSONPatch: Codable,
   }
   
   /// This initializer decodes the provided string with the given decoding strategies
-  /// into a JSON value.
+  /// into a JSON patch object.
   public init(string: String,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
@@ -61,6 +69,8 @@ public struct JSONPatch: Codable,
                      userInfo: userInfo)
   }
   
+  /// This initializer decodes the content at the provided URL with the given
+  /// decoding strategies into a JSON patch object.
   public init(url: URL,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
@@ -71,11 +81,13 @@ public struct JSONPatch: Codable,
                   userInfo: userInfo)
   }
   
+  /// Initializer used to decode JSON patch objects.
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
     self.operations = try container.decode([JSONPatchOperation].self)
   }
   
+  /// Encodes this JSON patch object using the provided encoder.
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.operations)
@@ -111,6 +123,8 @@ public struct JSONPatch: Codable,
                   encoding: .utf8)
   }
   
+  /// Applies this JSON patch object to the given JSON document, mutating this JSON
+  /// document in place.
   public func apply(to json: inout JSON) throws {
     for operation in self.operations {
       try operation.apply(to: &json)
@@ -130,6 +144,7 @@ public struct JSONPatch: Codable,
                                                      nan: "NaN"))) ?? "<invalid JSON>"
   }
   
+  /// Description for debugging purposes.
   public var debugDescription: String {
     return "[" + self.operations.map { $0.debugDescription }.joined(separator: ", ") + "]"
   }
