@@ -9,6 +9,24 @@ import XCTest
 @testable import DynamicJSON
 
 final class JSONLocationTests: XCTestCase {
+  
+  struct Example {
+    let store: Store
+  }
+  
+  struct Store {
+    let book: [Book]
+  }
+  
+  struct Book {
+    let title: String
+  }
+  
+  func testInitializers() throws {
+    let ref1 = try JSONLocation("$['store']['book'][0]['title']")
+    let ref2 = JSONLocation(segments: [.member("store"), .member("book"), .index(0), .member("title")])
+    XCTAssertEqual(ref1, ref2)
+  }
 
   func testSimpleLocations() throws {
     XCTAssertEqual(try? JSONPath(query: "$[3]").location, try? JSONLocation("$[3]"))

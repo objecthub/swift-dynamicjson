@@ -69,6 +69,16 @@ final class JSONConstructorTests: XCTestCase {
     XCTAssertEqual(person, person2)
   }
   
+  func testCoerce() throws {
+    let json3: JSON = [
+      "name": "Matthew",
+      "age": 29,
+      "children": []
+    ]
+    let person3: Person = try json3.coerce()
+    XCTAssertEqual(Person(name: "Matthew", age: 29, children: []), person3)
+  }
+  
   func testOptCodableInit() throws {
     let test = Test(num: 1, obj: .null)
     let json = try JSON(test)

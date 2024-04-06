@@ -32,6 +32,7 @@ public struct JSONPointer: SegmentableJSONReference,
                            CustomStringConvertible {
   private let tokens: [ReferenceToken]
   
+  /// Segment implementation.
   public enum ReferenceToken: JSONReferenceSegment, Hashable, CustomStringConvertible {
     case member(String)
     case index(String, Int?)
@@ -169,6 +170,11 @@ public struct JSONPointer: SegmentableJSONReference,
     try container.encode(self.description)
   }
   
+  /// Returns this JSONPointer as an array of reference tokens.
+  public var segments: [ReferenceToken] {
+    return self.tokens
+  }
+  
   /// Returns a new JSONPointer with the given member selected.
   public func select(member: String) -> JSONPointer {
     var tokens = self.tokens
@@ -181,11 +187,6 @@ public struct JSONPointer: SegmentableJSONReference,
     var tokens = self.tokens
     tokens.append(.index(String(index), index))
     return JSONPointer(tokens: tokens)
-  }
-  
-  /// Returns this JSONPointer as an array of reference tokens.
-  public var segments: [ReferenceToken] {
-    return self.tokens
   }
   
   /// Constructs a new JSONPointer by appending the given segment to this pointer.

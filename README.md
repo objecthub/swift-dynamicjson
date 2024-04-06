@@ -54,7 +54,7 @@ enumeration. The following code initializes a JSON value from a JSON encoded val
 literal.
 
 ```swift
-let json1 = try JSON(encoded: """
+let json1 = try JSON(string: """
   {
     "foo": true,
     "str": "one two",
@@ -100,6 +100,19 @@ Executing this code will print the following JSON-based representation of `Perso
 }
 ```
 
+It is also possible to do the inverse, and convert a JSON-based representation
+into a strongly typed data structure via method `coerce()`.
+
+```swift
+let json3: JSON = [
+  "name": "Matthew",
+  "age": 29,
+  "children": []
+]
+let person2: Person = try json3.coerce()
+```
+
+
 ## Accessing JSON Values
 
 JSON values can be accessed using dynamic member lookup as if the data was typed.
@@ -113,17 +126,128 @@ value 1.
    - **Reference lookup:**
       - Using JSON Pointer string: `try json1[ref: "/object/arr/0"]`
       - Using JSON Path string: `try json1[ref: "$.object.arr[0]"]`
-      - Using `JSONPointer` or `JSONPath` object `p`: `json1[ref: p]`
+      - Using implementations of [`JSONReference`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONReference.swift), such as `JSONPointer` and `JSONPath`: `json1[ref: p]`, where `p` is an object of type `JSONReference`
 
-## Access with JSON Pointer
+In the DynamicJSON framework, components of a JSON value are identified by implementations
+of the protocols [`JSONReference`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONReference.swift) and [`SegmentableJSONReference`](https://github.com/objecthub/swift-dynamicjson/blob/5a14f6e014116be9c95c68f0e3141d2605f95c5e/Sources/DynamicJSON/JSONReference.swift#L57). The following code fragment presents the core methods implementing JSON references:
+
+```swift
+public protocol JSONReference: CustomStringConvertible {
+  /// Returns a new JSONReference with the given member selected.
+  func select(member: String) -> Self
+  /// Returns a new JSONReference with the given index selected.
+  func select(index: Int) -> Self
+  /// Retrieve value at which this reference is pointing from JSON document `value`.
+  func get(from value: JSON) -> JSON?
+  /// Replace value at which this reference is pointing with `json` within `value`.
+  func set(to json: JSON, in value: JSON) throws -> JSON
+  /// Mutate value at which this reference is pointing within JSON document `value`
+  /// with function `proc`.
+  func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
+}
+
+public protocol SegmentableJSONReference: JSONReference {
+  associatedtype Segment: JSONReferenceSegment
+  /// An array of segments representing the reference.
+  var segments: [Segment] { get }
+  /// Creates a new `SegmentableJSONReference` on top of this reference.
+  func select(segment: Segment) -> Self
+  /// Decomposes this reference into the top segment selector and its parent.
+  var deselect: (Self, Segment)? { get }
+}
+```
+
+DynamicJSON currently provides two implementations of `SegmentableJSONReference`: [`JSONPointer`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONPointer.swift) and [`JSONLocation`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONLocation.swift), an abstraction that is equivalent to singular _JSON Path_ queries.
+
+### Identifying values via JSON Location
+
+In framework DynamicJSON, [`JSONLocation`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONLocation.swift) is the default implementation for identifying JSON values within a JSON document. It is based on how values are identified in [JSON Path]((https://datatracker.ietf.org/doc/html/rfc9535/) and uses JSON Path syntax.
+
+A `JSONLocation` value is defined in terms of a sequence of member names and array indices used to navigate through the structure of a JSON document. `JSONLocation` references refer to at most one value within a JSON document. The following code summarizes how `JSONLocation` values are represented:
+
+```swift
+public indirect enum JSONLocation: SegmentableJSONReference, Codable, Hashable, CustomStringConvertible {
+  case root
+  case member(JSONLocation, String)
+  case index(JSONLocation, Int)
+  
+  public enum Segment: JSONReferenceSegment, Codable, Hashable, CustomStringConvertible {
+    case member(String)
+    case index(Int)
+    ...
+  }
+  ...
+}
+```
+
+A JSON location is a path to an element in a JSON structure. Each element of the path is called a _segment_. The JSON location syntax supports two different forms to express such sequences of segments. Each sequence starts with `$` indicating the "root" of a JSON document. The most common form for expressing the segment sequence is using the dot notation:
+
+```swift
+$.store.book[0].title
+```
+
+While accessing an array index is always done using bracket notation, it is possible to also express the access of members of an object using bracket notation:
+
+```swift
+$['store']['book'][0]['title']
+```
+
+Is is also possible to mix the dot and bracket notation. Dots are only used before property names and never together with brackets:
+
+```swift
+$['store'].book[0].title
+```
+
+The `JSONLocation` API supports multiple initializers for creating JSON location references:
+
+```swift
+let r1 = try JSONLocation("$['store']['book'][0]['title']")
+let r2 = JSONLocation(segments: [.member("store"),
+                                 .member("book"),
+                                 .index(0),
+                                 .member("title")])
+```
+
+This is a list of the most frequently used methods of `JSONLocation`:
+
+```swift
+public indirect enum JSONLocation: SegmentableJSONReference, ... {
+  /// The segments defining this `JSONLocation`.
+  var segments: [Segment]
+  /// Returns a new JSONLocation with the given member selected.
+  func select(member: String) -> JSONLocation
+  /// Returns a new JSONLocation with the given index selected.
+  func select(index: Int) -> JSONLocation
+  /// Returns a new JSONLocation by appending the given segment.
+  func select(segment: Segment) -> JSONLocation
+  /// Returns a matching `JSONPointer` reference if possible. `JSONLocation` references
+  /// which use negative indices cannot be converted to `JSONPointer`.
+  var pointer: JSONPointer?
+  /// Returns a matching `JSONPath` query.
+  var path: JSONPath
+  /// Retrieve value at which this reference is pointing from JSON document `value`.
+  /// If the reference does not match any value, `nil` is returned.
+  func get(from value: JSON) -> JSON?
+  /// Replace value associated with this reference within `in` with `value`.
+  func set(to json: JSON, in value: JSON) throws -> JSON
+  /// Mutate value at which this reference is pointing within `value` with function `proc`.
+  /// `proc` is provided a reference, enabling efficient, in-place mutations that do not
+  /// trigger copying large parts of the JSON document.
+  func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
+}
+```
+
+### Identifying values via JSON Pointer
 
 ## Queries with JSON Path
 
 ## Mutating JSON Values
 
-## Using JSON Patch
+### JSON Mutation API
 
-## Merging JSON Data
+### Using JSON Patch
+
+### Merging JSON Data
 
 ## Validating JSON Data
 
