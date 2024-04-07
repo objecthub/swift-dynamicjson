@@ -210,28 +210,28 @@ let r2 = JSONLocation(segments: [.member("store"),
                                  .member("title")])
 ```
 
-This is a list of the most frequently used methods of `JSONLocation`:
+`JSONLocation` defines the following frequently used methods:
 
 ```swift
 public indirect enum JSONLocation: SegmentableJSONReference, ... {
-  /// The segments defining this `JSONLocation`.
+  // The segments defining this `JSONLocation`.
   var segments: [Segment]
-  /// Returns a new JSONLocation with the given member selected.
+  // Returns a new JSONLocation with the given member selected.
   func select(member: String) -> JSONLocation
-  /// Returns a new JSONLocation with the given index selected.
+  // Returns a new JSONLocation with the given index selected.
   func select(index: Int) -> JSONLocation
-  /// Returns a new JSONLocation by appending the given segment.
+  // Returns a new JSONLocation by appending the given segment.
   func select(segment: Segment) -> JSONLocation
-  /// Returns a matching `JSONPointer` reference if possible.
+  // Returns a matching `JSONPointer` reference if possible.
   var pointer: JSONPointer?
-  /// Returns a matching `JSONPath` query.
+  // Returns a matching `JSONPath` query.
   var path: JSONPath
-  /// Retrieve value at this location within `value`.
+  // Retrieve value at this location within `value`.
   func get(from value: JSON) -> JSON?
-  /// Replace value at this location within `in` with `value`.
+  // Replace value at this location within `in` with `value`.
   func set(to json: JSON, in value: JSON) throws -> JSON
-  /// Mutate value at this location within `value` with function `proc`.
-  /// `proc` is provided a reference, enabling efficient in-place mutations.
+  // Mutate value at this location within `value` with function `proc`.
+  // `proc` is provided a reference, enabling efficient in-place mutations.
   func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
 }
 ```
@@ -274,7 +274,119 @@ struct JSONPointer: SegmentableJSONReference, Codable, Hashable, CustomStringCon
 }
 ```
 
+The `JSONPointer` API supports multiple initializers for creating JSON Pointer references:
+
+```swift
+let p1 = try JSONPointer("/store/book/0/title")
+let p2 = JSONPointer(components: ["store", "book", "0", "title"])
+```
+
+`JSONPointer` defines the following frequently used methods:
+
+```swift
+struct JSONPointer: SegmentableJSONReference, ... {
+  // Returns this JSONPointer as an array of reference tokens.
+  var segments: [ReferenceToken]
+  // Returns a new JSONPointer with the given member selected.
+  func select(member: String) -> JSONPointer
+  // Returns a new JSONPointer with the given index selected.
+  func select(index: Int) -> JSONPointer
+  // Constructs a new JSONPointer by appending the given segment to this pointer.
+  func select(segment: ReferenceToken) -> JSONPointer
+  // Decomposes this JSONPointer into a parent pointer and a selector reference token.
+  var deselect: (JSONPointer, ReferenceToken)?
+  // The reference tokens defining this `JSONPointer` value.
+  var components: [String]
+  // Returns all JSON locations corresponding to this `JSONPointer`.
+  func locations() -> [JSONLocation]
+  // Retrieve value at which this reference is pointing from JSON document `value`.
+  func get(from value: JSON) -> JSON?
+  // Replace value at which this reference is pointing with `json` within `value`.
+  func set(to json: JSON, in value: JSON) throws -> JSON
+  // Mutate value at this location within `value` with function `proc`. `proc`
+  // is provided a reference, enabling efficient, in-place mutations.
+  func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
+}
+```
+
 ## Queries with JSON Path
+
+DynamicJSON supports the full _JSON Path_ standard as defined by [RFC 9535](https://datatracker.ietf.org/doc/html/rfc9535/).
+Enum [`JSONPath`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONPath/JSONPath.swift)
+represents JSON Path queries.
+[`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSON.swift)
+provides `query()` methods to apply a JSON Path query to a JSON value.
+
+To illustrate the usage of JSON Path queries, the following JSON value is being defined (this
+is the example from RFC 9535):
+
+```swift
+let jval = try JSON(string: """
+  { "store": {
+      "book": [
+        { "category": "reference",
+          "author": "Nigel Rees",
+          "title": "Sayings of the Century",
+          "price": 8.95 },
+        { "category": "fiction",
+          "author": "Evelyn Waugh",
+          "title": "Sword of Honour",
+          "price": 12.99 },
+        { "category": "fiction",
+          "author": "Herman Melville",
+          "title": "Moby Dick",
+          "isbn": "0-553-21311-3",
+          "price": 8.99 },
+        { "category": "fiction",
+          "author": "J. R. R. Tolkien",
+          "title": "The Lord of the Rings",
+          "isbn": "0-395-19395-8",
+          "price": 22.99 }
+      ],
+      "bicycle": {
+        "color": "red",
+        "price": 399
+      }
+    }
+  }
+  """)
+```
+
+Now a JSON Path query `$.store.book[?@.price < 10].title` can be defined by using the
+`JSONPath(query:strict:)` initializer. Finally, the path can be applied to `jval` by
+invoking its `query()` method. The result is an array of
+[`LocatedJSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/LocatedJSON.swift)
+values matching the query within `jval`.
+[`LocatedJSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/LocatedJSON.swift)
+combines a location where a value was found with the value at that location into one object.
+
+```swift
+let path = try JSONPath(query: "$.store.book[?@.price < 10].title")
+var results = try value.query(path)
+for result in results {
+  print(result)
+}
+```
+
+This is the output generated from this code. It prints two `LocatedJSON` objects for the two
+values within `jval` matching the query `path`.
+
+```swift
+$['store']['book'][0]['title'] => "Sayings of the Century"
+$['store']['book'][2]['title'] => "Moby Dick"
+```
+
+If only locations or only values are needed as a result of evaluating a JSON Path query, then
+it is possible to use the `query(locations:)` or `query(values:)` methods of `JSON`.
+
+The above API supports the default JSON Path query language. JSON Path has a built-in
+extensibility mechanism that lets one add custom functions, applicable in query filters.
+This can be achieved by extending class
+[`JSONPathEnvironment`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONPath/JSONPathEnvironment.swift)
+and overriding method `initialize()`. Such an extended environment can then be passed to
+the initializer of struct 
+[`JSONPathEvaluator`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONPath/JSONPathEvaluator.swift),
+which provides a means to execute queries using the extended environment.
 
 ## Mutating JSON Values
 

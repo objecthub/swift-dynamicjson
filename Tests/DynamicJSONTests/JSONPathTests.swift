@@ -443,4 +443,41 @@ final class JSONPathTests: XCTestCase {
     XCTAssertNotNil(parse("$[ 0 , 1 ]"))
     XCTAssertNotNil(parse("$[*,1]"))
   }
+  
+  func testJSONPathQuery() throws {
+    let value = try JSON(string: """
+    { "store": {
+        "book": [
+          { "category": "reference",
+            "author": "Nigel Rees",
+            "title": "Sayings of the Century",
+            "price": 8.95 },
+          { "category": "fiction",
+            "author": "Evelyn Waugh",
+            "title": "Sword of Honour",
+            "price": 12.99 },
+          { "category": "fiction",
+            "author": "Herman Melville",
+            "title": "Moby Dick",
+            "isbn": "0-553-21311-3",
+            "price": 8.99 },
+          { "category": "fiction",
+            "author": "J. R. R. Tolkien",
+            "title": "The Lord of the Rings",
+            "isbn": "0-395-19395-8",
+            "price": 22.99 }
+        ],
+        "bicycle": {
+          "color": "red",
+          "price": 399
+        }
+      }
+    }
+    """)
+    let path = try JSONPath(query: "$.store.book[?@.price < 10].title")
+    let results = try value.query(path)
+    XCTAssertEqual(results.count, 2)
+    XCTAssertEqual(results[0], LocatedJSON("Sayings of the Century", try JSONLocation("$['store']['book'][0]['title']")))
+    XCTAssertEqual(results[1], LocatedJSON("Moby Dick", try JSONLocation("$['store']['book'][2]['title']")))
+  }
 }
