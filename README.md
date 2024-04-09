@@ -12,12 +12,10 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
    - An implementation of _JSON Merge Patch_ as defined by [RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/) for merging JSON data with JSON patches.
    - An implementation of _JSON Schema_ as defined by the [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/) for validating JSON data.
 
-&nbsp;
-
 <table width="100%">
 <tr><th colspan="2">Table of contents</th></tr>
 <tr>
-<td width="50%" valign="top">
+<td width="300px" valign="top">
 1. &nbsp;<a href="#representing-json-data">Representing JSON Data</a><br />
 2. &nbsp;<a href="#accessing-json-values">Accessing JSON Values</a><br />
 2.1 &nbsp;<a href="#json-location">JSON Location</a><br />
