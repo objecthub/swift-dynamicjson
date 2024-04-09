@@ -12,26 +12,27 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
    - An implementation of _JSON Merge Patch_ as defined by [RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/) for merging JSON data with JSON patches.
    - An implementation of _JSON Schema_ as defined by the [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/) for validating JSON data.
 
-<table>
+<small>
+<table width="100%">
 <tr><th colspan="2">Table of contents</th></tr>
 <tr>
 <td width="50%" valign="top">
 1. &nbsp;<a href="#representing-json-data">Representing JSON Data</a><br />
 2. &nbsp;<a href="#accessing-json-values">Accessing JSON Values</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 &nbsp;<a href="">Identifying values via JSON Location</a>&nbsp;&nbsp;&nbsp;&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 &nbsp;<a href="">Identifying values via JSON Pointer</a><br />
-3. &nbsp;<a href="">Queries with JSON Path</a><br />
-4. &nbsp;<a href="">Mutating JSON Values</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 &nbsp;<a href="#identifying-values-via-json-location">Identifying values via JSON Location</a>&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 &nbsp;<a href="#identifying-values-via-json-pointer">Identifying values via JSON Pointer</a><br />
+3. &nbsp;<a href="#queries-with-json-path">Queries with JSON Path</a><br />
 </td>
-<td valign="top">
-5. &nbsp;<a href="">Mutating JSON Values</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1 &nbsp;<a href="">JSON Mutation API</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2 &nbsp;<a href="">Using JSON Patch</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.3 &nbsp;<a href="">Merging JSON Data</a><br />
-6. &nbsp;<a href="">Validating JSON Data</a><br />
+<td width="50%" valign="top">
+4. &nbsp;<a href="#mutating-json-values">Mutating JSON Values</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 &nbsp;<a href="#json-mutation-api">JSON Mutation API</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 &nbsp;<a href="#using-json-patch">Using JSON Patch</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 &nbsp;<a href="#merging-json-data">Merging JSON Data</a><br />
+5. &nbsp;<a href="#validating-json-data">Validating JSON Data</a><br />
 </td>
 </tr>
 </table>
+</small>
 
 &nbsp;
 
