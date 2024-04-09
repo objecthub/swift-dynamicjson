@@ -12,27 +12,27 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
    - An implementation of _JSON Merge Patch_ as defined by [RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/) for merging JSON data with JSON patches.
    - An implementation of _JSON Schema_ as defined by the [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/) for validating JSON data.
 
-<small>
+&nbsp;
+
 <table width="100%">
 <tr><th colspan="2">Table of contents</th></tr>
 <tr>
 <td width="50%" valign="top">
 1. &nbsp;<a href="#representing-json-data">Representing JSON Data</a><br />
 2. &nbsp;<a href="#accessing-json-values">Accessing JSON Values</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 &nbsp;<a href="#identifying-values-via-json-location">Identifying values via JSON Location</a>&nbsp;&nbsp;&nbsp;&nbsp;<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 &nbsp;<a href="#identifying-values-via-json-pointer">Identifying values via JSON Pointer</a><br />
+2.1 &nbsp;<a href="#json-location">JSON Location</a><br />
+2.2 &nbsp;<a href="#json-pointer">JSON Pointer</a><br />
 3. &nbsp;<a href="#queries-with-json-path">Queries with JSON Path</a><br />
 </td>
 <td width="50%" valign="top">
 4. &nbsp;<a href="#mutating-json-values">Mutating JSON Values</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.1 &nbsp;<a href="#json-mutation-api">JSON Mutation API</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.2 &nbsp;<a href="#using-json-patch">Using JSON Patch</a><br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4.3 &nbsp;<a href="#merging-json-data">Merging JSON Data</a><br />
+4.1 &nbsp;<a href="#mutation-api">Mutation API</a><br />
+4.2 &nbsp;<a href="#json-patch">JSON Patch</a><br />
+4.3 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
 5. &nbsp;<a href="#validating-json-data">Validating JSON Data</a><br />
 </td>
 </tr>
 </table>
-</small>
 
 &nbsp;
 
@@ -182,7 +182,7 @@ public protocol SegmentableJSONReference: JSONReference {
 
 _DynamicJSON_ currently provides two implementations of `SegmentableJSONReference`: [`JSONPointer`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONPointer.swift) and [`JSONLocation`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONLocation.swift), an abstraction that is equivalent to singular _JSON Path_ queries.
 
-### Identifying values via JSON Location
+### JSON Location
 
 [`JSONLocation`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONLocation.swift) is the default implementation for identifying JSON values within a JSON document. It is based on how values are identified in [JSON Path](https://datatracker.ietf.org/doc/html/rfc9535/) and uses a restricted form of JSON Path query syntax.
 
@@ -260,7 +260,7 @@ public indirect enum JSONLocation: SegmentableJSONReference, ... {
 }
 ```
 
-### Identifying values via JSON Pointer
+### JSON Pointer
 
 _JSON Pointer_ is specified by [RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901/) and
 is generally the most established formalism for referring to a JSON value within a JSON document.
@@ -414,7 +414,7 @@ which provides a means to execute queries using the extended environment.
 
 ## Mutating JSON Values
 
-### JSON Mutation API
+### Mutation API
 
 _DynamicJSON_ represents JSON data with value type
 [`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSON.swift).
@@ -504,9 +504,9 @@ The second form of the `mutate` method provides specific functions `arrProc` for
 and `objProc` for mutating objects, again in a way in which no copies are created. For all
 other values, `proc` is being called.
 
-### Using JSON Patch
+### JSON Patch
 
-### Merging JSON Data
+### JSON Merge Patch
 
 ## Validating JSON Data
 
