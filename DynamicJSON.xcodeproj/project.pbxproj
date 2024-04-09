@@ -995,7 +995,7 @@
 		CCB465A82BACDAC8001FBDFA /* remotes */ = {
 			isa = PBXGroup;
 			children = (
-				CCB466232BB9FB7C001FBDFA /* 2020-12 */,
+				CCB466232BB9FB7C001FBDFA /* draft2020-12 */,
 				CCB466242BB9FD63001FBDFA /* different-id-ref-string.json */,
 				CCB466252BB9FD7D001FBDFA /* nested-absolute-ref-to-string.json */,
 				CCB466262BB9FD8F001FBDFA /* urn-ref-string.json */,
@@ -1036,7 +1036,7 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
-		CCB466232BB9FB7C001FBDFA /* 2020-12 */ = {
+		CCB466232BB9FB7C001FBDFA /* draft2020-12 */ = {
 			isa = PBXGroup;
 			children = (
 				CCB465922BACDAC8001FBDFA /* baseUriChange */,
@@ -1058,7 +1058,7 @@
 				CCB465A62BACDAC8001FBDFA /* subSchemas.json */,
 				CCB465A72BACDAC8001FBDFA /* tree.json */,
 			);
-			path = "2020-12";
+			path = "draft2020-12";
 			sourceTree = "<group>";
 		};
 		CCB4662D2BBB4AB9001FBDFA /* JSONPatch */ = {

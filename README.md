@@ -15,7 +15,7 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 <table width="100%">
 <tr><th colspan="2">Table of contents</th></tr>
 <tr>
-<td width="600px" valign="top">
+<td width="650px" valign="top">
 1. &nbsp;<a href="#representing-json-data">Representing JSON Data</a><br />
 2. &nbsp;<a href="#accessing-json-values">Accessing JSON Values</a><br />
 2.1 &nbsp;<a href="#json-location">JSON Location</a><br />

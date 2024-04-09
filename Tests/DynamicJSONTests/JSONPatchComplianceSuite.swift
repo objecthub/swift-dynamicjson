@@ -10,7 +10,7 @@ import Foundation
 final class JSONPatchComplianceSuite: JSONPatchTestCase {
   
   public override var directory: String? {
-    return "JSONPatch"
+    return "JSONPatch/"
   }
   
   func testTests() {
