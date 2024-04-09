@@ -40,7 +40,7 @@ All JSON values in framework _DynamicJSON_ are represented with enumeration [`JS
 Enumeration `JSON` defines the following cases:
 
 ```swift
-public indirect enum JSON {
+indirect enum JSON: Hashable, Codable, CustomStringConvertible, ... {
   case null
   case boolean(Bool)
   case integer(Int64)
@@ -153,7 +153,7 @@ In _DynamicJSON_, components of a JSON value are identified by implementations
 of the protocols [`JSONReference`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONReference.swift) and [`SegmentableJSONReference`](https://github.com/objecthub/swift-dynamicjson/blob/5a14f6e014116be9c95c68f0e3141d2605f95c5e/Sources/DynamicJSON/JSONReference.swift#L57). The following code presents the core methods implementing JSON references:
 
 ```swift
-public protocol JSONReference: CustomStringConvertible {
+protocol JSONReference: CustomStringConvertible {
   // Returns a new JSONReference with the given member selected.
   func select(member: String) -> Self
   // Returns a new JSONReference with the given index selected.
@@ -167,7 +167,7 @@ public protocol JSONReference: CustomStringConvertible {
   func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
 }
 
-public protocol SegmentableJSONReference: JSONReference {
+protocol SegmentableJSONReference: JSONReference {
   associatedtype Segment: JSONReferenceSegment
   // An array of segments representing the reference.
   var segments: [Segment] { get }
@@ -235,7 +235,7 @@ let r2 = JSONLocation(segments: [.member("store"),
 `JSONLocation` defines the following frequently used methods:
 
 ```swift
-public indirect enum JSONLocation: SegmentableJSONReference, ... {
+indirect enum JSONLocation: SegmentableJSONReference, ... {
   // The segments defining this `JSONLocation`.
   var segments: [Segment]
   // Returns a new JSONLocation with the given member selected.
@@ -333,7 +333,7 @@ struct JSONPointer: SegmentableJSONReference, ... {
 
 ## Queries with JSON Path
 
-DynamicJSON supports the full _JSON Path_ standard as defined by [RFC 9535](https://datatracker.ietf.org/doc/html/rfc9535/).
+_DynamicJSON_ supports the full _JSON Path_ standard as defined by [RFC 9535](https://datatracker.ietf.org/doc/html/rfc9535/).
 Enum [`JSONPath`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONPath/JSONPath.swift)
 represents JSON Path queries.
 [`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSON.swift)
@@ -541,18 +541,22 @@ bundles operations together into a "patch object" providing functionality to app
 struct JSONPatch: Codable, Hashable, CustomStringConvertible, CustomDebugStringConvertible {
   // Sequence of operations.
   let operations: [JSONPatchOperation]
+  
   // Initializer based on a sequence of operations
   init(operations: [JSONPatchOperation]) { ... }
+  
   // Decodes the provided data with the given decoding strategies.
   init(data: Data,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
        floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
        userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
+  
   // Decodes the provided string with the given decoding strategies.
   init(string: String,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
        floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
        userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
+  
   // Decodes the content at the provided URL with the given decoding strategies.
   init(url: URL,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
@@ -560,14 +564,59 @@ struct JSONPatch: Codable, Hashable, CustomStringConvertible, CustomDebugStringC
        userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
   ...
   // Applies this patch object to `json` mutating `json` in place.
-  public func apply(to json: inout JSON) throws { ... }
+  func apply(to json: inout JSON) throws { ... }
   ...
 }
 ```
 
+The following code shows how to load a JSON patch snippet into a patch object and
+apply it to a json value:
 
+```swift
+let jsonstr = """
+  [
+    { "op": "test", "path": "/a/b/c", "value": "foo" },
+    { "op": "remove", "path": "/a/b/c" },
+    { "op": "add", "path": "/a/b/c", "value": [ "foo", "bar" ] },
+    { "op": "replace", "path": "/a/b/c", "value": 42 },
+    { "op": "move", "from": "/a/b/c", "path": "/a/b/d" },
+    { "op": "copy", "from": "/a/b/d", "path": "/a/b/e" }
+  ]
+  """
+let patch = try JSONPatch(string: jsonstr)
+var json: JSON = ...
+try json.apply(patch: patch)
+```
 
 ### JSON Merge Patch
+
+_DynamicJSON_ provides basic support for _JSON Merge Patch_ as defined by
+[RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/).
+
+A JSON merge patch document describes changes to be made to a target JSON document using
+a syntax that closely mimics the document being modified. Recipients of a merge patch
+document determine the exact set of changes being requested by comparing the content of the
+provided patch against the current content of the target document. If the provided merge
+patch contains members that do not appear within the target, those members are added.
+If the target does contain the member, the value is replaced. Null values in the merge
+patch are given special meaning to indicate the removal of existing values in the target.
+
+The algorithm to apply a merge patch document to a JSON value is implemented by the
+following method of the
+[`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/4719984b16dca8e60d9917fcebea5704f513b962/Sources/DynamicJSON/JSON.swift#L538)
+enum:
+
+```swift
+// Merges this JSON value with the given JSON value `patch` recursively. Objects are
+// merged key by key with values from `patch` overriding values of the object represented
+// by this JSON value. All other types of JSON values are not merged and `patch` overrides
+// this JSON value.
+func merging(patch: JSON) -> JSON { ... }
+```
+
+Thus, the current implementation of applying a merge patch document is actually not mutating
+an existing JSON value. It is rather constructing a new JSON value from scratch by merging
+the old value with the merge patch document.
 
 ## Validating JSON Data
 
