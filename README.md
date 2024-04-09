@@ -12,6 +12,29 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
    - An implementation of _JSON Merge Patch_ as defined by [RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/) for merging JSON data with JSON patches.
    - An implementation of _JSON Schema_ as defined by the [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/) for validating JSON data.
 
+<table>
+<tr><th colspan="2">Table of contents</th></tr>
+<tr>
+<td width="50%" valign="top">
+1. &nbsp;<a href="#representing-json-data">Representing JSON Data</a><br />
+2. &nbsp;<a href="#accessing-json-values">Accessing JSON Values</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.1 &nbsp;<a href="">Identifying values via JSON Location</a>&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.2 &nbsp;<a href="">Identifying values via JSON Pointer</a><br />
+3. &nbsp;<a href="">Queries with JSON Path</a><br />
+4. &nbsp;<a href="">Mutating JSON Values</a><br />
+</td>
+<td valign="top">
+5. &nbsp;<a href="">Mutating JSON Values</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.1 &nbsp;<a href="">JSON Mutation API</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.2 &nbsp;<a href="">Using JSON Patch</a><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.3 &nbsp;<a href="">Merging JSON Data</a><br />
+6. &nbsp;<a href="">Validating JSON Data</a><br />
+</td>
+</tr>
+</table>
+
+&nbsp;
+
 ## Representing JSON Data
 
 All JSON values in framework _DynamicJSON_ are represented with enumeration [`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSON.swift).
@@ -132,26 +155,26 @@ of the protocols [`JSONReference`](https://github.com/objecthub/swift-dynamicjso
 
 ```swift
 public protocol JSONReference: CustomStringConvertible {
-  /// Returns a new JSONReference with the given member selected.
+  // Returns a new JSONReference with the given member selected.
   func select(member: String) -> Self
-  /// Returns a new JSONReference with the given index selected.
+  // Returns a new JSONReference with the given index selected.
   func select(index: Int) -> Self
-  /// Retrieve value at which this reference is pointing from JSON document `value`.
+  // Retrieve value at which this reference is pointing from JSON document `value`.
   func get(from value: JSON) -> JSON?
-  /// Replace value at which this reference is pointing with `json` within `value`.
+  // Replace value at which this reference is pointing with `json` within `value`.
   func set(to json: JSON, in value: JSON) throws -> JSON
-  /// Mutate value at which this reference is pointing within JSON document `value`
-  /// with function `proc`.
+  // Mutate value at which this reference is pointing within JSON document `value`
+  // with function `proc`.
   func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
 }
 
 public protocol SegmentableJSONReference: JSONReference {
   associatedtype Segment: JSONReferenceSegment
-  /// An array of segments representing the reference.
+  // An array of segments representing the reference.
   var segments: [Segment] { get }
-  /// Creates a new `SegmentableJSONReference` on top of this reference.
+  // Creates a new `SegmentableJSONReference` on top of this reference.
   func select(segment: Segment) -> Self
-  /// Decomposes this reference into the top segment selector and its parent.
+  // Decomposes this reference into the top segment selector and its parent.
   var deselect: (Self, Segment)? { get }
 }
 ```
@@ -391,6 +414,94 @@ which provides a means to execute queries using the extended environment.
 ## Mutating JSON Values
 
 ### JSON Mutation API
+
+_DynamicJSON_ represents JSON data with value type
+[`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSON.swift).
+There are a number of methods that mutate such data without copies being created. These are listed
+in the code snippet below.
+
+```swift
+enum JSON: Hashable, .. {
+  // Mutates this JSON value if it represents either an array or a string by appending
+  // the given JSON value `json`. For arrays, `json` is appended as a new element. For
+  // strings it is expected that `json` also refers to a string and `json` gets appended
+  // as a string. For all other types of JSON values, an error is thrown.
+  mutating func append(_ json: JSON) throws
+  
+  // Mutates this JSON value if it represents either an array or a string by inserting
+  // the given JSON value `json`. For arrays, `json` is inserted as a new element at
+  // `index`. For strings it is expected that `json` also refers to a string and `json`
+  // gets inserted into this string at position `index`. For all other types of JSON
+  // values, an error is thrown.
+  mutating func insert(_ json: JSON, at index: Int) throws
+  
+  // Adds a new key/value mapping or updates an existing key/value mapping in this
+  // JSON object. If this JSON value is not an object, an error is thrown.
+  mutating func assign(_ member: String, to json: JSON) throws
+  
+  // Replaces the value the location reference `ref` is referring to with `json`. The
+  // replacement is done in place, i.e. it mutates this JSON value. `ref` can be
+  // implemented by any abstraction implementing the `JSONReference` procotol.
+  mutating func update(_ ref: JSONReference, with json: JSON) throws
+  
+  /// Replaces the value the location reference string `ref` is referring to with `json`.
+  /// The replacement is done in place, i.e. it mutates this JSON value. `ref` is a string
+  /// representation of either `JSONLocation` or `JSONPointer` references.
+  mutating func update(_ ref: String, with json: JSON) throws
+  
+  /// Mutates the JSON value the reference `ref` is referring to with function `proc`.
+  /// `proc` receives a reference to the JSON value, allowing efficient in place mutations
+  /// without automatically doing any copying. `ref` can be implemented by any abstraction
+  /// implementing the `JSONReference` procotol.
+  mutating func mutate(_ ref: JSONReference, with proc: (inout JSON) throws -> Void) throws
+  
+  /// Mutates the JSON value the reference `ref` is referring to with function `arrProc`
+  /// if the value is an array or `objProc` if the value is an object. For all other
+  /// cases, an error is thrown. This method allows for efficient in place mutations
+  /// without automatically doing any copying. `ref` can be implemented by any abstraction
+  /// implementing the `JSONReference` procotol.
+  mutating func mutate(_ ref: JSONReference,
+                       array arrProc: ((inout [JSON]) throws -> Void)? = nil,
+                       object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
+                       other proc: ((inout JSON) throws -> Void)? = nil) throws
+  
+  /// Mutates the JSON value the reference string `ref` is referring to with function `proc`.
+  /// `proc` receives a reference to the JSON value, allowing efficient in place mutations
+  /// without automatically doing any copying. `ref` is a string representation of either
+  /// `JSONLocation` or `JSONPointer` references.
+  mutating func mutate(_ ref: String, with proc: (inout JSON) throws -> Void) throws
+  
+  /// Mutates the JSON array the reference string `ref` is referring to with function
+  /// `arrProc` if the value is an array or `objProc` if the value is an object. For
+  /// all other cases, an error is thrown. This method allows for efficient in place mutations
+  /// without automatically doing any copying. `ref` is a string representation of either
+  /// `JSONLocation` or `JSONPointer` references.
+  mutating func mutate(_ ref: String,
+                       array arrProc: ((inout [JSON]) throws -> Void)? = nil,
+                       object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
+                       other proc: ((inout JSON) throws -> Void)? = nil) throws
+  ...
+}
+```
+
+The most generic form of mutation is provided by the following two methods:
+
+```swift
+mutating func mutate(_ ref: JSONReference,
+                     with proc: (inout JSON) throws -> Void) throws
+mutating func mutate(_ ref: JSONReference,
+                     array arrProc: ((inout [JSON]) throws -> Void)? = nil,
+                     object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
+                     other proc: ((inout JSON) throws -> Void)? = nil) throws
+```
+
+These methods mutate the JSON value at which the reference `ref` is referring to via function `proc`.
+`proc` receives a reference to this JSON value, allowing efficient, in place mutations without
+automatically creating copies.
+
+The second form of the `mutate` method provides specific functions `arrProc` for mutating arrays
+and `objProc` for mutating objects, again in a way in which no copies are created. For all
+other values, `proc` is being called.
 
 ### Using JSON Patch
 
