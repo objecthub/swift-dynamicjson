@@ -3,7 +3,7 @@
         "description": "single dependency",
         "schema": {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "dependencies": {"bar": ["foo"]}
+            "dependencies": {"bar": ["foo"] }
         },
         "tests": [
             {

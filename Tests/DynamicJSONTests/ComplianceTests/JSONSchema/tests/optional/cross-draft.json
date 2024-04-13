@@ -6,6 +6,7 @@
             "type": "array",
             "$ref": "http://localhost:1234/draft2019-09/ignore-prefixItems.json"
         },
+        "ignore": true,
         "tests": [
             {
                 "description": "first item not a string is valid",

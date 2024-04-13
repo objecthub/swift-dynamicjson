@@ -65,16 +65,6 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     try container.encode(self.uri.string ?? self.uri.description)
   }
   
-  /*
-  public init(from decoder: Decoder) throws {
-    self.uri = try URLComponents(from: decoder)
-  }
-
-  public func encode(to encoder: Encoder) throws {
-    try self.uri.encode(to: encoder)
-  }
-  */
-  
   public var isAbsolute: Bool {
     return self.uri.scheme != nil || self.uri.host != nil
   }

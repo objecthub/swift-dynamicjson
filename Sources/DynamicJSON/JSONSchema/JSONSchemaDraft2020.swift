@@ -30,6 +30,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     public let metadata: Bool
     public let format: Bool
     public let content: Bool
+    public let deprecated: Bool
     
     public init(core: Bool = true,
                 applicator: Bool = true,
@@ -37,7 +38,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
                 validation: Bool = true,
                 metadata: Bool = true,
                 format: Bool = true,
-                content: Bool = true) {
+                content: Bool = true,
+                deprecated: Bool = true) {
       self.core = core
       self.applicator = applicator
       self.unevaluated = unevaluated
@@ -45,6 +47,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       self.metadata = metadata
       self.format = format
       self.content = content
+      self.deprecated = deprecated
     }
   }
   
@@ -184,7 +187,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     func flag(_ reason: Reason, for member: String) {
       result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
-    guard case .descriptor(let descriptor) = self.schema else {
+    guard case .descriptor(let descriptor, _) = self.schema else {
       return
     }
     // if let id = descriptor.id {}
@@ -240,7 +243,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
         return nil
       }
     }
-    guard case .descriptor(let descriptor) = self.schema else {
+    guard case .descriptor(let descriptor, _) = self.schema else {
       return
     }
     if let prefixItems = descriptor.prefixItems, case .array(let arr) = instance.value {
@@ -410,7 +413,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
         return nil
       }
     }
-    guard case .descriptor(let descriptor) = self.schema else {
+    guard case .descriptor(let descriptor, _) = self.schema else {
       return
     }
     if let unevaluatedProperties = descriptor.unevaluatedProperties,
@@ -437,7 +440,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     func flag(_ reason: Reason, for member: String) {
       result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
-    guard case .descriptor(let descriptor) = self.schema else {
+    guard case .descriptor(let descriptor, _) = self.schema else {
       return
     }
     if let multipleOf = descriptor.multipleOf {
@@ -573,12 +576,10 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       }
     }
     if let depRequired = descriptor.dependentRequired, case .object(let dict) = instance.value {
-      for (m, others) in depRequired {
-        if dict[m] != nil {
-          let miss = others.filter { dict[$0] == nil }
-          if !miss.isEmpty {
-            flag(.dependentPropertiesMissing(m, miss), for: "dependentRequired")
-          }
+      for (m, others) in depRequired where dict[m] != nil {
+        let miss = others.filter { dict[$0] == nil }
+        if !miss.isEmpty {
+          flag(.dependentPropertiesMissing(m, miss), for: "dependentRequired")
         }
       }
     }
@@ -603,6 +604,47 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   open func validateContent(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     
+  }
+  
+  open func validateDeprecated(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+    func flag(_ reason: Reason, for member: String) {
+      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
+    }
+    func validator(for schema: JSONSchema,
+                   at member: String, _ member2: String? = nil,
+                   index: Int? = nil) -> JSONSchemaValidator? {
+      do {
+        var location: JSONLocation = .member(self.context.location, member)
+        if let member2 {
+          location = .member(location, member2)
+        }
+        if let index, index >= 0 {
+          location = .index(location, index)
+        }
+        return try self.context.validator(for: schema, at: location, dialect: self.dialect)
+      } catch let e {
+        flag(.validationError(e), for: member)
+        return nil
+      }
+    }
+    guard case .descriptor(let descriptor, _) = self.schema else {
+      return
+    }
+    if let dependencies = descriptor.dependencies, case .object(let d) = instance.value {
+      for (member, mode) in dependencies where d[member] != nil {
+        switch mode {
+          case .array(let arr):
+            let miss = arr.filter { d[$0] == nil }
+            if !miss.isEmpty {
+              flag(.dependentPropertiesMissing(member, miss), for: "dependencies")
+            }
+          case .schema(let schema):
+            if let validator = validator(for: schema, at: "dependencies", member) {
+              result.include(validator.validate(instance))
+            }
+        }
+      }
+    }
   }
   
   open func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResults {
@@ -635,6 +677,9 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
     if self.dialect.vocabulary.unevaluated {
       self.validateUnevaluated(instance: instance, result: &result)
+    }
+    if self.dialect.vocabulary.deprecated {
+      self.validateDeprecated(instance: instance, result: &result)
     }
     return result
   }

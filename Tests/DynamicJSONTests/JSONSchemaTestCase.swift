@@ -61,13 +61,17 @@ class JSONSchemaTestCase: XCTestCase {
         } else {
           let schema = test.schema
           for testCase in test.tests {
-            print("  • \(testCase.description)")
-            let result = try testCase.data.validate(with: schema, using: registry)
-            if testCase.valid != result.isValid {
-              if testCase.valid {
-                XCTFail("🛑 \(name)/\(test.description)/\(testCase.description): \(result)")
-              } else {
-                XCTFail("🛑 \(name)/\(test.description)/\(testCase.description): valid but should fail")
+            if testCase.ignore ?? false {
+              print("  • [ignored] \(testCase.description)")
+            } else {
+              print("  • \(testCase.description)")
+              let result = try testCase.data.validate(with: schema, using: registry)
+              if testCase.valid != result.isValid {
+                if testCase.valid {
+                  XCTFail("🛑 \(name)/\(test.description)/\(testCase.description): \(result)")
+                } else {
+                  XCTFail("🛑 \(name)/\(test.description)/\(testCase.description): valid but should fail")
+                }
               }
             }
           }

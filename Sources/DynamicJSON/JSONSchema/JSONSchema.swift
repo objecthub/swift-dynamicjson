@@ -24,12 +24,13 @@ public indirect enum JSONSchema: Codable,
                                  Equatable,
                                  CustomDebugStringConvertible {
   case boolean(Bool)
-  case descriptor(JSONSchemaDescriptor)
+  case descriptor(JSONSchemaDescriptor, JSON)
 
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
-    if let object = try? container.decode(JSONSchemaDescriptor.self) {
-      self = .descriptor(object)
+    if let object = try? container.decode(JSONSchemaDescriptor.self),
+       let json = try? container.decode(JSON.self) {
+      self = .descriptor(object, json)
     } else if let bool = try? container.decode(Bool.self) {
       self = .boolean(bool)
     } else {
@@ -44,8 +45,8 @@ public indirect enum JSONSchema: Codable,
     switch self {
       case .boolean(let bool):
         try container.encode(bool)
-      case .descriptor(let descriptor):
-        try container.encode(descriptor)
+      case .descriptor(let descriptor, let json):
+        try container.encode(json)
     }
   }
   
@@ -62,7 +63,7 @@ public indirect enum JSONSchema: Codable,
     switch self {
       case .boolean(_):
         return nil
-      case .descriptor(let descriptor):
+      case .descriptor(let descriptor, _):
         return descriptor.id
     }
   }
@@ -71,7 +72,7 @@ public indirect enum JSONSchema: Codable,
     switch self {
       case .boolean(_):
         return nil
-      case .descriptor(let descriptor):
+      case .descriptor(let descriptor, _):
         return descriptor.schema
     }
   }
@@ -80,7 +81,7 @@ public indirect enum JSONSchema: Codable,
     switch self {
       case .boolean(_):
         return nil
-      case .descriptor(let descriptor):
+      case .descriptor(let descriptor, _):
         return descriptor.title
     }
   }
@@ -91,13 +92,13 @@ public indirect enum JSONSchema: Codable,
         return "false"
       case .boolean(true):
         return "true"
-      case .descriptor(let descriptor):
+      case .descriptor(let descriptor, let json):
         return descriptor.debugDescription
     }
   }
   
   public var schemaObjects: [JSONLocation : JSONSchema] {
-    guard case .descriptor(let descriptor) = self else {
+    guard case .descriptor(let descriptor, _) = self else {
       return [:]
     }
     var res: [JSONLocation : JSONSchema] = [:]
@@ -111,11 +112,11 @@ public indirect enum JSONSchema: Codable,
     switch self {
       case .boolean(_):
         nested[location] = self
-      case .descriptor(var descriptor):
+      case .descriptor(var descriptor, let json):
         if let id = descriptor.id {
           descriptor.id = id.relative(to: base)
         }
-        nested[location] = .descriptor(descriptor)
+        nested[location] = .descriptor(descriptor, json)
         descriptor.insert(into: &nested, at: location, uri: descriptor.id ?? base)
     }
   }
@@ -315,14 +316,14 @@ public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvert
 
 public indirect enum JSONSchemaDependency: Codable, Equatable {
   case array([String])
-  case schema(JSONSchemaDescriptor)
+  case schema(JSONSchema)
   
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
-    if let object = try? container.decode(JSONSchemaDescriptor.self) {
-      self = .schema(object)
-    } else if let arr = try? container.decode([String].self) {
+    if let arr = try? container.decode([String].self) {
       self = .array(arr)
+    } else if let object = try? container.decode(JSONSchema.self) {
+      self = .schema(object)
     } else {
       throw DecodingError.dataCorrupted(
         DecodingError.Context(codingPath: decoder.codingPath,
@@ -335,8 +336,8 @@ public indirect enum JSONSchemaDependency: Codable, Equatable {
     switch self {
       case .array(let arr):
         try container.encode(arr)
-      case .schema(let descriptor):
-        try container.encode(descriptor)
+      case .schema(let schema):
+        try container.encode(schema)
     }
   }
 }
@@ -369,8 +370,8 @@ extension Dictionary<String, JSONSchemaDependency> {
       switch value {
         case .array(_):
           break
-        case .schema(let descriptor):
-          JSONSchema.descriptor(descriptor).insert(into: &nested, at: .member(location, key), uri: base)
+        case .schema(let schema):
+          schema.insert(into: &nested, at: .member(location, key), uri: base)
       }
     }
   }

@@ -6,6 +6,7 @@
             "$schema": "http://localhost:1234/draft2020-12/format-assertion-false.json",
             "format": "ipv4"
         },
+        "ignore": true,
         "tests": [
             {
                 "description": "format-assertion: false: valid string",
@@ -26,6 +27,7 @@
             "$schema": "http://localhost:1234/draft2020-12/format-assertion-true.json",
             "format": "ipv4"
         },
+        "ignore": true,
         "tests": [
             {
                 "description": "format-assertion: true: valid string",

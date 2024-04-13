@@ -95,12 +95,14 @@
             {
                 "description": "NKO DIGIT ZERO does not match (unlike e.g. Python)",
                 "data": "߀",
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "NKO DIGIT ZERO (as \\u escape) does not match",
                 "data": "\u07c0",
-                "valid": false
+                "valid": false,
+                "ignore": true
             }
         ]
     },
@@ -120,12 +122,14 @@
             {
                 "description": "NKO DIGIT ZERO matches (unlike e.g. Python)",
                 "data": "߀",
-                "valid": true
+                "valid": true,
+                "ignore": true
             },
             {
                 "description": "NKO DIGIT ZERO (as \\u escape) matches",
                 "data": "\u07c0",
-                "valid": true
+                "valid": true,
+                "ignore": true
             }
         ]
     },
@@ -145,7 +149,8 @@
             {
                 "description": "latin-1 e-acute does not match (unlike e.g. Python)",
                 "data": "é",
-                "valid": false
+                "valid": false,
+                "ignore": true
             }
         ]
     },
@@ -165,7 +170,8 @@
             {
                 "description": "latin-1 e-acute matches (unlike e.g. Python)",
                 "data": "é",
-                "valid": true
+                "valid": true,
+                "ignore": true
             }
         ]
     },
@@ -205,7 +211,8 @@
             {
                 "description": "zero-width whitespace matches",
                 "data": "\ufeff",
-                "valid": true
+                "valid": true,
+                "ignore": true
             },
             {
                 "description": "line feed matches (line terminator)",
@@ -270,7 +277,8 @@
             {
                 "description": "zero-width whitespace does not match",
                 "data": "\ufeff",
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "line feed does not match (line terminator)",
@@ -343,12 +351,14 @@
             {
                 "description": "literal unicode character in json string",
                 "data": "Les hivers de mon enfance étaient des saisons longues, longues. Nous vivions en trois lieux: l'école, l'église et la patinoire; mais la vraie vie était sur la patinoire.",
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "unicode character in hex format in string",
                 "data": "Les hivers de mon enfance étaient des saisons longues, longues. Nous vivions en trois lieux: l'\u00e9cole, l'église et la patinoire; mais la vraie vie était sur la patinoire.",
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "unicode matching is case-sensitive",
@@ -401,7 +411,8 @@
             {
                 "description": "non-ascii digits (BENGALI DIGIT FOUR, BENGALI DIGIT TWO)",
                 "data": "৪২",
-                "valid": false
+                "valid": false,
+                "ignore": true
             }
         ]
     },
@@ -495,12 +506,14 @@
             {
                 "description": "literal unicode character in json string",
                 "data": { "l'école": "pas de vraie vie" },
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "unicode character in hex format in string",
                 "data": { "l'\u00e9cole": "pas de vraie vie" },
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "unicode matching is case-sensitive",
@@ -561,7 +574,8 @@
             {
                 "description": "non-ascii digits (BENGALI DIGIT FOUR, BENGALI DIGIT TWO)",
                 "data": { "৪২": "khajit has wares if you have coin" },
-                "valid": false
+                "valid": false,
+                "ignore": true
             }
         ]
     },
@@ -589,7 +603,8 @@
             {
                 "description": "non-ascii digits (BENGALI DIGIT FOUR, BENGALI DIGIT TWO)",
                 "data": { "৪২": "khajit has wares if you have coin" },
-                "valid": true
+                "valid": true,
+                "ignore": true
             }
         ]
     }

@@ -93,7 +93,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   }
   
   /// Used to initialize nested schema resources.
-  internal init(nested: JSONSchema) {
+  internal init(nested: JSONSchema, outer: JSONSchemaResource? = nil) {
     self.schema = nested
     if nested.isBoolean {
       self.nested = nil
@@ -102,6 +102,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
       self.nested = [:]
       self.anchors = [:]
     }
+    self.outer = outer
   }
   
   /// Initializes root schema resources, scans the whole document and sets up lookup
@@ -112,11 +113,11 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
       case .boolean(_):
         self.init(nested: root)
         return
-      case .descriptor(var descriptor):
+      case .descriptor(var descriptor, let json):
         if descriptor.id == nil {
           descriptor.id = JSONSchemaIdentifier(string: UUID().uuidString)
         }
-        self.init(nested: .descriptor(descriptor))
+        self.init(nested: .descriptor(descriptor, json))
     }
     let schemaObjects = self.schema.schemaObjects
     for (location, schema) in schemaObjects where location != .root {
@@ -134,7 +135,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
       if resource.outer == nil {
         resource.outer = self
       }
-      if case .descriptor(let descriptor) = resource.schema {
+      if case .descriptor(let descriptor, _) = resource.schema {
         if let anchor = descriptor.anchor {
           if descriptor.id != nil {
             resource.selfAnchor = anchor
@@ -151,7 +152,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
         }
       }
     }
-    if case .descriptor(let descriptor) = self.schema, descriptor.id != nil {
+    if case .descriptor(let descriptor, _) = self.schema, descriptor.id != nil {
       if let anchor = descriptor.anchor {
         self.selfAnchor = anchor
       }
@@ -167,18 +168,20 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     guard let data = string.data(using: .utf8) else {
       throw Error.cannotDecodeString
     }
-    try self.init(root: .descriptor(JSONDecoder().decode(JSONSchemaDescriptor.self, from: data)))
+    try self.init(root: .descriptor(JSONDecoder().decode(JSONSchemaDescriptor.self, from: data),
+                                    JSONDecoder().decode(JSON.self, from: data)))
   }
   
   /// Initializes a schema resource from a URL for the given default JSON schema identifier.
   /// The given schema identifier is only used if the schema does not define one itself
   public convenience init(url: URL, id: JSONSchemaIdentifier?) throws {
-    var descriptor = try JSONDecoder().decode(JSONSchemaDescriptor.self,
-                                              from: try Data(contentsOf: url))
+    let data =  try Data(contentsOf: url)
+    var descriptor = try JSONDecoder().decode(JSONSchemaDescriptor.self, from: data)
+    let json = try JSONDecoder().decode(JSON.self, from: data)
     if descriptor.id == nil {
       descriptor.id = id
     }
-    try self.init(root: .descriptor(descriptor))
+    try self.init(root: .descriptor(descriptor, json))
   }
   
   /// Returns true if this is an anonymous schema resource
@@ -243,11 +246,20 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
       return .static(self)
     } else if fragment.starts(with: "/") {
       if let nested = self.nested {
-        let locations = try JSONPointer(fragment).locations()
+        // Resolve as JSON pointer reference
+        let pointer = try JSONPointer(fragment)
+        let locations = pointer.locations()
+        // Find via known keywords
         for location in locations {
           if let subschema = nested[location] {
             return .static(subschema)
           }
+        }
+        // Find via unknown keywords
+        if case .descriptor(_, let json) = self.schema,
+           let target = pointer.get(from: json),
+           let targetSchema: JSONSchema = try? target.coerce() {
+          return .static(JSONSchemaResource(nested: targetSchema, outer: self))
         }
       }
     } else if let anchors = self.anchors, let subschema = anchors[fragment] {

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CC0A59F02BC0854800F155FE /* JSONMergingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59EF2BC0854800F155FE /* JSONMergingTests.swift */; };
 		CC0A59F22BC31A8900F155FE /* JSONPointerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59F12BC31A8900F155FE /* JSONPointerTests.swift */; };
+		CC0A59F42BC6737F00F155FE /* JSONSchemaOptionalSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */; };
 		CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE72B9CBB6100746181 /* JSONPointer.swift */; };
 		CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE92B9D27F200746181 /* JSONReference.swift */; };
 		CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */; };
@@ -479,6 +480,7 @@
 /* Begin PBXFileReference section */
 		CC0A59EF2BC0854800F155FE /* JSONMergingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMergingTests.swift; sourceTree = "<group>"; };
 		CC0A59F12BC31A8900F155FE /* JSONPointerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointerTests.swift; sourceTree = "<group>"; };
+		CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaOptionalSuite.swift; sourceTree = "<group>"; };
 		CC10ABE72B9CBB6100746181 /* JSONPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointer.swift; sourceTree = "<group>"; };
 		CC10ABE92B9D27F200746181 /* JSONReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONReference.swift; sourceTree = "<group>"; };
 		CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMutationTests.swift; sourceTree = "<group>"; };
@@ -773,6 +775,7 @@
 				CCB4655B2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift */,
 				CCB4655D2BAB9828001FBDFA /* JSONSchemaTestCase.swift */,
 				CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */,
+				CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */,
 				CCB465FA2BB7328B001FBDFA /* JSONSchemaDebugTest.swift */,
 				CCB466382BBF3374001FBDFA /* JSONPatchComplianceTest.swift */,
 				CCB4663B2BBF34D7001FBDFA /* JSONPatchTestCase.swift */,
@@ -1302,6 +1305,7 @@
 				CC0A59F22BC31A8900F155FE /* JSONPointerTests.swift in Sources */,
 				CCB4664D2BBF66C7001FBDFA /* JSONPatchLargeTest.swift in Sources */,
 				CCB4655C2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift in Sources */,
+				CC0A59F42BC6737F00F155FE /* JSONSchemaOptionalSuite.swift in Sources */,
 				CCB465FC2BB732B5001FBDFA /* JSONSchemaDebugTest.swift in Sources */,
 				CCB4663A2BBF3445001FBDFA /* JSONPatchComplianceTest.swift in Sources */,
 				CC528E452B7A15B1001E9E52 /* JSONConstructorTests.swift in Sources */,

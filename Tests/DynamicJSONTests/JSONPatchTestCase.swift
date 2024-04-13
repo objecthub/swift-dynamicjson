@@ -37,12 +37,10 @@ class JSONPatchTestCase: XCTestCase {
     if let url = bundle.url(forResource: filename,
                             withExtension: "json",
                             subdirectory: self.directory) {
-      print("@@@!! url = \(url)")
       let data = try Data(contentsOf: url)
       return try JSONDecoder().decode(JSONPatchComplianceTests.self, from: data)
     } else {
       let url = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/\(self.directory ?? "")\(filename).json")
-      print("@@@@@ url = \(url)")
       if FileManager.default.fileExists(atPath: url.path) {
         let data = try Data(contentsOf: url)
         return try JSONDecoder().decode(JSONPatchComplianceTests.self, from: data)

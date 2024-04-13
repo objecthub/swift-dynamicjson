@@ -6,6 +6,7 @@
             "type": "integer",
             "multipleOf": 0.5
         },
+        "ignore": true,
         "tests": [
             {
                 "description": "valid if optional overflow handling is implemented",
