@@ -45,7 +45,7 @@ public indirect enum JSONSchema: Codable,
     switch self {
       case .boolean(let bool):
         try container.encode(bool)
-      case .descriptor(let descriptor, let json):
+      case .descriptor(_, let json):
         try container.encode(json)
     }
   }
@@ -54,7 +54,7 @@ public indirect enum JSONSchema: Codable,
     switch self {
       case .boolean(_):
         return true
-      case .descriptor(_):
+      case .descriptor(_, _):
         return false
     }
   }
@@ -92,7 +92,7 @@ public indirect enum JSONSchema: Codable,
         return "false"
       case .boolean(true):
         return "true"
-      case .descriptor(let descriptor, let json):
+      case .descriptor(let descriptor, _):
         return descriptor.debugDescription
     }
   }

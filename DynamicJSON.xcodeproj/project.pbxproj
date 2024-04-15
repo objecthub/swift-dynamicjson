@@ -10,6 +10,8 @@
 		CC0A59F02BC0854800F155FE /* JSONMergingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59EF2BC0854800F155FE /* JSONMergingTests.swift */; };
 		CC0A59F22BC31A8900F155FE /* JSONPointerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59F12BC31A8900F155FE /* JSONPointerTests.swift */; };
 		CC0A59F42BC6737F00F155FE /* JSONSchemaOptionalSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */; };
+		CC0A5A062BCB34A500F155FE /* JSONSchemaFormatSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A5A052BCB34A500F155FE /* JSONSchemaFormatSuite.swift */; };
+		CC0A5A082BCC665700F155FE /* JSONSchemaFormatValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A5A072BCC665700F155FE /* JSONSchemaFormatValidators.swift */; };
 		CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE72B9CBB6100746181 /* JSONPointer.swift */; };
 		CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE92B9D27F200746181 /* JSONReference.swift */; };
 		CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */; };
@@ -481,6 +483,8 @@
 		CC0A59EF2BC0854800F155FE /* JSONMergingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMergingTests.swift; sourceTree = "<group>"; };
 		CC0A59F12BC31A8900F155FE /* JSONPointerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointerTests.swift; sourceTree = "<group>"; };
 		CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaOptionalSuite.swift; sourceTree = "<group>"; };
+		CC0A5A052BCB34A500F155FE /* JSONSchemaFormatSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaFormatSuite.swift; sourceTree = "<group>"; };
+		CC0A5A072BCC665700F155FE /* JSONSchemaFormatValidators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaFormatValidators.swift; sourceTree = "<group>"; };
 		CC10ABE72B9CBB6100746181 /* JSONPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointer.swift; sourceTree = "<group>"; };
 		CC10ABE92B9D27F200746181 /* JSONReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONReference.swift; sourceTree = "<group>"; };
 		CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMutationTests.swift; sourceTree = "<group>"; };
@@ -776,6 +780,7 @@
 				CCB4655D2BAB9828001FBDFA /* JSONSchemaTestCase.swift */,
 				CCB4658F2BAC0741001FBDFA /* JSONSchemaComplianceSuite.swift */,
 				CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */,
+				CC0A5A052BCB34A500F155FE /* JSONSchemaFormatSuite.swift */,
 				CCB465FA2BB7328B001FBDFA /* JSONSchemaDebugTest.swift */,
 				CCB466382BBF3374001FBDFA /* JSONPatchComplianceTest.swift */,
 				CCB4663B2BBF34D7001FBDFA /* JSONPatchTestCase.swift */,
@@ -832,6 +837,7 @@
 				CCB4662B2BBB13D0001FBDFA /* JSONSchemaValidationResults.swift */,
 				CCB4661E2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift */,
 				CCB465EB2BAD6E30001FBDFA /* JSONSchemaRegistry.swift */,
+				CC0A5A072BCC665700F155FE /* JSONSchemaFormatValidators.swift */,
 				CCB465E92BAD6C9D001FBDFA /* JSONSchemaDraft2020.swift */,
 			);
 			path = JSONSchema;
@@ -1267,6 +1273,7 @@
 			files = (
 				CCB465022BA83C44001FBDFA /* JSONSchema.swift in Sources */,
 				CCB465042BAA4D2D001FBDFA /* Indirect.swift in Sources */,
+				CC0A5A082BCC665700F155FE /* JSONSchemaFormatValidators.swift in Sources */,
 				CC528E292B7975DC001E9E52 /* DynamicJSON.docc in Sources */,
 				CCB465E52BAD54D1001FBDFA /* JSONSchemaDialect.swift in Sources */,
 				CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */,
@@ -1300,6 +1307,7 @@
 			files = (
 				CCB464F82BA0FAA3001FBDFA /* JSONLocationTests.swift in Sources */,
 				CC0A59F02BC0854800F155FE /* JSONMergingTests.swift in Sources */,
+				CC0A5A062BCB34A500F155FE /* JSONSchemaFormatSuite.swift in Sources */,
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
 				CC0A59F22BC31A8900F155FE /* JSONPointerTests.swift in Sources */,

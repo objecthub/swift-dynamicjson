@@ -95,7 +95,7 @@ class JSONSchemaTestCase: XCTestCase {
   internal func makeRegistry() -> JSONSchemaRegistry {
     let testUri = JSONSchemaIdentifier(string: "http://localhost:1234/")!
     let schemaUri = JSONSchemaIdentifier(string: "https://json-schema.org/draft/2020-12/")!
-    let registry = JSONSchemaRegistry()
+    let registry = self.makeNewRegistry()
     let bundle = Bundle(for: type(of: self))
     if let dir = bundle.url(forResource: "remotes",
                             withExtension: nil,
@@ -116,5 +116,9 @@ class JSONSchemaTestCase: XCTestCase {
       registry.register(provider: .files(from: dir, base: schemaUri))
     }
     return registry
+  }
+  
+  open func makeNewRegistry() -> JSONSchemaRegistry {
+    return JSONSchemaRegistry()
   }
 }

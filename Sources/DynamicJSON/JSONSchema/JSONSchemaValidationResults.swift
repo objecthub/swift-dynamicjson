@@ -22,40 +22,62 @@ import Foundation
 
 public struct JSONSchemaValidationResults: CustomStringConvertible {
   
-  public struct Error: CustomStringConvertible {
+  public protocol AnnotationMessage {
+    func description(value: LocatedJSON, location: JSONLocation) -> String
+  }
+  
+  public struct Annotation<Message: AnnotationMessage>: CustomStringConvertible {
     public let value: LocatedJSON
     public let location: JSONLocation
-    public let schema: JSONSchema
-    public let reason: Reason
+    public let message: Message
     
     public init(value: LocatedJSON,
                 location: JSONLocation,
-                schema: JSONSchema,
-                reason: Reason) {
+                message: Message) {
       self.value = value
       self.location = location
-      self.schema = schema
-      self.reason = reason
+      self.message = message
     }
     
     public var description: String {
-      return "value \(self.value.value) at \(value.location) not matching " +
-             "schema \(self.schema.id?.string ?? ""); reason: \(self.reason)"
+      return message.description(value: self.value, location: self.location)
     }
   }
-
+  
   public protocol Reason {
     var reason: String { get }
   }
   
+  public struct ValidationError: AnnotationMessage {
+    public let schema: JSONSchema
+    public let reason: Reason
+    
+    public func description(value: LocatedJSON, location: JSONLocation) -> String {
+      return "value \(value) not matching schema \(self.schema.id?.string ?? "") at \(location); " +
+             "reason: \(self.reason.reason)"
+    }
+  }
+  
+  public struct FormatConstraint: AnnotationMessage {
+    public let format: String
+    public let valid: Bool?
+    
+    public func description(value: LocatedJSON, location: JSONLocation) -> String {
+      return "string \(value) needs to conform with format '\(self.format)' at location " +
+             "\(location)" + (valid == nil ? "" : valid! ? "; valid" : "; invalid")
+    }
+  }
+  
   private let location: JSONLocation
-  public private(set) var errors: [Error]
+  public private(set) var errors: [Annotation<ValidationError>]
+  public private(set) var formatConstraints: [Annotation<FormatConstraint>]
   public private(set) var evaluatedProperties: Set<String>
   public private(set) var evaluatedItems: Set<Int>
   
   public init(for location: JSONLocation) {
     self.location = location
     self.errors = []
+    self.formatConstraints = []
     self.evaluatedProperties = []
     self.evaluatedItems = []
   }
@@ -64,14 +86,23 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return self.errors.isEmpty
   }
   
-  public mutating func flag(_ reason: Reason,
+  public mutating func flag(error reason: Reason,
                             for value: LocatedJSON,
                             schema: JSONSchema,
                             at location: JSONLocation) {
-    self.errors.append(Error(value: value,
-                             location: location,
-                             schema: schema,
-                             reason: reason))
+    self.errors.append(Annotation(value: value,
+                                  location: location,
+                                  message: ValidationError(schema: schema, reason: reason)))
+  }
+  
+  public mutating func flag(format: String,
+                            valid: Bool?,
+                            for value: LocatedJSON,
+                            schema: JSONSchema,
+                            at location: JSONLocation) {
+    self.formatConstraints.append(Annotation(value: value,
+                                             location: location,
+                                             message: FormatConstraint(format: format, valid: valid)))
   }
   
   public mutating func evaluted(property: String) {
@@ -119,6 +150,7 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
   @discardableResult
   public mutating func include(_ other: JSONSchemaValidationResults) -> JSONSchemaValidationResults {
     self.errors.append(contentsOf: other.errors)
+    self.formatConstraints.append(contentsOf: other.formatConstraints)
     if self.location == other.location {
       self.evaluatedProperties.formUnion(other.evaluatedProperties)
       self.evaluatedItems.formUnion(other.evaluatedItems)
@@ -127,16 +159,25 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
   }
   
   public var description: String {
+    var res = ""
     if self.errors.isEmpty {
-      return "valid"
+      res += "VALID"
     } else {
-      var res = "invalid:"
+      res += "INVALID:"
       var i = 0
       for error in self.errors {
         i += 1
-        res += "\n[\(i)] \(error)"
+        res += "\n  [\(i)] \(error)"
       }
-      return res
     }
+    if self.formatConstraints.isEmpty {
+      res += "\nFORMAT CONSTRAINTS:"
+      var i = 0
+      for conformance in self.formatConstraints {
+        i += 1
+        res += "\n  [\(i)] \(conformance)"
+      }
+    }
+    return res
   }
 }

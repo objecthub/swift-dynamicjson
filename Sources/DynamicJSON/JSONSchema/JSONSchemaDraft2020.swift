@@ -31,15 +31,17 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     public let format: Bool
     public let content: Bool
     public let deprecated: Bool
+    public let formatValidators: [String : (String) -> Bool]
     
     public init(core: Bool = true,
                 applicator: Bool = true,
                 unevaluated: Bool = true,
                 validation: Bool = true,
                 metadata: Bool = true,
-                format: Bool = true,
+                format: Bool = false,
                 content: Bool = true,
-                deprecated: Bool = true) {
+                deprecated: Bool = true,
+                formatValidators: [String : (String) -> Bool] = JSONSchemaFormatValidators.draft2020) {
       self.core = core
       self.applicator = applicator
       self.unevaluated = unevaluated
@@ -48,6 +50,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       self.format = format
       self.content = content
       self.deprecated = deprecated
+      self.formatValidators = formatValidators
     }
   }
   
@@ -98,6 +101,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     case containCountMismatch(UInt, UInt, UInt)
     case arrayPrefixInvalid(Int)
     case arrayItemInvalid(Int)
+    case formatMismatch(String)
     
     public var reason: String {
       switch self {
@@ -165,6 +169,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
           return "Array item at index \(index) does not match the schema prefix"
         case .arrayItemInvalid(let index):
           return "Array item at index \(index) does not match the required schema"
+        case .formatMismatch(let format):
+          return "String does not match format '\(format)'"
       }
     }
     
@@ -184,11 +190,12 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   open func validateCore(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
-    func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
-    }
-    guard case .descriptor(let descriptor, _) = self.schema else {
+    guard self.dialect.vocabulary.core,
+          case .descriptor(let descriptor, _) = self.schema else {
       return
+    }
+    func flag(_ reason: Reason, for member: String) {
+      result.flag(error: reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
     // if let id = descriptor.id {}
     // if let schema = descriptor.schema {}
@@ -223,8 +230,12 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   open func validateApplicator(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+    guard self.dialect.vocabulary.applicator,
+          case .descriptor(let descriptor, _) = self.schema else {
+      return
+    }
     func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
+      result.flag(error: reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
     func validator(for schema: JSONSchema,
                    at member: String, _ member2: String? = nil,
@@ -242,9 +253,6 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
         flag(.validationError(e), for: member)
         return nil
       }
-    }
-    guard case .descriptor(let descriptor, _) = self.schema else {
-      return
     }
     if let prefixItems = descriptor.prefixItems, case .array(let arr) = instance.value {
       do {
@@ -393,8 +401,12 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   open func validateUnevaluated(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+    guard self.dialect.vocabulary.unevaluated,
+          case .descriptor(let descriptor, _) = self.schema else {
+      return
+    }
     func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
+      result.flag(error: reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
     func validator(for schema: JSONSchema,
                    at member: String, _ member2: String? = nil,
@@ -412,9 +424,6 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
         flag(.validationError(e), for: member)
         return nil
       }
-    }
-    guard case .descriptor(let descriptor, _) = self.schema else {
-      return
     }
     if let unevaluatedProperties = descriptor.unevaluatedProperties,
        case .object(let dict) = instance.value,
@@ -437,11 +446,12 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   open func validateValidation(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
-    func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
-    }
-    guard case .descriptor(let descriptor, _) = self.schema else {
+    guard self.dialect.vocabulary.validation,
+          case .descriptor(let descriptor, _) = self.schema else {
       return
+    }
+    func flag(_ reason: Reason, for member: String) {
+      result.flag(error: reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
     }
     if let multipleOf = descriptor.multipleOf {
       switch instance.value {
@@ -595,20 +605,60 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   open func validateMetadata(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
-    
+    guard self.dialect.vocabulary.metadata,
+          case .descriptor(_, _) = self.schema else {
+      return
+    }
   }
   
   open func validateFormat(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
-    
+    guard case .descriptor(let descriptor, _) = self.schema,
+          let format = descriptor.format,
+          case .string(let str) = instance.value else {
+      return
+    }
+    if self.dialect.vocabulary.format,
+       let validator = self.dialect.vocabulary.formatValidators[format] {
+      let valid = validator(str)
+      if !valid {
+        result.flag(error: Reason.formatMismatch(format),
+                    for: instance,
+                    schema: self.schema,
+                    at: .member(self.context.location, "format"))
+      }
+      // Write annotation
+      result.flag(format: format,
+                  valid: valid,
+                  for: instance,
+                  schema: self.schema,
+                  at: .member(self.context.location, "format"))
+    } else {
+      // Write annotation
+      result.flag(format: format,
+                  valid: nil,
+                  for: instance,
+                  schema: self.schema,
+                  at: .member(self.context.location, "format"))
+    }
   }
   
   open func validateContent(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
-    
+    guard self.dialect.vocabulary.content,
+          case .descriptor(_, _) = self.schema else {
+      return
+    }
   }
   
   open func validateDeprecated(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+    guard self.dialect.vocabulary.deprecated,
+          case .descriptor(let descriptor, _) = self.schema else {
+      return
+    }
     func flag(_ reason: Reason, for member: String) {
-      result.flag(reason, for: instance, schema: self.schema, at: .member(self.context.location, member))
+      result.flag(error: reason,
+                  for: instance,
+                  schema: self.schema,
+                  at: .member(self.context.location, member))
     }
     func validator(for schema: JSONSchema,
                    at member: String, _ member2: String? = nil,
@@ -627,9 +677,6 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
         return nil
       }
     }
-    guard case .descriptor(let descriptor, _) = self.schema else {
-      return
-    }
     if let dependencies = descriptor.dependencies, case .object(let d) = instance.value {
       for (member, mode) in dependencies where d[member] != nil {
         switch mode {
@@ -647,40 +694,32 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  open func validate(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+    self.validateCore(instance: instance, result: &result)
+    self.validateApplicator(instance: instance, result: &result)
+    self.validateValidation(instance: instance, result: &result)
+    self.validateMetadata(instance: instance, result: &result)
+    self.validateFormat(instance: instance, result: &result)
+    self.validateContent(instance: instance, result: &result)
+    self.validateUnevaluated(instance: instance, result: &result)
+    self.validateDeprecated(instance: instance, result: &result)
+  }
+  
   open func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResults {
     var result = JSONSchemaValidationResults(for: instance.location)
     // Check if this schema always suceeds or fails
     if case .boolean(let bool) = self.schema {
       if !bool {
-        result.flag(Reason.alwaysFails, for: instance, schema: self.schema, at: self.context.location)
+        result.flag(error: Reason.alwaysFails,
+                    for: instance,
+                    schema: self.schema,
+                    at: self.context.location)
       }
       return result
     }
     // Validate supported vocabularies
-    if self.dialect.vocabulary.core {
-      self.validateCore(instance: instance, result: &result)
-    }
-    if self.dialect.vocabulary.applicator {
-      self.validateApplicator(instance: instance, result: &result)
-    }
-    if self.dialect.vocabulary.validation {
-      self.validateValidation(instance: instance, result: &result)
-    }
-    if self.dialect.vocabulary.metadata {
-      self.validateMetadata(instance: instance, result: &result)
-    }
-    if self.dialect.vocabulary.format {
-      self.validateFormat(instance: instance, result: &result)
-    }
-    if self.dialect.vocabulary.content {
-      self.validateContent(instance: instance, result: &result)
-    }
-    if self.dialect.vocabulary.unevaluated {
-      self.validateUnevaluated(instance: instance, result: &result)
-    }
-    if self.dialect.vocabulary.deprecated {
-      self.validateDeprecated(instance: instance, result: &result)
-    }
+    self.validate(instance: instance, result: &result)
+    // Return result
     return result
   }
 }
