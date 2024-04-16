@@ -73,6 +73,7 @@ public struct JSONPointer: SegmentableJSONReference,
   public enum Error: LocalizedError, CustomStringConvertible {
     case rootMissing
     case invalidPointer
+    case unescapedUsageOfTilde
     
     public var description: String {
       switch self {
@@ -80,6 +81,8 @@ public struct JSONPointer: SegmentableJSONReference,
           return "missing initial '/'"
         case .invalidPointer:
           return "invalid JSON pointer identifier"
+        case .unescapedUsageOfTilde:
+          return "unescaped usage of '~' character"
       }
     }
     
@@ -88,12 +91,7 @@ public struct JSONPointer: SegmentableJSONReference,
     }
     
     public var failureReason: String? {
-      switch self {
-        case .rootMissing:
-          return "parsing error"
-        case .invalidPointer:
-          return "parsing error"
-      }
+      return "parsing error"
     }
   }
   
@@ -107,13 +105,21 @@ public struct JSONPointer: SegmentableJSONReference,
   
   /// Initialize a `JSONPointer` reference using a string representation of a JSON
   /// pointer based on RFC 6901.
-  public init(_ jsonPointer: String) throws {
+  public init(_ jsonPointer: String, strict: Bool = false) throws {
     let cs = jsonPointer.split(separator: "/", omittingEmptySubsequences: false)
     if let initial = cs.first {
       guard initial.isEmpty else {
         throw Error.rootMissing
       }
-      self.init(components: cs.dropFirst().map { JSONPointer.unescapeMember(String($0)) })
+      if strict {
+        self.init(components: try cs.dropFirst().map {
+          try JSONPointer.strictUnescapeMember(String($0))
+        })
+      } else {
+        self.init(components: cs.dropFirst().map {
+          JSONPointer.unescapeMember(String($0))
+        })
+      }
     } else {
       self.init(components: [])
     }
@@ -418,6 +424,35 @@ public struct JSONPointer: SegmentableJSONReference,
       }
     }
     return escaped ? res + "~" : res
+  }
+  
+  private static func strictUnescapeMember(_ str: String) throws -> String {
+    var res = ""
+    var escaped = false
+    for c in str {
+      switch c {
+        case "~":
+          if escaped {
+            throw Error.unescapedUsageOfTilde
+          }
+          escaped = true
+        case "0":
+          res.append(escaped ? "~" : "0")
+          escaped = false
+        case "1":
+          res.append(escaped ? "/" : "1")
+          escaped = false
+        default:
+          if escaped {
+            throw Error.unescapedUsageOfTilde
+          }
+          res.append(c)
+      }
+    }
+    if escaped {
+      throw Error.unescapedUsageOfTilde
+    }
+    return res
   }
   
   private static func escapeMember(_ str: String) -> String {

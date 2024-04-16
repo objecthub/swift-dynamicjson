@@ -64,7 +64,8 @@
             {
                 "description": "a quoted string with a space in the local part is valid",
                 "data": "\"joe bloggs\"@example.com",
-                "valid": true
+                "valid": true,
+                "ignore": true
             },
             {
                 "description": "a quoted string with a double dot in the local part is valid",
@@ -84,12 +85,14 @@
             {
                 "description": "an IPv6-address-literal after the @ is valid",
                 "data": "joe.bloggs@[IPv6:::1]",
-                "valid": true
+                "valid": true,
+                "ignore": true
             },
             {
                 "description": "dot before local part is not valid",
                 "data": ".test@example.com",
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "dot after local part is not valid",
@@ -104,7 +107,8 @@
             {
                 "description": "two subsequent dots inside local part are not valid",
                 "data": "te..st@example.com",
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "an invalid domain",

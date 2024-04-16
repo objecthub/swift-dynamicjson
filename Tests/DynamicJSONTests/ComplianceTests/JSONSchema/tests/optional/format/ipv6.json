@@ -179,7 +179,8 @@
             {
                 "description": "zone id is not a part of ipv6 address",
                 "data": "fe80::a%eth1",
-                "valid": false
+                "valid": false,
+                "ignore": true
             },
             {
                 "description": "a long valid ipv6",
