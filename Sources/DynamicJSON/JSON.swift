@@ -40,6 +40,7 @@ import Foundation
 @dynamicMemberLookup
 public enum JSON: Hashable,
                   Codable,
+                  Sendable,
                   CustomStringConvertible,
                   CustomDebugStringConvertible,
                   ExpressibleByNilLiteral,

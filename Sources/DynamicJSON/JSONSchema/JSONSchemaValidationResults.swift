@@ -20,6 +20,10 @@
 
 import Foundation
 
+///
+/// Result container for JSON schema validators. Currently, `JSONSchemaValidationResults`
+/// values primarily collect errors and format annotations.
+///
 public struct JSONSchemaValidationResults: CustomStringConvertible {
   
   public protocol AnnotationMessage {
@@ -68,12 +72,26 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     }
   }
   
+  /// Location of the current validator invocation. At the top level, this is always
+  /// `.root`. This location is used internally to merge results.
   private let location: JSONLocation
+  
+  /// Errors found by the validator.
   public private(set) var errors: [Annotation<ValidationError>]
+  
+  /// Format annotations. These are always collected, no matter whether the
+  /// `format-annotation` vocabulary is enabled or not. If it is enabled, then the
+  /// constraints that are not valid can also be found under `errors`.
   public private(set) var formatConstraints: [Annotation<FormatConstraint>]
+  
+  /// The evaluated properties of an object. Used primarily internally.
   public private(set) var evaluatedProperties: Set<String>
+  
+  /// The evaluated items of an array. Used primarily internally.
   public private(set) var evaluatedItems: Set<Int>
   
+  ///  Initializes a new, empty `JSONSchemaValidationResults` value for the given
+  ///  location.
   public init(for location: JSONLocation) {
     self.location = location
     self.errors = []
@@ -82,10 +100,13 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     self.evaluatedItems = []
   }
   
+  /// Did the validator succeed and the value is considered valid? If false, at least
+  /// one error was found.
   public var isValid: Bool {
     return self.errors.isEmpty
   }
   
+  /// Used internally to flag errors.
   public mutating func flag(error reason: Reason,
                             for value: LocatedJSON,
                             schema: JSONSchema,
@@ -95,6 +116,7 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
                                   message: ValidationError(schema: schema, reason: reason)))
   }
   
+  /// Used internally to flag format annotations.
   public mutating func flag(format: String,
                             valid: Bool?,
                             for value: LocatedJSON,
@@ -105,24 +127,32 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
                                              message: FormatConstraint(format: format, valid: valid)))
   }
   
+  /// Used internally to declare a property to be evaluated.
   public mutating func evaluted(property: String) {
     self.evaluatedProperties.insert(property)
   }
   
+  /// Used internally to declare an array item to be evaluated.
   public mutating func evaluted(item: Int) {
     self.evaluatedItems.insert(item)
   }
   
+  /// Merges another `JSONSchemaValidationResults` value into this value, declaring
+  /// `item` to be evaluated.
   public mutating func include(_ other: JSONSchemaValidationResults, for item: Int) {
     self.include(other)
     self.evaluted(item: item)
   }
   
+  /// Merges another `JSONSchemaValidationResults` value into this value, declaring
+  /// `member` to be evaluated.
   public mutating func include(_ other: JSONSchemaValidationResults, for member: String) {
     self.include(other)
     self.evaluted(property: member)
   }
   
+  /// Merges another `JSONSchemaValidationResults` value into this value if the other
+  /// value is valid, declaring `item` to be evaluated.
   public mutating func include(ifValid other: JSONSchemaValidationResults, for item: Int) -> Bool {
     guard other.isValid else {
       return false
@@ -131,6 +161,8 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return true
   }
   
+  /// Merges another `JSONSchemaValidationResults` value into this value if the other
+  /// value is valid, declaring `member` to be evaluated.
   public mutating func include(ifValid other: JSONSchemaValidationResults, for member: String) -> Bool {
     guard other.isValid else {
       return false
@@ -139,6 +171,8 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return true
   }
   
+  /// Merges another `JSONSchemaValidationResults` value into this value if the other
+  /// value is valid.
   public mutating func include(ifValid other: JSONSchemaValidationResults) -> Bool {
     guard other.isValid else {
       return false
@@ -147,6 +181,7 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return true
   }
   
+  /// Merges another `JSONSchemaValidationResults` value into this value.
   @discardableResult
   public mutating func include(_ other: JSONSchemaValidationResults) -> JSONSchemaValidationResults {
     self.errors.append(contentsOf: other.errors)
@@ -158,6 +193,7 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return other
   }
   
+  /// Textual description of this results value.
   public var description: String {
     var res = ""
     if self.errors.isEmpty {
@@ -170,7 +206,7 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
         res += "\n  [\(i)] \(error)"
       }
     }
-    if self.formatConstraints.isEmpty {
+    if !self.formatConstraints.isEmpty {
       res += "\nFORMAT CONSTRAINTS:"
       var i = 0
       for conformance in self.formatConstraints {

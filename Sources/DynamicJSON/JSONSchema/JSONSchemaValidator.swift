@@ -20,6 +20,10 @@
 
 import Foundation
 
+///
+/// JSON schema validators define a `validate(:LocatedJSON)` method as their main
+/// entry point. They return a `JSONSchemaValidationResults` object as their output.
+///
 public protocol JSONSchemaValidator {
   func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResults
 }

@@ -100,20 +100,20 @@ class JSONSchemaTestCase: XCTestCase {
     if let dir = bundle.url(forResource: "remotes",
                             withExtension: nil,
                             subdirectory: "JSONSchema") {
-      registry.register(provider: .files(from: dir, base: testUri))
+      registry.register(provider: .staticFiles(from: dir, base: testUri))
     } else {
       let dir = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONSchema/remotes/",
                     isDirectory: true)
-      registry.register(provider: .files(from: dir, base: testUri))
+      registry.register(provider: .staticFiles(from: dir, base: testUri))
     }
     if let dir = bundle.url(forResource: "2020-12",
                             withExtension: nil,
                             subdirectory: "JSONSchema") {
-      registry.register(provider: .files(from: dir, base: schemaUri))
+      registry.register(provider: .staticFiles(from: dir, base: schemaUri))
     } else {
       let dir = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONSchema/2020-12/",
                     isDirectory: true)
-      registry.register(provider: .files(from: dir, base: schemaUri))
+      registry.register(provider: .staticFiles(from: dir, base: schemaUri))
     }
     return registry
   }

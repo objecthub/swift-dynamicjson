@@ -20,8 +20,20 @@
 
 import Foundation
 
+///
+/// Representation of a JSON schema. A JSON schema is either boolean (i.e. validation
+/// yields always true or false), or it is a collection of keywords specified by a
+/// "descriptor". The descriptor is a structured interpretation of a schema definition
+/// provided as a second parameter to case `descriptor`.
+///
+/// `JSONSchema` values are almost never created individually, e.g. by using the
+/// cases defined below. They are typically managed via a `JSONSchemaResource`. Thus
+/// class `JSONSchemaResource` handles parsing strings and binary data and converting
+/// them into valid `JSONSchema` objects.
+///
 public indirect enum JSONSchema: Codable,
                                  Equatable,
+                                 Sendable,
                                  CustomDebugStringConvertible {
   case boolean(Bool)
   case descriptor(JSONSchemaDescriptor, JSON)
@@ -122,7 +134,11 @@ public indirect enum JSONSchema: Codable,
   }
 }
 
-public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvertible {
+///
+/// `JSONSchemaDescriptor` provides a structured representation of all the
+/// keywords defined by the JSON Schema Draft 2020 standard.
+///
+public struct JSONSchemaDescriptor: Codable, Equatable, Sendable, CustomDebugStringConvertible {
     
   // Core vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/core
@@ -225,6 +241,7 @@ public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvert
     return "{ id = \(self.id?.string ?? "nil"), ... }"
   }
   
+  /// Collect nested JSONSchema definitions
   fileprivate func insert(into nested: inout [JSONLocation : JSONSchema],
                           at location: JSONLocation,
                           uri base: JSONSchemaIdentifier?) {
@@ -314,7 +331,10 @@ public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvert
   }
 }
 
-public indirect enum JSONSchemaDependency: Codable, Equatable {
+///
+/// Representation of the `dependencies` keyword.
+///
+public indirect enum JSONSchemaDependency: Codable, Equatable, Sendable {
   case array([String])
   case schema(JSONSchema)
   

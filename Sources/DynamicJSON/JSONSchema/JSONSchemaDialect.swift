@@ -20,13 +20,25 @@
 
 import Foundation
 
+///
+/// A `JSONSchemaDialect` gets identified by a URI. It provides a `validator` factory
+/// method for instantiating validators for that dialect, given a root schema and
+/// validation context.
+///
 public protocol JSONSchemaDialect {
   var uri: URL { get }
   func validator(for: JSONSchema, in: JSONSchemaValidationContext) -> JSONSchemaValidator
 }
 
 extension JSONSchemaDialect where Self == JSONSchemaDraft2020.Dialect {
+  
+  /// Default `draft2020` implementation (which ignores the "format" keyword).
   public static var draft2020: JSONSchemaDraft2020.Dialect {
     return JSONSchemaDraft2020.Dialect.default
+  }
+  
+  /// Frequently used variant of `draft2020` which validates strings via the "format" keyword.
+  public static var draft2020Format: JSONSchemaDraft2020.Dialect {
+    return JSONSchemaDraft2020.Dialect.validateFormat
   }
 }

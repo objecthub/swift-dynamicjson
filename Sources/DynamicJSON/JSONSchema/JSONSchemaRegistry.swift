@@ -20,6 +20,11 @@
 
 import Foundation
 
+///
+/// Class `JSONSchemaRegistry` is used to define an environment of all known JSON
+/// schema resources. Every validator application is based on such a schema registry
+/// for looking up referenced schema.
+///
 public class JSONSchemaRegistry {
   
   /// This is a shared, non-thread safe registry that can be used as a quick alternative
@@ -73,6 +78,7 @@ public class JSONSchemaRegistry {
     }
   }
   
+  /// Initializes a new empty schema registry using `.draft2020` as default schema dialect.
   public init(defaultDialect: JSONSchemaDialect = .draft2020) {
     self.defaultDialect = defaultDialect
     self.dialects = [defaultDialect.uri : defaultDialect]
@@ -80,6 +86,9 @@ public class JSONSchemaRegistry {
     self.providers = []
   }
   
+  /// Initializes a new schema registry using `.draft2020` as default schema dialect.
+  /// All supported schema dialects, schema resources, and schema providers can be provided
+  /// upfront.
   public init(defaultDialect: JSONSchemaDialect = .draft2020,
               dialects: [JSONSchemaDialect] = [],
               resources: [JSONSchemaResource] = [],
@@ -101,10 +110,12 @@ public class JSONSchemaRegistry {
     self.providers = providers
   }
   
+  /// Registers a new schema dialect.
   public func register(dialect: JSONSchemaDialect) {
     self.dialects[dialect.uri] = dialect
   }
   
+  /// Registers a new schema resource.
   public func register(resource: JSONSchemaResource) throws {
     guard !resource.schema.isBoolean else {
       return
@@ -115,6 +126,7 @@ public class JSONSchemaRegistry {
     self.register(resource: resource, for: resource.id)
   }
   
+  /// Registers a new schema resource for the given schema identifier.
   private func register(resource: JSONSchemaResource, for id: JSONSchemaIdentifier?) {
     for nested in resource.nestedResources {
       if let nestedId = nested.id, !nestedId.isEmpty {
@@ -126,10 +138,13 @@ public class JSONSchemaRegistry {
     }
   }
   
+  /// Registers a new schema provider (as a dynamic registry extension mechanism).
   public func register(provider: JSONSchemaProvider) {
     self.providers.append(provider)
   }
   
+  /// Loads a new schema from the given URL into the registry, using `id` as the default
+  /// schema identifier (in case the schema at `url` does not define its own).
   @discardableResult
   public func loadSchema(from url: URL, id: JSONSchemaIdentifier?) throws -> JSONSchemaResource {
     let resource = try JSONSchemaResource(url: url, id: id)
@@ -137,6 +152,7 @@ public class JSONSchemaRegistry {
     return resource
   }
   
+  /// Looks up a schema resource for the given schema identifier.
   public func resource(for baseUri: JSONSchemaIdentifier) -> JSONSchemaResource? {
     // Get JSON schema resource via the first matching provider, if it is not available yet
     if self.resources[baseUri] == nil {

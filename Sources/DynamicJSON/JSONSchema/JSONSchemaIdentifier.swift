@@ -20,9 +20,13 @@
 
 import Foundation
 
-public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
+///
+/// URI representing a JSON schema identifier.
+///
+public struct JSONSchemaIdentifier: Codable, Hashable, Sendable, CustomStringConvertible {
   public let uri: URLComponents
   
+  /// Initialize URI from a string.
   public init?(string: String) {
     guard let uri = URLComponents(string: string) else {
       return nil
@@ -30,6 +34,7 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     self.uri = uri
   }
   
+  /// Initialize URI from a path and a segment.
   public init(path: String, fragment: String? = nil) {
     var uri = URLComponents()
     uri.percentEncodedPath = path
@@ -37,10 +42,12 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     self.uri = uri
   }
   
+  /// Initialize URI from a `URLComponents` value.
   public init(uri: URLComponents) {
     self.uri = uri
   }
   
+  /// Initialize URI from a `URL` value.
   public init?(url: URL, resolvingAgainstBaseURL: Bool = true) {
     guard let uri = URLComponents(url: url, resolvingAgainstBaseURL: resolvingAgainstBaseURL) else {
       return nil
@@ -65,23 +72,28 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     try container.encode(self.uri.string ?? self.uri.description)
   }
   
+  /// Is this an absolute URI?
   public var isAbsolute: Bool {
     return self.uri.scheme != nil || self.uri.host != nil
   }
   
+  /// Is this a base URI?
   public var isBaseIdentifier: Bool {
     return self.uri.fragment == nil
   }
   
+  /// Is this URI empty (i.e. it has no scheme, no host, no port, no path, and no fragment)?
   public var isEmpty: Bool {
     return self.uri.scheme == nil && self.uri.host == nil && self.uri.port == nil &&
            self.uri.path.isEmpty && self.uri.fragment == nil
   }
   
+  /// Path of this URI.
   public var path: String {
     return self.uri.path
   }
   
+  /// Last path component of this URI.
   public var lastPathComponent: String {
     let path = self.percentEncodedPath
     if let index = path.lastIndex(of: "/") {
@@ -92,24 +104,30 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     }
   }
   
+  /// Fragment of this URI.
   public var fragment: String? {
     return self.uri.fragment
   }
   
+  /// Path in percent-encoded form.
   public var percentEncodedPath: String {
     return self.uri.percentEncodedPath
   }
   
+  /// Fragment in percent-encoded form.
   public var percentEncodedFragment: String? {
     return self.uri.percentEncodedFragment
   }
   
+  /// Base identifier, i.e. ignoring fragments.
   public var baseIdentifier: JSONSchemaIdentifier {
     var res = self.uri
     res.fragment = nil
     return JSONSchemaIdentifier(uri: res)
   }
   
+  /// Interpret this `JSONSchemaIdentifier` relative to `base` and return this interpretation
+  /// as a new `JSONSchemaIdentifier`.
   public func relative(to base: JSONSchemaIdentifier?) -> JSONSchemaIdentifier {
     guard let base, !self.isAbsolute else {
       return self
@@ -137,6 +155,7 @@ public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
     return JSONSchemaIdentifier(uri: res)
   }
   
+  /// The URI as a string.
   public var string: String {
     return self.uri.string ?? self.uri.description
   }

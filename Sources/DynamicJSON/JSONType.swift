@@ -34,6 +34,7 @@ import Foundation
 public struct JSONType: OptionSet,
                         Hashable,
                         Codable,
+                        Sendable,
                         CustomStringConvertible,
                         CustomDebugStringConvertible {
   

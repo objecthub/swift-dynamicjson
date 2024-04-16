@@ -20,6 +20,10 @@
 
 import Foundation
 
+///
+/// `JSONSchemaValidationContext` values capture validation context information during
+/// the validation process.
+/// 
 public struct JSONSchemaValidationContext {
   
   /// Collection of errors raised by functionality provided by `JSONSchemaRegistry`.

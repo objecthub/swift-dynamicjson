@@ -20,6 +20,12 @@
 
 import Foundation
 
+///
+/// Implementation of JSON Schema resources. These are containers for managing JSON schema.
+/// Each resource encapsulates one schema. It manages various indices to look up nested schema
+/// as well as anchor definitions. Since schema might be nested, each schema also has an
+/// optional `outer` link to its enclosing schema.
+///
 public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConvertible {
   public let schema: JSONSchema
   private var distance: Int = .max
@@ -29,6 +35,8 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   public private(set) var selfAnchor: String? = nil
   public private(set) var dynamicSelfAnchor: String? = nil
   
+  /// Anchors are either static and dynamic. They are stored in resolved form, i.e.
+  /// referring directly to the corresponding `JSONSchemaResource` object.
   public enum Anchor {
     case `static`(JSONSchemaResource)
     case `dynamic`(JSONSchemaResource)
@@ -106,7 +114,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   }
   
   /// Initializes root schema resources, scans the whole document and sets up lookup
-  /// tables for nested schema and anchors. This constructor forces root schema to have
+  /// tables for nested schema and anchors. This constructor forces schema `root` to have
   /// an id, i.e. it will generate one if not available.
   public convenience init(root: JSONSchema) throws {
     switch root {
@@ -160,28 +168,34 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
         self.dynamicSelfAnchor = anchor
       }
     }
-    // print(self.debugDescription)
   }
   
-  /// Initializes a schema resource from a string representation.
-  public convenience init(string: String) throws {
+  public convenience init(data: Data, id: JSONSchemaIdentifier? = nil) throws {
+    let schema = try JSONDecoder().decode(JSONSchema.self, from: data)
+    switch schema {
+      case .boolean(_):
+        try self.init(root: schema)
+      case .descriptor(var descriptor, let json):
+        if descriptor.id == nil {
+          descriptor.id = id
+        }
+        try self.init(root: .descriptor(descriptor, json))
+    }
+  }
+  
+  /// Initializes a schema resource from a string representation. The given schema
+  /// identifier `id` is only used if the schema does not define one itself.
+  public convenience init(string: String, id: JSONSchemaIdentifier? = nil) throws {
     guard let data = string.data(using: .utf8) else {
       throw Error.cannotDecodeString
     }
-    try self.init(root: .descriptor(JSONDecoder().decode(JSONSchemaDescriptor.self, from: data),
-                                    JSONDecoder().decode(JSON.self, from: data)))
+    try self.init(data: data, id: id)
   }
   
   /// Initializes a schema resource from a URL for the given default JSON schema identifier.
-  /// The given schema identifier is only used if the schema does not define one itself
-  public convenience init(url: URL, id: JSONSchemaIdentifier?) throws {
-    let data =  try Data(contentsOf: url)
-    var descriptor = try JSONDecoder().decode(JSONSchemaDescriptor.self, from: data)
-    let json = try JSONDecoder().decode(JSON.self, from: data)
-    if descriptor.id == nil {
-      descriptor.id = id
-    }
-    try self.init(root: .descriptor(descriptor, json))
+  /// The given schema identifier `id` is only used if the schema does not define one itself.
+  public convenience init(url: URL, id: JSONSchemaIdentifier? = nil) throws {
+    try self.init(data: try Data(contentsOf: url), id: id)
   }
   
   /// Returns true if this is an anonymous schema resource
@@ -229,11 +243,6 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     return [JSONSchemaResource]((self.nested ?? [:]).values)
   }
   
-  /// Returns an absolute URI for the given relative URI
-  // public func uri(relative: JSONSchemaIdentifier) -> JSONSchemaIdentifier {
-  //  return relative.relative(to: self.id)
-  //}
-  
   /// Resolves a fragment relative to this schema resource.
   public func resolve(fragment: String?) throws -> Anchor {
     if self.isAnonymous, let outer = self.outer {
@@ -269,9 +278,6 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     } else if self.dynamicSelfAnchor == fragment {
       return .dynamic(self)
     }
-    // print("----\(fragment)----------------------------------------")
-    // print(self.debugDescription)
-    // print("--------------------------------------------")
     throw Error.illegalUriFragment(fragment)
   }
   

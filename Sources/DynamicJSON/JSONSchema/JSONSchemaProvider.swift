@@ -26,8 +26,47 @@ public protocol JSONSchemaProvider {
 
 extension JSONSchemaProvider where Self == StaticJSONSchemaFileProvider {
   public static func files(from directory: URL,
-                           base uri: JSONSchemaIdentifier) -> StaticJSONSchemaFileProvider {
+                           base uri: JSONSchemaIdentifier,
+                           expiry: TimeInterval = .infinity) -> JSONSchemaProvider {
+    return JSONSchemaFileProvider(directory: directory, base: uri, expiry: expiry)
+  }
+  
+  public static func staticFiles(from directory: URL,
+                                 base uri: JSONSchemaIdentifier) -> JSONSchemaProvider {
     return StaticJSONSchemaFileProvider(directory: directory, base: uri)
+  }
+}
+
+open class JSONSchemaFileProvider: JSONSchemaProvider, CustomStringConvertible {
+  public let directory: URL
+  public let uri: JSONSchemaIdentifier
+  public let expiry: TimeInterval
+  public var updateTime: Date
+  public var fileProvider: StaticJSONSchemaFileProvider
+  
+  public init(directory dir: URL,
+              base uri: JSONSchemaIdentifier,
+              expiry: TimeInterval = .infinity) {
+    self.directory = dir
+    self.uri = uri
+    self.fileProvider = StaticJSONSchemaFileProvider(directory: dir, base: uri)
+    self.expiry = expiry
+    self.updateTime = .now
+  }
+  
+  public func resource(for id: JSONSchemaIdentifier) -> JSONSchemaResource? {
+    if Date.now.timeIntervalSince(self.updateTime) > self.expiry {
+      self.update()
+    }
+    return self.fileProvider.resource(for: id)
+  }
+  
+  public func update() {
+    self.fileProvider = StaticJSONSchemaFileProvider(directory: self.directory, base: self.uri)
+  }
+  
+  public var description: String {
+    return self.fileProvider.description
   }
 }
 

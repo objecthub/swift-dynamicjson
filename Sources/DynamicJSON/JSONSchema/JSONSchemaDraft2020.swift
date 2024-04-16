@@ -56,6 +56,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   public struct Dialect: JSONSchemaDialect {
     public static let `default`: Dialect = Dialect()
+    public static let `validateFormat`: Dialect = Dialect(vocabulary: Vocabulary(format: true))
+    
     public let vocabulary: Vocabulary
     
     public init(vocabulary: Vocabulary = Vocabulary()) {
