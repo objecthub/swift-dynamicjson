@@ -20,6 +20,19 @@
 
 import Foundation
 
+///
+/// Implementation of JSON schema validation based on the JSON schema Draft 2020-12
+/// standard. The validator is configured via its `Dialect` descriptor which uses
+/// a `Vocabulary` value to declare what vocaularies of the schema are being
+/// evaluated.
+///
+/// Two standard dialects are predefined `JSONSchemaDraft2020.Dialect.default` and
+/// `JSONSchemaDraft2020.Dialect.validateFormat` (this one enables the
+/// `format-annotation` vocabulary). These are also available as
+/// `draft2020` and `draft2020Format` values via protocol `JSONSchemaDialect`.
+///
+///
+///
 open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   public struct Vocabulary {
@@ -181,10 +194,18 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// The dialect defining what is being evaluated by this validator.
   public let dialect: Dialect
+  
+  /// The validation context.
   public let context: JSONSchemaValidationContext
+  
+  /// The schema being currently validated.
   public let schema: JSONSchema
   
+  /// Initializer of a new validator object. This initialized should not be called in
+  /// custom code. It is used primarily by the validator factory method provided by
+  /// the "Draft 2020-12" dialect value.
   public init(dialect: Dialect, context: JSONSchemaValidationContext, schema: JSONSchema) {
     self.dialect = dialect
     self.context = context
@@ -696,6 +717,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Validate all the vocabularies for the given instance, writing annotations into the
+  /// validation results object `result`.
   open func validate(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     self.validateCore(instance: instance, result: &result)
     self.validateApplicator(instance: instance, result: &result)
@@ -707,6 +730,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     self.validateDeprecated(instance: instance, result: &result)
   }
   
+  /// Validate the given instance returning a new validation results value.
   open func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResults {
     var result = JSONSchemaValidationResults(for: instance.location)
     // Check if this schema always suceeds or fails

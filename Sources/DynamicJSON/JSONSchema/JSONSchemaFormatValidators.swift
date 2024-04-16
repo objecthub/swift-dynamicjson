@@ -7,6 +7,12 @@
 
 import Foundation
 
+///
+/// Module implementing format validators. A format validator verifies that a string
+/// is matching a particular syntax. Format validator functions are packaged up as a
+/// map `draft2020` which can be used to parameterize the `JSONSchemaDraft2020`
+/// vocabulary.
+///
 public struct JSONSchemaFormatValidators {
   
   public static let draft2020: [String : (String) -> Bool] = [
