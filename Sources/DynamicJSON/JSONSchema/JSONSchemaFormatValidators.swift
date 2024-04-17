@@ -53,20 +53,23 @@ public struct JSONSchemaFormatValidators {
     return false
   }
   
+  private static let dateRegex = try! NSRegularExpression(
+    pattern: ##"^(?<year>\d\d\d\d)\-(?<month>\d\d)\-(?<day>\d\d)$"##,
+    options: [.caseInsensitive])
+  
   public static func isDate(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
     }
-    let regex = Regex<AnyRegexOutput>(/(?<year>\d{4})\-(?<month>\d{2})\-(?<day>\d{2})/)
-    if let match = str.wholeMatch(of: regex) {
-      if let year = match["year"]?.substring,
-         let month = match["month"]?.substring,
-         let day = match["day"]?.substring {
-        let date = DateComponents(year: Int(year), month: Int(month), day: Int(day))
-        return date.isValidDate(in: .current)
-      }
+    guard let match = JSONSchemaFormatValidators.dateRegex.firstMatch(
+                        in: str, range: NSMakeRange(0, str.utf16.count)),
+          let year = Int(str[Range(match.range(withName: "year"), in: str)!]),
+          let month = Int(str[Range(match.range(withName: "month"), in: str)!]),
+          let day = Int(str[Range(match.range(withName: "day"), in: str)!]) else {
+      return false
     }
-    return false
+    let date = DateComponents(year: Int(year), month: Int(month), day: Int(day))
+    return date.isValidDate(in: .current)
   }
   
   private static let timeRegex = try! NSRegularExpression(pattern: #"""
