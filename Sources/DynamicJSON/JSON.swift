@@ -712,18 +712,43 @@ public enum JSON: Hashable,
   
   /// Returns true if this JSON document is valid for the given JSON schema (using
   /// `registry` for resolving references to schema referred to from `schema`).
-  public func valid(for schema: JSONSchema, using registry: JSONSchemaRegistry? = nil) -> Bool {
-    return (try? self.validate(with: schema, using: registry))?.isValid ?? false
+  public func valid(for schema: JSONSchema,
+                    dialect: JSONSchemaDialect? = nil,
+                    using registry: JSONSchemaRegistry? = nil) -> Bool {
+    return (try? self.validate(with: schema, dialect: dialect, using: registry))?.isValid ?? false
   }
   
   /// Returns a schema validation result for this JSON document validated against the
   /// JSON schema `schema` (using`registry` for resolving references to schema referred to
   /// from `schema`).
-  public func validate(with schema: JSONSchema, using registry: JSONSchemaRegistry? = nil) throws
+  public func validate(with schema: JSONSchema,
+                       dialect: JSONSchemaDialect? = nil,
+                       using registry: JSONSchemaRegistry? = nil) throws
                 -> JSONSchemaValidationResults {
-    let resource = try JSONSchemaResource(root: schema)
-    let registry = registry ?? JSONSchemaRegistry()
-    return try registry.validator(for: resource).validate(LocatedJSON(root: self))
+    return try self.validate(with: try JSONSchemaResource(root: schema),
+                             dialect: dialect,
+                             using: registry)
+  }
+  
+  /// Returns true if this JSON document is valid for the given JSON schema (using
+  /// `registry` for resolving references to schema referred to from `schema`).
+  public func valid(for resource: JSONSchemaResource,
+                    dialect: JSONSchemaDialect? = nil,
+                    using registry: JSONSchemaRegistry? = nil) -> Bool {
+    return (try? self.validate(with: resource, dialect: dialect, using: registry))?.isValid ?? false
+  }
+  
+  /// Returns a schema validation result for this JSON document validated against the
+  /// JSON schema `schema` (using`registry` for resolving references to schema referred to
+  /// from `schema`).
+  public func validate(with resource: JSONSchemaResource,
+                       dialect: JSONSchemaDialect? = nil,
+                       using registry: JSONSchemaRegistry? = nil) throws
+                -> JSONSchemaValidationResults {
+    let registry = try registry ??
+                     JSONSchemaRegistry(defaultDialect: dialect ?? .draft2020)
+                       .register(resource: resource)
+    return try registry.validator(for: resource, dialect: dialect).validate(LocatedJSON(root: self))
   }
   
   // MARK: - String representations

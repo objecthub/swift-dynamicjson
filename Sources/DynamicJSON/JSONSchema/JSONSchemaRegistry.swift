@@ -79,11 +79,22 @@ public class JSONSchemaRegistry {
   }
   
   /// Initializes a new empty schema registry using `.draft2020` as default schema dialect.
-  public init(defaultDialect: JSONSchemaDialect = .draft2020) {
+  public convenience init(defaultDialect: JSONSchemaDialect = .draft2020) {
+    self.init(defaultDialect: defaultDialect,
+              dialects: [defaultDialect.uri : defaultDialect],
+              resources: [:],
+              providers: [])
+  }
+  
+  /// Initializes a new empty schema registry using `.draft2020` as default schema dialect.
+  private init(defaultDialect: JSONSchemaDialect,
+               dialects: [URL : JSONSchemaDialect],
+               resources: [JSONSchemaIdentifier : JSONSchemaResource],
+               providers: [JSONSchemaProvider]) {
     self.defaultDialect = defaultDialect
-    self.dialects = [defaultDialect.uri : defaultDialect]
-    self.resources = [:]
-    self.providers = []
+    self.dialects = dialects
+    self.resources = resources
+    self.providers = providers
   }
   
   /// Initializes a new schema registry using `.draft2020` as default schema dialect.
@@ -110,24 +121,42 @@ public class JSONSchemaRegistry {
     self.providers = providers
   }
   
+  /// Returns a copy of this schema registry.
+  public func copy() -> JSONSchemaRegistry {
+    return JSONSchemaRegistry(defaultDialect: self.defaultDialect,
+                              dialects: self.dialects,
+                              resources: self.resources,
+                              providers: self.providers)
+  }
+  
   /// Registers a new schema dialect.
-  public func register(dialect: JSONSchemaDialect) {
-    self.dialects[dialect.uri] = dialect
+  @discardableResult
+  public func register(dialect ds: JSONSchemaDialect...) -> JSONSchemaRegistry {
+    for dialect in ds {
+      self.dialects[dialect.uri] = dialect
+    }
+    return self
   }
   
   /// Registers a new schema resource.
-  public func register(resource: JSONSchemaResource) throws {
-    guard !resource.schema.isBoolean else {
-      return
+  @discardableResult
+  public func register(resource rs: JSONSchemaResource...) throws -> JSONSchemaRegistry {
+    for resource in rs {
+      guard !resource.schema.isBoolean else {
+        continue
+      }
+      guard resource.isRoot else {
+        throw Error.cannotRegisterNonRootResource(resource.schema)
+      }
+      self.register(resource: resource, for: resource.id)
     }
-    guard resource.isRoot else {
-      throw Error.cannotRegisterNonRootResource(resource.schema)
-    }
-    self.register(resource: resource, for: resource.id)
+    return self
   }
   
   /// Registers a new schema resource for the given schema identifier.
-  private func register(resource: JSONSchemaResource, for id: JSONSchemaIdentifier?) {
+  @discardableResult
+  private func register(resource: JSONSchemaResource,
+                        for id: JSONSchemaIdentifier?) -> JSONSchemaRegistry {
     for nested in resource.nestedResources {
       if let nestedId = nested.id, !nestedId.isEmpty {
         self.resources[nestedId] = nested
@@ -136,11 +165,14 @@ public class JSONSchemaRegistry {
     if let id = id ?? resource.id, !id.isEmpty {
       self.resources[id] = resource
     }
+    return self
   }
   
   /// Registers a new schema provider (as a dynamic registry extension mechanism).
-  public func register(provider: JSONSchemaProvider) {
-    self.providers.append(provider)
+  @discardableResult
+  public func register(provider ps: JSONSchemaProvider...) -> JSONSchemaRegistry {
+    self.providers.append(contentsOf: ps)
+    return self
   }
   
   /// Loads a new schema from the given URL into the registry, using `id` as the default
