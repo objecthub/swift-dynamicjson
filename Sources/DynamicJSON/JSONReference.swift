@@ -49,11 +49,18 @@ public protocol JSONReference: CustomStringConvertible {
   func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
 }
 
-  ///
-  /// Implementations of the `SegmentableJSONReference` protocol use a sequence of
-  /// segments to identify a value within a JSON document. Each segment needs to implement
-  /// the `JSONReferenceSegment` protocol.
-  ///
+extension JSONReference {
+  /// Does this reference point to an existing value within `json`?
+  public func exists(for json: JSON) -> Bool {
+    return self.get(from: json) != nil
+  }
+}
+
+///
+/// Implementations of the `SegmentableJSONReference` protocol use a sequence of
+/// segments to identify a value within a JSON document. Each segment needs to implement
+/// the `JSONReferenceSegment` protocol.
+///
 public protocol SegmentableJSONReference: JSONReference {
   
   /// Segment type.

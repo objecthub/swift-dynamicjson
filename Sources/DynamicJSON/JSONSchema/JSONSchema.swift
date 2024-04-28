@@ -38,6 +38,59 @@ public indirect enum JSONSchema: Codable,
   case boolean(Bool)
   case descriptor(JSONSchemaDescriptor, JSON)
 
+  /// Collection of errors raised by functionality provided by `JSONSchema`.
+  public enum Error: LocalizedError, CustomStringConvertible {
+    case cannotDecodeString
+    
+    public var description: String {
+      switch self {
+        case .cannotDecodeString:
+          return "cannot decode string into a JSON schema"
+      }
+    }
+    
+    public var errorDescription: String? {
+      return self.description
+    }
+    
+    public var failureReason: String? {
+      switch self {
+        case .cannotDecodeString:
+          return "decoding error"
+      }
+    }
+  }
+  
+  /// Initializes a schema from a `Data` value. The given schema
+  /// identifier `id` is only used if the schema does not define one itself.
+  public init(data: Data, id: JSONSchemaIdentifier? = nil) throws {
+    let schema = try JSONDecoder().decode(JSONSchema.self, from: data)
+    switch schema {
+      case .boolean(_):
+        self = schema
+      case .descriptor(var descriptor, let json):
+        if descriptor.id == nil {
+          descriptor.id = id
+        }
+        self = .descriptor(descriptor, json)
+    }
+  }
+  
+  /// Initializes a schema from a string representation. The given schema
+  /// identifier `id` is only used if the schema does not define one itself.
+  public init(string: String, id: JSONSchemaIdentifier? = nil) throws {
+    guard let data = string.data(using: .utf8) else {
+      throw Error.cannotDecodeString
+    }
+    try self.init(data: data, id: id)
+  }
+  
+  /// Initializes a schema from a URL for the given default JSON schema identifier.
+  /// The given schema identifier `id` is only used if the schema does not define one itself.
+  public init(url: URL, id: JSONSchemaIdentifier? = nil) throws {
+    try self.init(data: try Data(contentsOf: url), id: id)
+  }
+  
   public init(from decoder: Decoder) throws {
     let container = try decoder.singleValueContainer()
     if let object = try? container.decode(JSONSchemaDescriptor.self),

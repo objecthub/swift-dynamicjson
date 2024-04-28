@@ -23,26 +23,29 @@ import Foundation
 ///
 /// A JSON value together with its corresponding location within another JSON value.
 /// `JSONLocation` is used as a location identifier; i.e. this struct is mostly of
-/// interest for JSONPath-based use cases.
+/// interest for JSONPath-based use cases. `exists` is an optional value that can be
+/// used to express whether that value actually exists at this location or doesn't.
 ///
 public struct LocatedJSON: Hashable, CustomStringConvertible {
   public let value: JSON
   public let location: JSONLocation
+  public let exists: Bool
   
   /// Returns a new `LocatedJSON` value representing the full document.
-  public static func root(_ value: JSON) -> LocatedJSON {
-    return LocatedJSON(root: value)
+  public static func root(_ value: JSON, exists: Bool = true) -> LocatedJSON {
+    return LocatedJSON(root: value, exists: exists)
   }
   
   /// Initializes a new `LocatedJSON` value representing the full document.
-  public init(root: JSON) {
-    self.init(root, .root)
+  public init(root: JSON, exists: Bool = true) {
+    self.init(root, .root, exists: exists)
   }
   
   /// Initializes a new `LocatedJSON` value given a JSON value and its location.
-  public init(_ value: JSON, _ location: JSONLocation) {
+  public init(_ value: JSON, _ location: JSONLocation, exists: Bool = true) {
     self.value = value
     self.location = location
+    self.exists = exists
   }
   
   /// Returns a new `LocatedJSON` for the value at index `i` of the array

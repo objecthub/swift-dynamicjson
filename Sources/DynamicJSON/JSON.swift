@@ -477,6 +477,39 @@ public enum JSON: Hashable,
     }
   }
   
+  /// Returns true if this JSON value is a refinement of `other`. A JSON array `lhs` is a
+  /// refinement of another JSON value `rhs` if `rhs` is also an array of equal length
+  /// such that every element `lhs[i]` is a refinement of `rhs[i]`. A JSON object `lhs` is a
+  /// refinement of another JSON value `rhs` if `rhs` is also an object such that for every
+  /// member `m` of `rhs`, `lhs[m]` is a refinement of `rhs[m]`. Any other JSON value `lhs`
+  /// is a refinement of another JSON value `rhs` if `lhs` is equal to `rhs`.
+  public func isRefinement(of other: JSON) -> Bool {
+    switch other {
+      case .array(let rhs):
+        guard case .array(let lhs) = self, lhs.count == rhs.count else {
+          return false
+        }
+        for i in lhs.indices {
+          guard lhs[i].isRefinement(of: rhs[i]) else {
+            return false
+          }
+        }
+        return true
+      case .object(let rhs):
+        guard case .object(let lhs) = self, lhs.count >= rhs.count else {
+          return false
+        }
+        for (member, rval) in rhs {
+          guard let lval = lhs[member], lval.isRefinement(of: rval) else {
+            return false
+          }
+        }
+        return true
+      default:
+        return self == other
+    }
+  }
+  
   /// Executes the given JSON path query and returns all matching JSON values with their
   /// corresponding locations.
   public func query(_ path: JSONPath) throws -> [LocatedJSON] {
@@ -554,6 +587,45 @@ public enum JSON: Hashable,
       return .object(result)
     } else {
       return patch
+    }
+  }
+  
+  public func merging(value: JSON) -> JSON? {
+    switch self {
+      case .array(let lhs):
+        guard case .array(let rhs) = value, lhs.count == rhs.count else {
+          return nil
+        }
+        var arr: [JSON] = []
+        for i in lhs.indices {
+          guard let merged = lhs[i].merging(value: rhs[i]) else {
+            return nil
+          }
+          arr.append(merged)
+        }
+        return .array(arr)
+      case .object(let lhs):
+        guard case .object(let rhs) = value else {
+          return nil
+        }
+        var dict: [String : JSON] = [:]
+        for (member, lval) in lhs {
+          if let rval = rhs[member] {
+            if let merged = lval.merging(value: rval) {
+              dict[member] = merged
+            } else {
+              return nil
+            }
+          } else {
+            dict[member] = lval
+          }
+        }
+        for (member, rval) in rhs where lhs[member] == nil {
+          dict[member] = rval
+        }
+        return .object(dict)
+      default:
+        return self == value ? self : nil
     }
   }
   

@@ -323,10 +323,17 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       var validatedMembers: Set<String> = []
       if let properties = descriptor.properties {
         for (member, schema) in properties {
-          if let value = instance.member(member),
-             let validator = validator(for: schema, at: "properties", member) {
-            validatedMembers.insert(member)
-            result.include(validator.validate(value), for: member)
+          if let validator = validator(for: schema, at: "properties", member) {
+            // If value defines this member, validate it
+            if let value = instance.member(member) {
+              validatedMembers.insert(member)
+              result.include(validator.validate(value), for: member)
+            // If value does not define this member, compute defaults
+            } else {
+              let val = LocatedJSON(.null, instance.location.select(member: member), exists: false)
+              let res = validator.validate(val)
+              result.merge(defaults: res.defaults, mode: .merge)
+            }
           }
         }
       }
@@ -370,7 +377,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       }
     }
     if let `if` = descriptor.if, let condition = validator(for: `if`, at: "if") {
-      if result.include(ifValid: condition.validate(instance)) {
+      if result.include(ifValid: condition.validate(instance), propagateDefault: .suppress) {
         if let then = descriptor.then, let validator = validator(for: then, at: "then") {
           result.include(validator.validate(instance))
         }
@@ -389,7 +396,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       var valid = false
       for i in anyOf.indices {
         if let validator = validator(for: anyOf[i], at: "anyOf", index: i) {
-          if result.include(ifValid: validator.validate(instance)) {
+          if result.include(ifValid: validator.validate(instance), propagateDefault: .altenative) {
             valid = true
           }
         }
@@ -403,7 +410,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       var flagged = false
       for i in oneOf.indices {
         if let validator = validator(for: oneOf[i], at: "oneOf", index: i) {
-          if result.include(ifValid: validator.validate(instance)) {
+          if result.include(ifValid: validator.validate(instance), propagateDefault: .altenative) {
             if valid && !flagged {
               flag(.tooManySchemaValidate, for: "oneOf")
               flagged = true
@@ -417,7 +424,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       }
     }
     if let not = descriptor.not, let validator = validator(for: not, at: "not") {
-      if result.include(ifValid: validator.validate(instance)) {
+      if result.include(ifValid: validator.validate(instance), propagateDefault: .suppress) {
         flag(.schemaValidatesButShouldFail, for: "not")
       }
     }
@@ -629,8 +636,24 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   open func validateMetadata(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
     guard self.dialect.vocabulary.metadata,
-          case .descriptor(_, _) = self.schema else {
+          case .descriptor(let descriptor, _) = self.schema else {
       return
+    }
+    if let `default` = descriptor.default {
+      result.flag(default: `default`, for: instance, schema: self.schema, at: self.context.location)
+    }
+    var tags = JSONSchemaValidationResults.MetaTags()
+    if let deprecated = descriptor.deprecated, deprecated {
+      tags.insert(.deprecated)
+    }
+    if let readOnly = descriptor.readOnly, readOnly {
+      tags.insert(.readOnly)
+    }
+    if let writeOnly = descriptor.writeOnly, writeOnly {
+      tags.insert(.writeOnly)
+    }
+    if !tags.isEmpty {
+      result.flag(tags: tags, for: instance, schema: self.schema, at: self.context.location)
     }
   }
   
