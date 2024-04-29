@@ -21,13 +21,15 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 2.1 &nbsp;<a href="#json-location">JSON Location</a><br />
 2.2 &nbsp;<a href="#json-pointer">JSON Pointer</a><br />
 3. &nbsp;<a href="#queries-with-json-path">Queries with JSON Path</a><br />
-</td>
-<td width="50%" valign="top">
 4. &nbsp;<a href="#mutating-json-values">Mutating JSON Values</a><br />
 4.1 &nbsp;<a href="#mutation-api">Mutation API</a><br />
 4.2 &nbsp;<a href="#json-patch">JSON Patch</a><br />
-4.3 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
-5. &nbsp;<a href="#validating-json-data">Validating JSON Data</a><br />
+</td>
+<td width="50%" valign="top">
+5. &nbsp;<a href="#merging-json-values">Merging JSON Values</a><br />
+5.1 &nbsp;<a href="#symmetrical-merge">Symmetrical Merge</a><br />
+5.2 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
+6. &nbsp;<a href="#validating-json-data">Validating JSON Data</a><br />
 </td>
 </tr>
 </table>
@@ -588,6 +590,62 @@ var json: JSON = ...
 try json.apply(patch: patch)
 ```
 
+## Merging JSON Values
+
+### Symmetrical Merge
+
+The method `isRefinement(of:)` of enum `JSON` defines a relationship between
+two JSON values. `a.isRefinement(of: b)` is true if
+
+1. Both `a` and `b` are JSON values of the same type,
+2. If `a` and `b` are arrays, they have the same length _n_ and `a[i].isRefinement(of: b[i])`
+   holds for every i ∈ [0; _n_[,
+3. If `a` and `b` are objects, for every member `m` of `b` with value `b[m]`, there is a
+   member `m` of `a` with value `a[m]` such that `a[m].isRefinement(of: b[m])`,
+4. For all other types, `a` and `b` are the same, i.e. `a == b`.
+
+This relationship intuitively models that whenever it's possible to read a value at a given
+location (or JSON pointer) from `b`, it's also possible to read a value at the same location from
+`a` and the value that is read for `a` is a refinement of the value read from `b`.
+
+The following example is showcasing this relationship:
+
+```swift
+let a = try JSON(string: #"""
+  {
+    "a": [1, { "b": 2 }],
+    "c": { "d": [{}] }
+  }
+"""#)
+let b = try JSON(string: #"""
+  {
+    "a": [1, { "b": 2, "e": 4 }],
+    "c": { "d": [{"f": 5}] }
+  }
+"""#)
+b.isRefinement(of: a) ⇒ true
+```
+
+Enum `JSON` provides a method `a.merging(value: b)` for merging two JSON values `a` and `b` such
+that the result of the merge is the "smallest" JSON value that is a refinement of both `a`
+and `b`. If such a merged value does not exist, then `merging(value:)` will return `nil`.
+Here is an example:
+
+```swift
+let c = try JSON(string: #"""
+  { "a": [1, {"e": 8}],
+    "c": {"f": "hello"},
+    "g": 9 }
+"""#)
+a.merging(value: c) 
+⇒
+{
+  "a": [1, { "b": 2, "e": 8 }],
+  "c": { "d": [{}], "f": "hello" },
+  "g": 9
+}
+```
+
 ### JSON Merge Patch
 
 _DynamicJSON_ provides basic support for _JSON Merge Patch_ as defined by
@@ -614,8 +672,8 @@ enum:
 func merging(patch: JSON) -> JSON { ... }
 ```
 
-Thus, the current implementation of applying a merge patch document is actually not mutating
-an existing JSON value. It is rather constructing a new JSON value from scratch by merging
+The implementation for applying a merge patch document to a JSON value is not mutating
+an existing JSON value. It is constructing a new JSON value from scratch by merging
 the old value with the merge patch document.
 
 ## Validating JSON Data

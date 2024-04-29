@@ -87,7 +87,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  public enum Reason: JSONSchemaValidationResults.Reason, CustomStringConvertible {
+  public enum Reason: JSONSchemaValidationResult.Reason, CustomStringConvertible {
     case validationError(Error)
     case alwaysFails
     case schemaValidatesButShouldFail
@@ -212,7 +212,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     self.schema = schema
   }
   
-  open func validateCore(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateCore(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.core,
           case .descriptor(let descriptor, _) = self.schema else {
       return
@@ -252,7 +252,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     // if let defs = descriptor.defs {}
   }
   
-  open func validateApplicator(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateApplicator(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.applicator,
           case .descriptor(let descriptor, _) = self.schema else {
       return
@@ -430,7 +430,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  open func validateUnevaluated(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateUnevaluated(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.unevaluated,
           case .descriptor(let descriptor, _) = self.schema else {
       return
@@ -475,7 +475,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  open func validateValidation(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateValidation(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.validation,
           case .descriptor(let descriptor, _) = self.schema else {
       return
@@ -634,7 +634,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  open func validateMetadata(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateMetadata(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.metadata,
           case .descriptor(let descriptor, _) = self.schema else {
       return
@@ -642,7 +642,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     if let `default` = descriptor.default {
       result.flag(default: `default`, for: instance, schema: self.schema, at: self.context.location)
     }
-    var tags = JSONSchemaValidationResults.MetaTags()
+    var tags = JSONSchemaValidationResult.MetaTags()
     if let deprecated = descriptor.deprecated, deprecated {
       tags.insert(.deprecated)
     }
@@ -657,7 +657,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  open func validateFormat(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateFormat(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard case .descriptor(let descriptor, _) = self.schema,
           let format = descriptor.format,
           case .string(let str) = instance.value else {
@@ -688,14 +688,14 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
-  open func validateContent(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateContent(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.content,
           case .descriptor(_, _) = self.schema else {
       return
     }
   }
   
-  open func validateDeprecated(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validateDeprecated(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.deprecated,
           case .descriptor(let descriptor, _) = self.schema else {
       return
@@ -742,7 +742,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   /// Validate all the vocabularies for the given instance, writing annotations into the
   /// validation results object `result`.
-  open func validate(instance: LocatedJSON, result: inout JSONSchemaValidationResults) {
+  open func validate(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     self.validateCore(instance: instance, result: &result)
     self.validateApplicator(instance: instance, result: &result)
     self.validateValidation(instance: instance, result: &result)
@@ -754,8 +754,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   /// Validate the given instance returning a new validation results value.
-  open func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResults {
-    var result = JSONSchemaValidationResults(for: instance.location)
+  open func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResult {
+    var result = JSONSchemaValidationResult(for: instance.location)
     // Check if this schema always suceeds or fails
     if case .boolean(let bool) = self.schema {
       if !bool {

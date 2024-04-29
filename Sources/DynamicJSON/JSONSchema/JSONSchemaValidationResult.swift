@@ -1,5 +1,5 @@
 //
-//  JSONSchemaValidationResults.swift
+//  JSONSchemaValidationResult.swift
 //  DynamicJSON
 //
 //  Created by Matthias Zenger on 01/04/2024.
@@ -21,10 +21,10 @@
 import Foundation
 
 ///
-/// Result container for JSON schema validators. Currently, `JSONSchemaValidationResults`
-/// values primarily collect errors and format annotations.
+/// Result container for JSON schema validators. Currently, `JSONSchemaValidationResult`
+/// values primarily collect errors, format and meta annotations, as well as defaults.
 ///
-public struct JSONSchemaValidationResults: CustomStringConvertible {
+public struct JSONSchemaValidationResult: CustomStringConvertible {
   
   public protocol AnnotationMessage {
     func description(value: LocatedJSON, location: JSONLocation) -> String
@@ -131,7 +131,7 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
   /// The evaluated items of an array. Used primarily internally.
   public private(set) var evaluatedItems: Set<Int>
   
-  ///  Initializes a new, empty `JSONSchemaValidationResults` value for the given
+  ///  Initializes a new, empty `JSONSchemaValidationResult` value for the given
   ///  location.
   public init(for location: JSONLocation) {
     self.location = location
@@ -219,23 +219,23 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     self.evaluatedItems.insert(item)
   }
   
-  /// Merges another `JSONSchemaValidationResults` value into this value, declaring
+  /// Merges another `JSONSchemaValidationResult` value into this value, declaring
   /// `item` to be evaluated.
-  public mutating func include(_ other: JSONSchemaValidationResults, for item: Int) {
+  public mutating func include(_ other: JSONSchemaValidationResult, for item: Int) {
     self.include(other)
     self.evaluted(item: item)
   }
   
-  /// Merges another `JSONSchemaValidationResults` value into this value, declaring
+  /// Merges another `JSONSchemaValidationResult` value into this value, declaring
   /// `member` to be evaluated.
-  public mutating func include(_ other: JSONSchemaValidationResults, for member: String) {
+  public mutating func include(_ other: JSONSchemaValidationResult, for member: String) {
     self.include(other)
     self.evaluted(property: member)
   }
   
-  /// Merges another `JSONSchemaValidationResults` value into this value if the other
+  /// Merges another `JSONSchemaValidationResult` value into this value if the other
   /// value is valid, declaring `item` to be evaluated.
-  public mutating func include(ifValid other: JSONSchemaValidationResults, for item: Int) -> Bool {
+  public mutating func include(ifValid other: JSONSchemaValidationResult, for item: Int) -> Bool {
     guard other.isValid else {
       self.merge(defaults: other.defaults, mode: .merge)
       return false
@@ -244,9 +244,9 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return true
   }
   
-  /// Merges another `JSONSchemaValidationResults` value into this value if the other
+  /// Merges another `JSONSchemaValidationResult` value into this value if the other
   /// value is valid, declaring `member` to be evaluated.
-  public mutating func include(ifValid other: JSONSchemaValidationResults, for member: String) -> Bool {
+  public mutating func include(ifValid other: JSONSchemaValidationResult, for member: String) -> Bool {
     guard other.isValid else {
       self.merge(defaults: other.defaults, mode: .merge)
       return false
@@ -255,9 +255,9 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return true
   }
   
-  /// Merges another `JSONSchemaValidationResults` value into this value if the other
+  /// Merges another `JSONSchemaValidationResult` value into this value if the other
   /// value is valid.
-  public mutating func include(ifValid other: JSONSchemaValidationResults,
+  public mutating func include(ifValid other: JSONSchemaValidationResult,
                                propagateDefault: DefaultPropagationMode) -> Bool {
     guard other.isValid else {
       self.merge(defaults: other.defaults, mode: propagateDefault)
@@ -267,10 +267,10 @@ public struct JSONSchemaValidationResults: CustomStringConvertible {
     return true
   }
   
-  /// Merges another `JSONSchemaValidationResults` value into this value.
+  /// Merges another `JSONSchemaValidationResult` value into this value.
   @discardableResult
-  public mutating func include(_ other: JSONSchemaValidationResults,
-                               mode: DefaultPropagationMode = .merge) -> JSONSchemaValidationResults {
+  public mutating func include(_ other: JSONSchemaValidationResult,
+                               mode: DefaultPropagationMode = .merge) -> JSONSchemaValidationResult {
     self.errors.append(contentsOf: other.errors)
     self.formatConstraints.append(contentsOf: other.formatConstraints)
     self.merge(defaults: other.defaults, mode: mode)

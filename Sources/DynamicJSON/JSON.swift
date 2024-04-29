@@ -590,6 +590,10 @@ public enum JSON: Hashable,
     }
   }
   
+  /// Merges two JSON values symmetrically, combining matching arrays and objects. If
+  /// incompatible values are to be matched, then `nil` is returned. If this method
+  /// succeeds, the resulting value is a refinement of the two merged values as defined
+  /// by `isRefinement(of:)`.
   public func merging(value: JSON) -> JSON? {
     switch self {
       case .array(let lhs):
@@ -796,7 +800,7 @@ public enum JSON: Hashable,
   public func validate(with schema: JSONSchema,
                        dialect: JSONSchemaDialect? = nil,
                        using registry: JSONSchemaRegistry? = nil) throws
-                -> JSONSchemaValidationResults {
+                -> JSONSchemaValidationResult {
     return try self.validate(with: try JSONSchemaResource(root: schema),
                              dialect: dialect,
                              using: registry)
@@ -816,7 +820,7 @@ public enum JSON: Hashable,
   public func validate(with resource: JSONSchemaResource,
                        dialect: JSONSchemaDialect? = nil,
                        using registry: JSONSchemaRegistry? = nil) throws
-                -> JSONSchemaValidationResults {
+                -> JSONSchemaValidationResult {
     let registry = try registry ??
                      JSONSchemaRegistry(defaultDialect: dialect ?? .draft2020)
                        .register(resource: resource)

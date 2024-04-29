@@ -196,6 +196,66 @@ final class JSONMergingTests: XCTestCase {
     XCTAssertEqual(result, expected)
   }
   
+  func testSymmetricalMergeBasics() throws {
+    let a = try JSON(string: #"{"a": {"c": 1}}"#)
+    XCTAssertEqual(a.merging(value: a), a)
+    let b = try JSON(string: #"{"a": {"d": 2}, "b": 3}"#)
+    XCTAssertEqual(b.merging(value: b), b)
+    let e = try JSON(string: #"{"a": {"c": 1, "d": 2}, "b": 3}"#)
+    let m0 = a.merging(value: b)
+    let m1 = b.merging(value: a)
+    XCTAssertEqual(m0, m1)
+    XCTAssertEqual(m0, e)
+  }
+  
+  func testSymmetricalMergeArrays() throws {
+    let a = try JSON(string: #"[{"a": {"c": 1}}, "hello", [1]]"#)
+    XCTAssertEqual(a.merging(value: a), a)
+    let b = try JSON(string: #"[{"a": {"d": 2}, "b": 3}, "hello", [1]]"#)
+    XCTAssertEqual(b.merging(value: b), b)
+    let e = try JSON(string: #"[{"a": {"c": 1, "d": 2}, "b": 3}, "hello", [1]]"#)
+    let m0 = a.merging(value: b)
+    let m1 = b.merging(value: a)
+    XCTAssertEqual(m0, m1)
+    XCTAssertEqual(m0, e)
+  }
+  
+  func testSymmetricalMergeObjects() throws {
+    let a = try JSON(string: #"{"a": [1, {"b": 2}], "c": {"d": 3, "e": 4}}"#)
+    XCTAssertEqual(a.merging(value: a), a)
+    let b = try JSON(string: #"{"a": [1, {"f": "hello"}], "c": {"d": 3, "g": []}, "h": true}"#)
+    XCTAssertEqual(b.merging(value: b), b)
+    let e = try JSON(string: #"{"a": [1, {"b": 2, "f": "hello"}], "c": {"d": 3, "e": 4, "g": []}, "h": true}"#)
+    let m0 = a.merging(value: b)
+    let m1 = b.merging(value: a)
+    XCTAssertEqual(m0, m1)
+    XCTAssertEqual(m0, e)
+  }
+  
+  func testRefinement() throws {
+    let a = try JSON(string: #"""
+      { "a": [1, {"b": 2}],
+        "c": {"d": [{}]}}
+    """#)
+    let b = try JSON(string: #"""
+      { "a": [1, {"b": 2, "e": 4}],
+        "c": {"d": [{"f": 5}]}}
+    """#)
+    XCTAssert(b.isRefinement(of: a))
+    let c = try JSON(string: #"""
+      { "a": [1, {"e": 8}],
+        "c": {"f": "hello"},
+        "g": 9 }
+    """#)
+    let m = a.merging(value: c)
+    let e = try JSON(string: #"""
+      { "a": [1, {"b": 2, "e": 8}],
+        "c": {"d": [{}], "f": "hello"},
+        "g": 9 }
+    """#)
+    XCTAssertEqual(m, e)
+  }
+  
   /*
   func testPatchShouldRemoveIndexFromArray() throws {
     let target = try JSON(string: #"["a", "b"]"#)
