@@ -27,3 +27,10 @@ import Foundation
 public protocol JSONSchemaValidator {
   func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResult
 }
+
+extension JSONSchemaValidator {
+  /// Validates the given JSON value, returning a `JSONSchemaValidationResult` object.
+  public func validate(_ instance: JSON) -> JSONSchemaValidationResult {
+    self.validate(LocatedJSON(root: instance))
+  }
+}

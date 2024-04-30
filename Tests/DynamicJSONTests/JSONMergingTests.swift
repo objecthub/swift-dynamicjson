@@ -256,6 +256,30 @@ final class JSONMergingTests: XCTestCase {
     XCTAssertEqual(m, e)
   }
   
+  func testOverriding() throws {
+    let a = try JSON(string: #"""
+      { "a": [1, {"b": 2}],
+        "c": {"d": [{}]}}
+    """#)
+    let d = try JSON(string: #"""
+      {
+        "a": [1, { "e": 2 }, 3],
+        "c": { "d": "hello" },
+        "f": 5
+      }
+    """#)
+    let m = a.overriding(with: d)
+    let e = try JSON(string: #"""
+      {
+        "a": [1, { "b": 2, "e": 2 }, 3],
+        "c": { "d": "hello" },
+        "f": 5
+      }
+    """#)
+    XCTAssertEqual(m, e)
+    XCTAssertNil(a.merging(value: d))
+  }
+  
   /*
   func testPatchShouldRemoveIndexFromArray() throws {
     let target = try JSON(string: #"["a", "b"]"#)

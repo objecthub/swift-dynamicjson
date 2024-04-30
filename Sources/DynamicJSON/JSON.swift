@@ -633,6 +633,53 @@ public enum JSON: Hashable,
     }
   }
   
+  /// Merges two JSON values, combining matching arrays and objects. If incompatible values
+  /// are to be matched, then the value defined by `rhs` overrides the value of `lhs`.
+  /// As opposed to method `merging(value:)`, combining arrays does not require the arrays to
+  /// be of the same length. The resulting array has always the length of the longest of the two
+  /// arrays and individual elements are combined using `overriding(with:)` whenever two
+  /// elements are available.
+  public func overriding(with value: JSON) -> JSON {
+    switch self {
+      case .array(let lhs):
+        guard case .array(let rhs) = value else {
+          return value
+        }
+        var arr: [JSON] = []
+        for i in lhs.indices {
+          if rhs.indices.contains(i) {
+            arr.append(lhs[i].overriding(with: rhs[i]))
+          } else {
+            arr.append(lhs[i])
+          }
+        }
+        if rhs.count > lhs.count {
+          for j in lhs.count..<rhs.count {
+            arr.append(rhs[j])
+          }
+        }
+        return .array(arr)
+      case .object(let lhs):
+        guard case .object(let rhs) = value else {
+          return value
+        }
+        var dict: [String : JSON] = [:]
+        for (member, lval) in lhs {
+          if let rval = rhs[member] {
+            dict[member] = lval.overriding(with: rval)
+          } else {
+            dict[member] = lval
+          }
+        }
+        for (member, rval) in rhs where lhs[member] == nil {
+          dict[member] = rval
+        }
+        return .object(dict)
+      default:
+        return value
+    }
+  }
+  
   /// Returns a new JSON value in which the value referenced by `ref` (any abstraction
   /// implementing the `JSONReference` procotol, such as `JSONLocation` and `JSONPointer`)
   /// was replaced with `json`.
@@ -824,7 +871,7 @@ public enum JSON: Hashable,
     let registry = try registry ??
                      JSONSchemaRegistry(defaultDialect: dialect ?? .draft2020)
                        .register(resource: resource)
-    return try registry.validator(for: resource, dialect: dialect).validate(LocatedJSON(root: self))
+    return try registry.validator(for: resource, dialect: dialect).validate(self)
   }
   
   // MARK: - String representations

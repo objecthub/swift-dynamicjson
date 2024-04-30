@@ -30,24 +30,25 @@ public class JSONSchemaRegistry {
   /// This is a shared, non-thread safe registry that can be used as a quick alternative
   /// for non-production usage to the default of `JSON.validate(with:, using:))` (which
   /// creates a new empty registry for every invocation).
-  public static let `default` = JSONSchemaRegistry()
+  public static let `default` = DefaultJSONSchemaRegistry()
   
   /// The default dialect used by this registry
   public let defaultDialect: JSONSchemaDialect
   
   /// Maps meta-schema URIs (i.e. $schema) to dialects
-  public private(set) var dialects: [URL : JSONSchemaDialect]
+  public fileprivate(set) var dialects: [URL : JSONSchemaDialect]
   
   /// Maps schema identifiers (i.e. $id) to schema
-  public private(set) var resources: [JSONSchemaIdentifier : JSONSchemaResource]
+  public fileprivate(set) var resources: [JSONSchemaIdentifier : JSONSchemaResource]
   
   /// Dynamic extension modules providing new JSON schema resources
-  private var providers: [JSONSchemaProvider]
+  fileprivate var providers: [JSONSchemaProvider]
   
   /// Collection of errors raised by functionality provided by `JSONSchemaRegistry`.
   public enum Error: LocalizedError, CustomStringConvertible {
     case cannotRegisterNonRootResource(JSONSchema)
     case schemaWithoutId(JSONSchema)
+    case unknownSchemaResource(String)
     
     public var description: String {
       switch self {
@@ -63,6 +64,9 @@ public class JSONSchemaRegistry {
           } else {
             return "schema does not provide an id"
           }
+        case .unknownSchemaResource(let identifier):
+          return "cannot find schema resource identified by: \(identifier)"
+          
       }
     }
     
@@ -74,6 +78,8 @@ public class JSONSchemaRegistry {
       switch self {
         case .cannotRegisterNonRootResource(_), .schemaWithoutId(_):
           return "schema error"
+        case .unknownSchemaResource(_):
+          return "identifier error"
       }
     }
   }
@@ -87,10 +93,10 @@ public class JSONSchemaRegistry {
   }
   
   /// Initializes a new empty schema registry using `.draft2020` as default schema dialect.
-  private init(defaultDialect: JSONSchemaDialect,
-               dialects: [URL : JSONSchemaDialect],
-               resources: [JSONSchemaIdentifier : JSONSchemaResource],
-               providers: [JSONSchemaProvider]) {
+  fileprivate init(defaultDialect: JSONSchemaDialect,
+                   dialects: [URL : JSONSchemaDialect],
+                   resources: [JSONSchemaIdentifier : JSONSchemaResource],
+                   providers: [JSONSchemaProvider]) {
     self.defaultDialect = defaultDialect
     self.dialects = dialects
     self.resources = resources
@@ -178,7 +184,7 @@ public class JSONSchemaRegistry {
   /// Loads a new schema from the given URL into the registry, using `id` as the default
   /// schema identifier (in case the schema at `url` does not define its own).
   @discardableResult
-  public func loadSchema(from url: URL, id: JSONSchemaIdentifier?) throws -> JSONSchemaResource {
+  public func loadSchema(from url: URL, id: JSONSchemaIdentifier? = nil) throws -> JSONSchemaResource {
     let resource = try JSONSchemaResource(url: url, id: id)
     try self.register(resource: resource)
     return resource
@@ -206,5 +212,52 @@ public class JSONSchemaRegistry {
     try self.register(resource: root)
     return try JSONSchemaValidationContext(registry: self)
                  .validator(for: root, at: .root, dialect: dialect)
+  }
+  
+  /// Entry point for a new validator for a JSON schema resource identified by `baseUri`.
+  /// `dialect` is the default dialect used if a schema resource does not define one.
+  public func validator(for baseUri: JSONSchemaIdentifier,
+                        dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
+    guard let root = self.resource(for: baseUri) else {
+      throw Error.unknownSchemaResource(baseUri.string)
+    }
+    return try JSONSchemaValidationContext(registry: self)
+                 .validator(for: root, at: .root, dialect: dialect)
+  }
+  
+  /// Entry point for a new validator for a JSON schema resource identified by `uristring`.
+  /// `dialect` is the default dialect used if a schema resource does not define one.
+  public func validator(for uristring: String,
+                        dialect: JSONSchemaDialect? = nil) throws -> JSONSchemaValidator {
+    guard let baseUri = JSONSchemaIdentifier(string: uristring),
+          let root = self.resource(for: baseUri) else {
+      throw Error.unknownSchemaResource(uristring)
+    }
+    return try JSONSchemaValidationContext(registry: self)
+                 .validator(for: root, at: .root, dialect: dialect)
+  }
+}
+
+///
+/// Special version of `JSONSchemaRegistry` with support to reset the resources.
+///
+public final class DefaultJSONSchemaRegistry: JSONSchemaRegistry {
+  public init() {
+    let dialect: JSONSchemaDialect = .draft2020
+    super.init(defaultDialect: dialect,
+               dialects: [dialect.uri : dialect],
+               resources: [:],
+               providers: [])
+  }
+  
+  public func clear(preserveDialects: Bool = true,
+                    preserveProviders: Bool = true) {
+    if !preserveDialects {
+      self.dialects.removeAll()
+    }
+    self.resources.removeAll()
+    if !preserveProviders {
+      self.providers.removeAll()
+    }
   }
 }

@@ -28,8 +28,11 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 <td width="50%" valign="top">
 5. &nbsp;<a href="#merging-json-values">Merging JSON Values</a><br />
 5.1 &nbsp;<a href="#symmetrical-merge">Symmetrical Merge</a><br />
-5.2 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
+5.2 &nbsp;<a href="#overriding-merge">Overriding Merge</a><br />
+5.3 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
 6. &nbsp;<a href="#validating-json-data">Validating JSON Data</a><br />
+6.1 &nbsp;<a href="#implementation-overview">Implementation Overview</a><br />
+6.2 &nbsp;<a href="#validation-api">Validation API</a><br />
 </td>
 </tr>
 </table>
@@ -594,7 +597,7 @@ try json.apply(patch: patch)
 
 ### Symmetrical Merge
 
-The method `isRefinement(of:)` of enum `JSON` defines a relationship between
+The method **`isRefinement(of:)`** of enum `JSON` defines a relationship between
 two JSON values. `a.isRefinement(of: b)` is true if
 
 1. Both `a` and `b` are JSON values of the same type,
@@ -626,8 +629,8 @@ let b = try JSON(string: #"""
 b.isRefinement(of: a) ⇒ true
 ```
 
-Enum `JSON` provides a method `a.merging(value: b)` for merging two JSON values `a` and `b` such
-that the result of the merge is the "smallest" JSON value that is a refinement of both `a`
+Enum `JSON` provides a method **`merging(value:)`** for merging two JSON values `a` and `b` such
+that the result of the merge `a.merging(value: b)` is the "smallest" JSON value that is a refinement of both `a`
 and `b`. If such a merged value does not exist, then `merging(value:)` will return `nil`.
 Here is an example:
 
@@ -646,6 +649,38 @@ a.merging(value: c)
 }
 ```
 
+Intuitively, `merging(value:)` combines two JSON values by adding all non-existing values to the
+merged value and merging overlapping values when possible. Whenever it is not possible to merge
+two values, `merging(value:)` will fail by returning `nil`.
+
+### Overriding Merge
+
+An alternative method, **`overriding(with:)`** merges two JSON values differently, letting the JSON
+value passed as an argument override values of the receiver whenever merging would fail otherwise.
+As opposed to method `merging(value:)`, combining arrays does not require the arrays to
+be of the same length. The resulting array has always the length of the longest of the two
+arrays and individual elements are combined using `overriding(with:)` whenever two
+elements are available.
+
+Here is an example which would fail if `merging(value:)` would be used instead:
+
+```swift
+let d = try JSON(string: #"""
+  {
+    "a": [1, { "e": 2 }, 3],
+    "c": { "d": "hello" },
+    "f": 5
+  }
+"""#)
+a.overriding(with: d)
+⇒
+{
+  "a": [1, { "b": 2, "e": 2 }, 3],
+  "c": { "d": "hello" },
+  "f": 5
+}
+```
+
 ### JSON Merge Patch
 
 _DynamicJSON_ provides basic support for _JSON Merge Patch_ as defined by
@@ -659,10 +694,9 @@ patch contains members that do not appear within the target, those members are a
 If the target does contain the member, the value is replaced. Null values in the merge
 patch are given special meaning to indicate the removal of existing values in the target.
 
-The algorithm to apply a merge patch document to a JSON value is implemented by the
-following method of the
-[`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/4719984b16dca8e60d9917fcebea5704f513b962/Sources/DynamicJSON/JSON.swift#L538)
-enum:
+The algorithm to apply a merge patch document to a JSON value is implemented by method
+the **`merging(patch:)`** of enum
+[`JSON`](https://github.com/objecthub/swift-dynamicjson/blob/4719984b16dca8e60d9917fcebea5704f513b962/Sources/DynamicJSON/JSON.swift#L538).
 
 ```swift
 // Merges this JSON value with the given JSON value `patch` recursively. Objects are
@@ -677,6 +711,94 @@ an existing JSON value. It is constructing a new JSON value from scratch by merg
 the old value with the merge patch document.
 
 ## Validating JSON Data
+
+_DynamicJSON_ implements _JSON Schema_ as defined by the
+[2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/) for
+validating JSON data. The framework is flexible allowing extensions for future revisions.
+
+### Implementation Overview
+
+A JSON schema gets represented by enum [`JSONSchema`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchema.swift).
+It is possible to load JSON schema values either from a file, decode them from a string,
+or from a data object. In the context of schema validation, top-level schema values are managed via class
+[`JSONSchemaResource`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaResource.swift)
+which pre-processes and validates schema values and provides an identity for them. Often it's easier just to work
+with `JSONSchemaResource` objects directly. JSON schema are identified by
+[`JSONSchemaIdentifier`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaIdentifier.swift)
+values, which are essentially URIs with JSON schema-specific methods. A `JSONSchemaIdentifier`
+value is either absolute or relative and it is either a base URI, i.e. it is referring to a top-level schema,
+or it is a non-base URI and thus refers to a schema nested within another schema via a URI fragment.
+
+The semantics of a schema is defined by their dialect. A schema dialect gets identified by a URI.
+A schema value provides access to their dialect identifier via property `schema`. If no identifier
+is provided, a default is assumed (which is `JSONSchemaDialect.draft2020` right now for top-level schema
+and the dialect of the enclosing schema for nested schema). Schema dialects are represented by
+implementations of the
+[`JSONSchemaDialect`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaDialect.swift)
+protocol. A key responsibility of `JSONSchemaDialect` implementations is to provide a factory method
+`validator(for:, in:)` for creating validator objects for this dialect. Validator objects implement protocol
+[`JSONSchemaValidator`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaValidator.swift)
+which provides one `validate()` method that takes a JSON instance and returns a
+[`JSONSchemaValidationResult`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift)
+value. This method gets eventually called to validate a JSON value.
+
+The whole schema validation process gets initiated and controlled by a
+[`JSONSchemaRegistry`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaRegistry.swift)
+object. JSON schema registries define:
+
+  - A set of supported dialects with their corresponding URI identities,
+  - A default dialect (for schema resources that do not define a dialect themselves),
+  - A set of known/loaded schema resources with their corresponding identities, and
+  - [`JSONSchemaProvider`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaProvider.swift)
+    objects, each implementing a method for discovering and loading new schema resources for
+    schema that are not loaded already.
+
+Most of the functionality of class
+[`JSONSchemaRegistry`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaRegistry.swift)
+is about configuring registry objects by registering supported dialects, inserting available
+schema resources and setting up schema providers for automatically discovering schema resources.
+Once a registry is configured, method `validator(for:, dialect:)` can be called to obtain a
+[`JSONSchemaValidator`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaValidator.swift)
+object for the given schema resource and default dialect. This validator object can then
+be used to validate an arbitrary number of JSON instances.
+
+The following example shows how validation is used in general:
+
+```swift
+let registry = JSONSchemaRegistry()
+/// Register a schema resource from a string literal
+try registry.register(resource: JSONSchemaResource(string: #"""
+  {
+    "$id": "https://example.com/schema/test",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+      "prop1": {
+        ...
+      }
+    }
+  }
+"""#))
+...
+/// Load a schema resource from a file
+try registry.loadSchema(from: URL(filePath: "/Users/objecthub/foo.json"))
+...
+/// Make JSON schema stored in files under the given directory discoverable
+registry.register(provider:
+  StaticJSONSchemaFileProvider(
+    directory: URL(filePath: "/Users/objecthub/myschema"),
+    base: JSONSchemaIdentifier(string: "http://example.com/schemas")!))
+...
+/// Obtain a validator for a schema
+guard let validator = try? registry.validator(for: "https://example.com/schema/test") else {
+  return
+}
+/// Validate a JSON instance `json`
+let result = validator.validate(json)
+print("valid = \(result.isValid)")
+```
+
+### Validation API
 
 
 
