@@ -35,6 +35,7 @@ import Foundation
 ///
 open class JSONSchemaDraft2020: JSONSchemaValidator {
   
+  /// Draft 2020-20 vocabulary implementation
   public struct Vocabulary {
     public let core: Bool
     public let applicator: Bool
@@ -67,18 +68,18 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Draft 2020-20 dialect representation
   public struct Dialect: JSONSchemaDialect {
     public static let `default`: Dialect = Dialect()
     public static let `validateFormat`: Dialect = Dialect(vocabulary: Vocabulary(format: true))
     
+    public let uri: URL
     public let vocabulary: Vocabulary
     
-    public init(vocabulary: Vocabulary = Vocabulary()) {
+    public init(uri: URL = URL(string: "https://json-schema.org/draft/2020-12/schema")!,
+                vocabulary: Vocabulary = Vocabulary()) {
+      self.uri = uri
       self.vocabulary = vocabulary
-    }
-    
-    public var uri: URL {
-      return URL(string: "https://json-schema.org/draft/2020-12/schema")!
     }
     
     public func validator(for schema: JSONSchema,
@@ -87,6 +88,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Draft 2020-20 error reasons
   public enum Reason: JSONSchemaValidationResult.Reason, CustomStringConvertible {
     case validationError(Error)
     case alwaysFails

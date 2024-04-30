@@ -250,10 +250,11 @@ public final class DefaultJSONSchemaRegistry: JSONSchemaRegistry {
                providers: [])
   }
   
-  public func clear(preserveDialects: Bool = true,
+  public func clear(defaultDialect: JSONSchemaDialect? = nil,
                     preserveProviders: Bool = true) {
-    if !preserveDialects {
+    if let defaultDialect {
       self.dialects.removeAll()
+      self.dialects[defaultDialect.uri] = defaultDialect
     }
     self.resources.removeAll()
     if !preserveProviders {

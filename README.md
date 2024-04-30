@@ -18,21 +18,22 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 <td width="650px" valign="top">
 1. &nbsp;<a href="#representing-json-data">Representing JSON Data</a><br />
 2. &nbsp;<a href="#accessing-json-values">Accessing JSON Values</a><br />
-2.1 &nbsp;<a href="#json-location">JSON Location</a><br />
-2.2 &nbsp;<a href="#json-pointer">JSON Pointer</a><br />
+&nbsp;&nbsp; 2.1 &nbsp;<a href="#json-location">JSON Location</a><br />
+&nbsp;&nbsp; 2.2 &nbsp;<a href="#json-pointer">JSON Pointer</a><br />
 3. &nbsp;<a href="#queries-with-json-path">Queries with JSON Path</a><br />
 4. &nbsp;<a href="#mutating-json-values">Mutating JSON Values</a><br />
-4.1 &nbsp;<a href="#mutation-api">Mutation API</a><br />
-4.2 &nbsp;<a href="#json-patch">JSON Patch</a><br />
+&nbsp;&nbsp; 4.1 &nbsp;<a href="#mutation-api">Mutation API</a><br />
+&nbsp;&nbsp; 4.2 &nbsp;<a href="#json-patch">JSON Patch</a><br />
 </td>
 <td width="50%" valign="top">
 5. &nbsp;<a href="#merging-json-values">Merging JSON Values</a><br />
-5.1 &nbsp;<a href="#symmetrical-merge">Symmetrical Merge</a><br />
-5.2 &nbsp;<a href="#overriding-merge">Overriding Merge</a><br />
-5.3 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
+&nbsp;&nbsp; 5.1 &nbsp;<a href="#symmetrical-merge">Symmetrical Merge</a><br />
+&nbsp;&nbsp; 5.2 &nbsp;<a href="#overriding-merge">Overriding Merge</a><br />
+&nbsp;&nbsp; 5.3 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
 6. &nbsp;<a href="#validating-json-data">Validating JSON Data</a><br />
-6.1 &nbsp;<a href="#implementation-overview">Implementation Overview</a><br />
-6.2 &nbsp;<a href="#validation-api">Validation API</a><br />
+&nbsp;&nbsp; 6.1 &nbsp;<a href="#implementation-overview">Implementation Overview</a><br />
+&nbsp;&nbsp; 6.2 &nbsp;<a href="#validation-api">Validation API</a><br />
+&nbsp;&nbsp; 6.3 &nbsp;<a href="#metadata-and-defaults">Metadata and Defaults</a><br />
 </td>
 </tr>
 </table>
@@ -425,7 +426,7 @@ There are a number of methods that mutate such data without copies being created
 in the code snippet below.
 
 ```swift
-enum JSON: Hashable, .. {
+enum JSON: Hashable, ... {
   // Mutates this JSON value if it represents either an array or a string by
   // appending the given JSON value `json`. For arrays, `json` is appended as a
   // new element. For strings it is expected that `json` also refers to a string
@@ -546,22 +547,18 @@ bundles operations together into a "patch object" providing functionality to app
 struct JSONPatch: Codable, Hashable, CustomStringConvertible, CustomDebugStringConvertible {
   // Sequence of operations.
   let operations: [JSONPatchOperation]
-  
   // Initializer based on a sequence of operations
   init(operations: [JSONPatchOperation]) { ... }
-  
   // Decodes the provided data with the given decoding strategies.
   init(data: Data,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
        floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
        userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
-  
   // Decodes the provided string with the given decoding strategies.
   init(string: String,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
        floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
        userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
-  
   // Decodes the content at the provided URL with the given decoding strategies.
   init(url: URL,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
@@ -765,8 +762,9 @@ be used to validate an arbitrary number of JSON instances.
 The following example shows how validation is used in general:
 
 ```swift
+// Create a new schema registry
 let registry = JSONSchemaRegistry()
-/// Register a schema resource from a string literal
+// Register a schema resource from a string literal
 try registry.register(resource: JSONSchemaResource(string: #"""
   {
     "$id": "https://example.com/schema/test",
@@ -780,26 +778,84 @@ try registry.register(resource: JSONSchemaResource(string: #"""
   }
 """#))
 ...
-/// Load a schema resource from a file
+// Load a schema resource from a file
 try registry.loadSchema(from: URL(filePath: "/Users/objecthub/foo.json"))
 ...
-/// Make JSON schema stored in files under the given directory discoverable
+// Make JSON schema stored in json files under the given directory discoverable
 registry.register(provider:
   StaticJSONSchemaFileProvider(
     directory: URL(filePath: "/Users/objecthub/myschema"),
     base: JSONSchemaIdentifier(string: "http://example.com/schemas")!))
 ...
-/// Obtain a validator for a schema
+// Obtain a validator for a schema
 guard let validator = try? registry.validator(for: "https://example.com/schema/test") else {
-  return
+  // Throw error stating that the schema could not be found
 }
-/// Validate a JSON instance `json`
+// Validate a JSON instance `json`
 let result = validator.validate(json)
 print("valid = \(result.isValid)")
 ```
 
+Schema validators return
+[`JSONSchemaValidationResult`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift)
+values. These are containers which provide access to information collected during the
+validation process. `JSONSchemaValidationResult` values encapsulate the following information:
+
+  - Validation errors
+  - Format constraints (i.e. format requirements for string values defined by the `format` keyword)
+  - Meta tags (i.e. annotations about access and deprecations)
+  - Default values (i.e. default values defined by the `default` keyword)
+  
+For figuring out whether validation was successful, it is sufficient to use property
+`isValid` of `JSONSchemaValidationResult`. It returns true if no validation errors were found.
+Otherwise, property `errors` provides access to the validation errors found. Other annotations
+that are collected during validation are discussed [below](#metadata-and-defaults).
+
 ### Validation API
 
+If an application only validates JSON instances against a small number of fixed
+schema (e.g. provided statically at application startup), it would be overkill to make use
+of the low-level API introduced above. For such simple use cases, enum `JSON` provides the
+following convenience methods:
+
+```swift
+enum JSON: Hashable, ... {
+  // Returns true if this JSON document is valid for the given JSON schema (using
+  // `registry` for resolving references to schema referred to from `schema`).
+  func valid(for schema: JSONSchema,
+             dialect: JSONSchemaDialect? = nil,
+             using registry: JSONSchemaRegistry? = nil) -> Bool
+  
+  // Returns a schema validation result for this JSON document validated against the
+  // JSON schema `schema` (using`registry` for resolving references to schema
+  // referred to from `schema`).
+  func validate(with schema: JSONSchema,
+                dialect: JSONSchemaDialect? = nil,
+                using registry: JSONSchemaRegistry? = nil) throws -> JSONSchemaValidationResult
+  
+  // Returns true if this JSON document is valid for the given JSON schema (using
+  // `registry` for resolving references to schema referred to from `schema`).
+  func valid(for resource: JSONSchemaResource,
+             dialect: JSONSchemaDialect? = nil,
+             using registry: JSONSchemaRegistry? = nil) -> Bool
+  
+  // Returns a schema validation result for this JSON document validated against the
+  // JSON schema `schema` (using`registry` for resolving references to schema
+  // referred to from `schema`).
+  func validate(with resource: JSONSchemaResource,
+                dialect: JSONSchemaDialect? = nil,
+                using registry: JSONSchemaRegistry? = nil) throws  -> JSONSchemaValidationResult
+  ...
+}
+```
+
+These validation methods are creating new registries on demand if parameter `registry` is
+set to `nil`, with only the provided schema or schema resource getting registered. For using
+non self-contained schema, it is therefore necessary to set up a suitable registry first and
+pass it in via the `registry` parameter. Alternatively, it is possible to use the default
+registry `JSONSchemaRegistry.default` if a single, shared, global registry should be used.
+
+### Metadata and Defaults
 
 
 ## Requirements
