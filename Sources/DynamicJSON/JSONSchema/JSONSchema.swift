@@ -33,7 +33,6 @@ import Foundation
 ///
 public indirect enum JSONSchema: Codable,
                                  Equatable,
-                                 Sendable,
                                  CustomDebugStringConvertible {
   case boolean(Bool)
   case descriptor(JSONSchemaDescriptor, JSON)
@@ -191,7 +190,7 @@ public indirect enum JSONSchema: Codable,
 /// `JSONSchemaDescriptor` provides a structured representation of all the
 /// keywords defined by the JSON Schema Draft 2020 standard.
 ///
-public struct JSONSchemaDescriptor: Codable, Equatable, Sendable, CustomDebugStringConvertible {
+public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvertible {
     
   // Core vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/core
@@ -387,7 +386,7 @@ public struct JSONSchemaDescriptor: Codable, Equatable, Sendable, CustomDebugStr
 ///
 /// Representation of the `dependencies` keyword.
 ///
-public indirect enum JSONSchemaDependency: Codable, Equatable, Sendable {
+public indirect enum JSONSchemaDependency: Codable, Equatable {
   case array([String])
   case schema(JSONSchema)
   

@@ -273,8 +273,8 @@ Identifier (URI) fragment identifiers (see [RFC 3986](https://datatracker.ietf.o
 
 Like JSON Locations, each JSON Pointer specifies a path to an element in a JSON structure starting
 with its root. Each element of the path either refers to an object member or an array index.
-Syntactically, each path element is prefixed with "/". JSON Pointer uses "~1" to encode "/" in
-member names and "~0" to encode "~". The empty string refers to the root of the JSON document.
+Syntactically, each path element is prefixed with "/". JSON Pointer uses "&#126;1" to encode "/" in
+member names and "&#126;0" to encode "&#126;". The empty string refers to the root of the JSON document.
 Here is an example:
 
 ```
@@ -864,7 +864,7 @@ The following technologies are needed to build the _DynamicJSON_ framework. The 
 and the command-line tool can both be built either using _Xcode_ or the _Swift Package Manager_.
 
 - [Xcode 15](https://developer.apple.com/xcode/)
-- [Swift 5.9](https://developer.apple.com/swift/)
+- [Swift 5.10](https://developer.apple.com/swift/)
 - [Swift Package Manager](https://swift.org/package-manager/)
 
 ## Copyright

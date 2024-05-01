@@ -89,7 +89,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   /// Draft 2020-20 error reasons
-  public enum Reason: JSONSchemaValidationResult.Reason, CustomStringConvertible {
+  public enum Reason: FailureReason, CustomStringConvertible {
     case validationError(Error)
     case alwaysFails
     case schemaValidatesButShouldFail

@@ -20,15 +20,22 @@
 
 import Foundation
 
+
+/// Protocol defining type for annotation messages.
+public protocol AnnotationMessage {
+  func description(value: LocatedJSON, location: JSONLocation) -> String
+}
+
+/// Protocol specifying a failure reason.
+public protocol FailureReason {
+  var reason: String { get }
+}
+
 ///
 /// Result container for JSON schema validators. Currently, `JSONSchemaValidationResult`
 /// values primarily collect errors, format and meta annotations, as well as defaults.
 ///
 public struct JSONSchemaValidationResult: CustomStringConvertible {
-  
-  public protocol AnnotationMessage {
-    func description(value: LocatedJSON, location: JSONLocation) -> String
-  }
   
   public struct Annotation<Message: AnnotationMessage>: CustomStringConvertible {
     public let value: LocatedJSON
@@ -48,13 +55,9 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
     }
   }
   
-  public protocol Reason {
-    var reason: String { get }
-  }
-  
   public struct ValidationError: AnnotationMessage {
     public let schema: JSONSchema
-    public let reason: Reason
+    public let reason: FailureReason
     
     public func description(value: LocatedJSON, location: JSONLocation) -> String {
       return "value \(value) not matching schema \(self.schema.id?.string ?? "") at \(location); " +
@@ -171,7 +174,7 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
   }
   
   /// Used to flag errors by validators.
-  public mutating func flag(error reason: Reason,
+  public mutating func flag(error reason: FailureReason,
                             for value: LocatedJSON,
                             schema: JSONSchema,
                             at location: JSONLocation) {
