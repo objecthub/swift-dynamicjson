@@ -36,6 +36,7 @@ public struct JSONSchemaFormatValidators {
     return true
   }
   
+#if os(iOS) || os(watchOS) || os(tvOS) || os(macOS)
   public static func isDateTime(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -52,6 +53,26 @@ public struct JSONSchemaFormatValidators {
     } catch {}
     return false
   }
+#else
+  public static func isDateTime(_ str: String) -> Bool {
+    guard str.allSatisfy(\.isASCII) else {
+      return false
+    }
+    let formatter = DateFormatter()
+    formatter.calendar = Calendar(identifier: .iso8601)
+    formatter.locale = Locale(identifier: "en_US_POSIX")
+    formatter.timeZone = TimeZone(identifier: "UTC")
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXXXX"
+    guard formatter.date(from: str) == nil else {
+      return true
+    }
+    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    guard formatter.date(from: str) == nil else {
+      return true
+    }
+    return false
+  }
+#endif
   
   private static let dateRegex = try! NSRegularExpression(
     pattern: ##"^(?<year>\d\d\d\d)\-(?<month>\d\d)\-(?<day>\d\d)$"##,
