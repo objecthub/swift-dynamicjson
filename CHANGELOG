@@ -1,0 +1,9 @@
+# Changelog
+
+## 1.0.0 (2024-05-02)
+- First official release
+- Full support for JSON Pointer, JSON Path, JSON Patch, JSON Merge Patch, and JSON Schema
+- Includes comprehensive test suite
+
+## 0.0.1 (2024-04-30)
+- Incomplete pre-release

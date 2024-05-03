@@ -490,6 +490,7 @@
 		CC10ABE92B9D27F200746181 /* JSONReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONReference.swift; sourceTree = "<group>"; };
 		CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMutationTests.swift; sourceTree = "<group>"; };
 		CC1D532E2BD22ED700EE1A24 /* JSONSchemaExampleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaExampleTest.swift; sourceTree = "<group>"; };
+		CC1D53302BE4666E00EE1A24 /* CHANGELOG */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHANGELOG; sourceTree = "<group>"; };
 		CC2473DF2B7B9DEE0022800A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		CC2473E02B7B9DF60022800A /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CC2473E12B7B9E330022800A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -724,6 +725,7 @@
 			children = (
 				CC2473DF2B7B9DEE0022800A /* LICENSE */,
 				CC2473E02B7B9DF60022800A /* README.md */,
+				CC1D53302BE4666E00EE1A24 /* CHANGELOG */,
 				CC2473E12B7B9E330022800A /* Package.swift */,
 				CC528E262B7975DC001E9E52 /* DynamicJSON */,
 				CC528E322B7975DC001E9E52 /* DynamicJSONTests */,
