@@ -853,10 +853,166 @@ These validation methods are creating new registries on demand if parameter `reg
 set to `nil`, with only the provided schema or schema resource getting registered. For using
 non self-contained schema, it is therefore necessary to set up a suitable registry first and
 pass it in via the `registry` parameter. Alternatively, it is possible to use the default
-registry `JSONSchemaRegistry.default` if a single, shared, global registry should be used.
+registry `JSONSchemaRegistry.default` if a single, shared, global registry is sufficient.
 
 ### Metadata and Defaults
 
+#### Format annotations
+
+`format` annotations of a JSON schema, i.e. declarations that JSON string values have a particular
+format, are being collected and made available via the
+[`formatConstraints`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift#L123C27-L123C44)
+property of
+[`JSONSchemaValidationResult`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift)
+values. Each constraint is an instance of
+[`Annotation<FormatConstraint>`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift#L40) providing access to fields `value` (a `LocatedJSON` value), `location` (within the schema), `message.format`
+and `message.valid`, with `message.valid` being a value of type `Bool?`. `true` refers to valid
+constraints, `false` to invalid constraints, and `nil` to constraints that could not be validated.
+Here is code that prints out all invalid constraints:
+
+```swift
+val res: JSONSchemaValidationResult = ...
+for constraint in res.formatConstraints where constraint.message.valid == false {
+  print("value \(constraint.value) does not match format '\(constraint.message.format)'")
+}
+```
+
+If invalid format constraints should result in a validation error, the vocabulary
+`https://json-schema.org/draft/2020-12/meta/format-annotation` needs to be enabled.
+This can be done by creating a custom
+[`JSONSchemaDraft2020.Dialect`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaDraft2020.swift#L72C17-L72C24)
+value with a vocabulary of type
+[`JSONSchemaDraft2020.Vocabulary`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaDraft2020.swift#L39)
+whose `format` property is set to true. Since such a dialect is useful frequently, a preconfigured
+dialect value is available via
+[`JSONSchemaDialect.draft2020Format`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaDialect.swift#L41).
+Defining a registry with this dialect as its default will always also validate format annotations.
+
+#### Default annotations
+
+`default` annotations of a JSON schema, i.e. declarations that properties have a given default
+value if the property is not defined explicitly, are being collected and made available via the
+[`defaults`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift#L129)
+property of
+[`JSONSchemaValidationResult`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift)
+values. `defaults` is providing a map from `JSONLocation` values to tuples `(exists: Bool, values: Set<JSON>)`.
+The `exists` component of the tuple states whether a value exists at this location (and thus, not default needs to be injected).
+The `values` component provides a set of JSON values which are all suitable as defaults (a schema can define multiple,
+alternative defaults). Here is code that prints out default values computed during a validation process:
+
+```swift
+let schema = try JSONSchema(string: #"""
+  {
+    "$id": "https://objecthub.com/example/person",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "person",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "birthday": {
+        "type": "string",
+        "format": "date"
+      },
+      "numChildren": {
+        "type": "integer",
+        "default": 0
+      },
+      "address": {
+        "oneOf": [
+          { "type": "string", "default": "12345 Mcity" },
+          { "$ref": "#address",
+            "default": { "city": "Mcity", "postalCode": "12345" } }
+        ]
+      },
+      "email": {
+        "type": "array",
+        "maxItems": 3,
+        "items": {
+          "type": "string",
+          "format": "email"
+        }
+      }
+    },
+    "required": ["name", "birthday"],
+    "$defs": {
+      "address": {
+        "$anchor": "address",
+        "type": "object",
+        "properties": {
+          "street": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string",
+            "pattern": "\\d{5}"
+          }
+        },
+        "required": ["city", "postalCode"]
+      }
+    }
+  }
+"""#)
+/// `instance0` is a valid instance of `schema`
+let instance0: JSON = [
+  "name": "John Doe",
+  "birthday": "1983-03-19",
+  "numChildren": 2,
+  "email": ["john@doe.com", "john.doe@gmail.com"]
+]
+instance0.valid(for: schema) ⇒ true
+/// `instance1` is not a valid instance of `schema`
+let instance1: JSON = [
+  "name": "John Doe",
+  "email": ["john@doe.com", "john.doe@gmail.com"]
+]
+instance1.valid(for: schema) ⇒ false
+/// `instance2` is a valid instance of `schema`
+let instance2: JSON = [
+  "name": "John Doe",
+  "birthday": "1983-03-19",
+  "address": "12 Main Street, 17445 Noname"
+]
+let res2 = try instance2.validate(with: schema)
+res2.isValid ⇒ true
+for (location, (exists, values)) in res2.defaults {
+  if exists {
+    print("\(location) exists; defaults: \(values)")
+  } else {
+    print("\(location) does not exist; defaults: \(values)")
+  }
+}
+```
+
+The loop at the end of this code prints out the following text:
+
+```
+$['numChildren'] does not exist; defaults: [0]
+$['address'] exists; defaults: [
+  "12345 Mcity",
+  {
+    "postalCode" : "12345",
+    "city" : "Mcity"
+  }
+]
+```
+
+#### Property metadata
+
+Property metadata annotations of a JSON schema such as `deprecated`, `readOnly`, and `writeOnly`,
+are being collected and made available via the
+[`tags`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift#L118C27-L118C31)
+property of
+[`JSONSchemaValidationResult`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift)
+values. Each location within the validated value with a metadata annotation is included in this array
+with an entry of type
+[`Annotation<MetaTags>`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift#L40) providing access to fields `value` (a `LocatedJSON` value), `location` (within the schema), `message.deprecated`
+`message.readOnly`, and `message.writeOnly`. `deprecated`, `readOnly`, and `writeOnly` are boolean properties.
 
 ## Requirements
 
