@@ -13,12 +13,13 @@ final class JSONPatchLargeTest: XCTestCase {
 
   private func jsonFileURL(_ filename: String) throws -> URL? {
     let bundle = Bundle(for: type(of: self))
-    guard let url = bundle.url(forResource: filename,
-                               withExtension: "json",
-                               subdirectory: "JSONPatch") else {
-      return nil
+    if let url = bundle.url(forResource: filename,
+                            withExtension: "json",
+                            subdirectory: "JSONPatch") {
+      return url
     }
-    return url
+    let url = URL(fileURLWithPath: "Tests/DynamicJSONTests/ComplianceTests/JSONPatch/\(filename).json")
+    return FileManager.default.fileExists(atPath: url.path) ? url : nil
   }
   
   private func loadJSON(_ filename: String) throws -> JSON? {
