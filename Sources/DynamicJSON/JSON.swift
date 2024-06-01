@@ -65,6 +65,7 @@ public enum JSON: Hashable,
     case cannotAppend(JSON, JSON)
     case cannotInsert(JSON, JSON, Int)
     case cannotAssign(String, JSON)
+    case cannotRemove(String, JSON)
     case typeMismatch(JSONType, JSON)
     
     public var description: String {
@@ -79,6 +80,8 @@ public enum JSON: Hashable,
           return "unable to insert \(json) into \(array) at \(index)"
         case .cannotAssign(let member, let json):
           return "unable to set/update member '\(member)' of \(json)"
+        case .cannotRemove(let member, let json):
+          return "unable to remove '\(member)' from \(json)"
         case .typeMismatch(let types, let json):
           return "expected \(json) to be of type \(types)"
       }
@@ -94,7 +97,7 @@ public enum JSON: Hashable,
           return "initialization error"
         case .erroneousEncoding:
           return "encoding error"
-        case .cannotAppend(_, _), .cannotInsert(_, _, _), .cannotAssign(_, _):
+        case .cannotAppend(_, _), .cannotInsert(_, _, _), .cannotAssign(_, _), .cannotRemove(_, _):
           return "mutation error"
         case .typeMismatch(_, _):
           return "type mismatch"
@@ -753,7 +756,19 @@ public enum JSON: Hashable,
       dict[member] = json  // modify dict
       self = .object(dict) // restore self
     } else {
-      throw Error.cannotAppend(json, self)
+      throw Error.cannotAssign(member, self)
+    }
+  }
+  
+  /// Removes an existing key/value mapping in this JSON object. If this JSON value
+  /// is not an object, an error is thrown.
+  public mutating func remove(_ member: String) throws {
+    if case .object(var dict) = self {
+      self = .null         // remove reference to dict
+      dict.removeValue(forKey: member)
+      self = .object(dict) // restore self
+    } else {
+      throw Error.cannotRemove(member, self)
     }
   }
   
