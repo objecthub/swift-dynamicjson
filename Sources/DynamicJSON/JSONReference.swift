@@ -46,7 +46,7 @@ public protocol JSONReference: CustomStringConvertible {
   /// with function `proc`. `proc` is provided a reference, enabling efficient,
   /// in-place mutations that do not trigger copying large parts of the JSON
   /// document.
-  func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
+  func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void, insert: Bool) throws
 }
 
 extension JSONReference {

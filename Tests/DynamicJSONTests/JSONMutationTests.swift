@@ -100,7 +100,7 @@ final class JSONMutationTests: XCTestCase {
         "number": 123,
         "object": [
             "str": "col",
-            "arr": [1, "two", ["one" : 1, "two" : 4, "three": 3]],
+            "arr": [1, "two", ["one" : 1, "two" : 4, "three": 3, "four": "new"]],
             "obj": [
                 "x": "rah",
                 "y": "tar",
@@ -114,7 +114,7 @@ final class JSONMutationTests: XCTestCase {
         "number": 123,
         "object": [
             "str": "col",
-            "arr": [1, "two", ["one" : 1, "two" : 4, "three": 3]],
+            "arr": [1, "two", ["one" : 1, "two" : 4, "three": 3, "four": "new"]],
             "obj": [
                 "x": "rah",
                 "y": "tar",
@@ -135,6 +135,9 @@ final class JSONMutationTests: XCTestCase {
       }
       value = .integer(2 * x)
     }))
+    XCTAssertNoThrow(try json.mutate("$.object.arr[2].four", with: { value in
+      value = .string("new")
+    }, insert: true))
     XCTAssertNoThrow(try json.mutate("/object/arr/2", object: { dict in
       dict["three"] = 3
     }))

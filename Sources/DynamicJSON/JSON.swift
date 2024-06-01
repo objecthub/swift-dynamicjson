@@ -761,15 +761,15 @@ public enum JSON: Hashable,
   /// replacement is done in place, i.e. it mutates this JSON value. `ref` can be
   /// implemented by any abstraction implementing the `JSONReference` procotol, such as
   /// `JSONLocation` (for singular JSON path queries) and `JSONPointer`.
-  public mutating func update(_ ref: JSONReference, with json: JSON) throws {
-    try self.mutate(ref) { $0 = json }
+  public mutating func update(_ ref: JSONReference, with json: JSON, insert: Bool = true) throws {
+    try self.mutate(ref, with: { $0 = json }, insert: insert)
   }
   
   /// Replaces the value the location reference string `ref` is referring to with `json`.
   /// The replacement is done in place, i.e. it mutates this JSON value. `ref` is a string
   /// representation of either `JSONLocation` or `JSONPointer` references.
-  public mutating func update(_ ref: String, with json: JSON) throws {
-    try self.mutate(ref) { $0 = json }
+  public mutating func update(_ ref: String, with json: JSON, insert: Bool = true) throws {
+    try self.mutate(ref, with: { $0 = json }, insert: insert)
   }
   
   /// Mutates the JSON value the reference `ref` is referring to with function `proc`.
@@ -777,8 +777,10 @@ public enum JSON: Hashable,
   /// without automatically doing any copying. `ref` can be implemented by any abstraction
   /// implementing the `JSONReference` procotol, such as `JSONLocation` (for singular JSON
   /// path queries) and `JSONPointer`.
-  public mutating func mutate(_ ref: JSONReference, with proc: (inout JSON) throws -> Void) throws {
-    try ref.mutate(&self, with: proc)
+  public mutating func mutate(_ ref: JSONReference,
+                              with proc: (inout JSON) throws -> Void,
+                              insert: Bool = false) throws {
+    try ref.mutate(&self, with: proc, insert: insert)
   }
   
   /// Mutates the JSON value the reference `ref` is referring to with function `arrProc`
@@ -790,16 +792,21 @@ public enum JSON: Hashable,
   public mutating func mutate(_ ref: JSONReference,
                               array arrProc: ((inout [JSON]) throws -> Void)? = nil,
                               object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
-                              other proc: ((inout JSON) throws -> Void)? = nil) throws {
-    try ref.mutate(&self, with: Self.mutator(array: arrProc, object: objProc, other: proc))
+                              other proc: ((inout JSON) throws -> Void)? = nil,
+                              insert: Bool = false) throws {
+    try ref.mutate(&self,
+                   with: Self.mutator(array: arrProc, object: objProc, other: proc),
+                   insert: insert)
   }
   
   /// Mutates the JSON value the reference string `ref` is referring to with function `proc`.
   /// `proc` receives a reference to the JSON value, allowing efficient in place mutations
   /// without automatically doing any copying. `ref` is a string representation of either
   /// `JSONLocation` or `JSONPointer` references.
-  public mutating func mutate(_ ref: String, with proc: (inout JSON) throws -> Void) throws {
-    try self.mutate(try JSON.reference(from: ref), with: proc)
+  public mutating func mutate(_ ref: String,
+                              with proc: (inout JSON) throws -> Void,
+                              insert: Bool = false) throws {
+    try self.mutate(try JSON.reference(from: ref), with: proc, insert: insert)
   }
   
   /// Mutates the JSON array the reference string `ref` is referring to with function
@@ -810,8 +817,13 @@ public enum JSON: Hashable,
   public mutating func mutate(_ ref: String,
                               array arrProc: ((inout [JSON]) throws -> Void)? = nil,
                               object objProc: ((inout [String : JSON]) throws -> Void)? = nil,
-                              other proc: ((inout JSON) throws -> Void)? = nil) throws {
-    try self.mutate(try JSON.reference(from: ref), array: arrProc, object: objProc, other: proc)
+                              other proc: ((inout JSON) throws -> Void)? = nil,
+                              insert: Bool = false) throws {
+    try self.mutate(try JSON.reference(from: ref),
+                    array: arrProc,
+                    object: objProc,
+                    other: proc,
+                    insert: insert)
   }
   
   /// Applies the given JSON Patch operation to this JSON document, mutating this JSON

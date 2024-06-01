@@ -334,28 +334,41 @@ public indirect enum JSONLocation: SegmentableJSONReference,
   /// Mutate value at which this reference is pointing within JSON document `value`
   /// with function `proc`. `proc` is provided a reference, enabling efficient,
   /// in-place mutations that do not trigger copying large parts of the JSON document.
-  public func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws {
+  public func mutate(_ json: inout JSON,
+                     with proc: (inout JSON) throws -> Void,
+                     insert: Bool = false) throws {
     var iter = self.segments.makeIterator()
-    try self.mutate(&json, next: &iter, with: proc)
+    try self.mutate(&json, next: &iter, with: proc, insert: insert)
   }
   
   private func mutate(_ value: inout JSON,
                       next iter: inout [JSONLocation.Segment].Iterator,
-                      with proc: (inout JSON) throws -> Void) throws {
+                      with proc: (inout JSON) throws -> Void,
+                      insert: Bool) throws {
     if let segment = iter.next() {
       switch segment {
         case .member(let member):
-          guard case .object(var dict) = value,
-                var json = dict[member] else {
+          guard case .object(var dict) = value else {
             throw JSONReferenceError.erroneousMemberSelection(value, member)
           }
           value = .null
-          dict[member] = nil
-          defer {
+          if var json = dict[member] {
+            dict[member] = nil
+            defer {
+              dict[member] = json
+              value = .object(dict)
+            }
+            try self.mutate(&json, next: &iter, with: proc, insert: insert)
+          } else if insert {
+            var json = JSON.null
+            defer {
+              value = .object(dict)
+            }
+            try self.mutate(&json, next: &iter, with: proc, insert: insert)
             dict[member] = json
-            value = .object(dict)
+          } else {
+            throw JSONReferenceError.erroneousMemberSelection(value, member)
           }
-          try self.mutate(&json, next: &iter, with: proc)
         case .index(let index):
           guard case .array(var arr) = value else {
             throw JSONReferenceError.erroneousIndexSelection(value, index)
@@ -375,7 +388,7 @@ public indirect enum JSONLocation: SegmentableJSONReference,
             arr[i] = json
             value = .array(arr)
           }
-          try self.mutate(&json, next: &iter, with: proc)
+          try self.mutate(&json, next: &iter, with: proc, insert: insert)
       }
     } else {
       try proc(&value)

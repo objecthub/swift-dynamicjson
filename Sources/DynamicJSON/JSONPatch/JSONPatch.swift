@@ -38,6 +38,11 @@ public struct JSONPatch: Codable,
     self.operations = operations
   }
   
+  /// Initializer based on a JSON object
+  public init(_ json: JSON) throws {
+    self = try json.coerce()
+  }
+  
   /// This initializer decodes the provided data with the given decoding strategies
   /// into a JSON patch object.
   public init(data: Data,

@@ -330,28 +330,41 @@ public struct JSONPointer: SegmentableJSONReference,
   /// Mutate value at which this reference is pointing within JSON document `value`
   /// with function `proc`. `proc` is provided a reference, enabling efficient,
   /// in-place mutations that do not trigger copying large parts of the JSON document.
-  public func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws {
+  public func mutate(_ json: inout JSON,
+                     with proc: (inout JSON) throws -> Void,
+                     insert: Bool = false) throws {
     var iter = self.tokens.makeIterator()
-    try self.mutate(&json, next: &iter, with: proc)
+    try self.mutate(&json, next: &iter, with: proc, insert: insert)
   }
   
   private func mutate(_ value: inout JSON,
                       next iter: inout [ReferenceToken].Iterator,
-                      with proc: (inout JSON) throws -> Void) throws {
+                      with proc: (inout JSON) throws -> Void,
+                      insert: Bool) throws {
     if let token = iter.next() {
       switch token {
         case .member(let member):
-          guard case .object(var dict) = value,
-                var json = dict[member] else {
+          guard case .object(var dict) = value else {
             throw JSONReferenceError.erroneousMemberSelection(value, member)
           }
           value = .null
-          dict[member] = nil
-          defer {
+          if var json = dict[member] {
+            dict[member] = nil
+            defer {
+              dict[member] = json
+              value = .object(dict)
+            }
+            try self.mutate(&json, next: &iter, with: proc, insert: insert)
+          } else if insert {
+            var json = JSON.null
+            defer {
+              value = .object(dict)
+            }
+            try self.mutate(&json, next: &iter, with: proc, insert: insert)
             dict[member] = json
-            value = .object(dict)
+          } else {
+            throw JSONReferenceError.erroneousMemberSelection(value, member)
           }
-          try self.mutate(&json, next: &iter, with: proc)
         case .index(let member, let index):
           if case .array(var arr) = value {
             if let index {
@@ -365,14 +378,14 @@ public struct JSONPointer: SegmentableJSONReference,
                 arr[index] = json
                 value = .array(arr)
               }
-              try self.mutate(&json, next: &iter, with: proc)
+              try self.mutate(&json, next: &iter, with: proc, insert: insert)
             } else {
               var json = JSON.null
               value = .null
               defer {
                 value = .array(arr)
               }
-              try self.mutate(&json, next: &iter, with: proc)
+              try self.mutate(&json, next: &iter, with: proc, insert: insert)
               arr.append(json)
             }
           } else if case .object(var dict) = value, var json = dict[member] {
@@ -382,7 +395,7 @@ public struct JSONPointer: SegmentableJSONReference,
               dict[member] = json
               value = .object(dict)
             }
-            try self.mutate(&json, next: &iter, with: proc)
+            try self.mutate(&json, next: &iter, with: proc, insert: insert)
           } else if let index {
             throw JSONReferenceError.erroneousIndexSelection(value, index)
           } else {

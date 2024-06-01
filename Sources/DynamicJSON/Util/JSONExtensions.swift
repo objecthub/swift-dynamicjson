@@ -24,7 +24,7 @@ extension Encodable {
   
   /// Returns a JSON representation for this encodable object, if encoding
   /// as JSON succeeds; otherwise `nil` is returned.
-  var jsonValue: JSON? {
+  public var jsonValue: JSON? {
     return try? JSON(encodable: self)
   }
 }
@@ -32,7 +32,7 @@ extension Encodable {
 extension Decodable {
   
   /// Initializes a new value given the JSON representation `json`.
-  init?(_ json: JSON?) {
+  public init?(_ json: JSON?) {
     if let value: Self = try? json?.coerce() {
       self = value
     } else {
@@ -46,7 +46,7 @@ extension KeyedDecodingContainer  {
   /// This custom implementation of `decodeIfPresent` is needed to handle optional JSON
   /// values correctly when decoding. The default implementation is not able to distinguish
   /// between "key not present" and "key is null".
-  func decodeIfPresent(_ type: JSON.Type, forKey key: Key) throws -> JSON? {
+  public func decodeIfPresent(_ type: JSON.Type, forKey key: Key) throws -> JSON? {
     if self.contains(key) {
       return try self.decode(JSON.self, forKey: key)
     } else {
