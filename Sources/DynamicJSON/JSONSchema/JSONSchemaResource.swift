@@ -41,7 +41,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     case `static`(JSONSchemaResource)
     case `dynamic`(JSONSchemaResource)
     
-    var isStatic: Bool {
+    public var isStatic: Bool {
       switch self {
         case .static(_):
           return true
@@ -50,7 +50,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
       }
     }
     
-    var resource: JSONSchemaResource {
+    public var resource: JSONSchemaResource {
       switch self {
         case .static(let resource):
           return resource
@@ -226,6 +226,51 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
   /// Returns all nested schema resources.
   public var nestedResources: [JSONSchemaResource] {
     return [JSONSchemaResource]((self.nested ?? [:]).values)
+  }
+  
+  /// Resolves the given anchor for this schema resource.
+  public func resolve(anchor: String?) throws -> Anchor? {
+    if self.isAnonymous, let outer = self.outer {
+      return try outer.resolve(anchor: anchor)
+    }
+    guard let anchor else {
+      return .static(self)
+    }
+    if anchor.isEmpty {
+      return .static(self)
+    } else if let anchors = self.anchors, let subschema = anchors[anchor] {
+      return subschema
+    } else if self.selfAnchor == anchor {
+      return .static(self)
+    } else if self.dynamicSelfAnchor == anchor {
+      return .dynamic(self)
+    }
+    return nil
+  }
+  
+  /// Resolves the given JSON reference for this schema resource
+  public func resolve(ref: JSONReference & JSONLocationConvertible) throws -> Anchor? {
+    if self.isAnonymous, let outer = self.outer {
+      return try outer.resolve(ref: ref)
+    }
+    if ref.isRoot {
+      return .static(self)
+    } else if let nested = self.nested {
+      let locations = ref.locations()
+      // Find via known keywords
+      for location in locations {
+        if let subschema = nested[location] {
+          return .static(subschema)
+        }
+      }
+      // Find via unknown keywords
+      if case .descriptor(_, let json) = self.schema,
+         let target = ref.get(from: json),
+         let targetSchema: JSONSchema = try? target.coerce() {
+        return .static(JSONSchemaResource(nested: targetSchema, outer: self))
+      }
+    }
+    return nil
   }
   
   /// Resolves a fragment relative to this schema resource.

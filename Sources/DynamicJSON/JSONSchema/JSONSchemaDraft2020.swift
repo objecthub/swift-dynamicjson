@@ -69,7 +69,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   /// Draft 2020-20 dialect representation
-  public struct Dialect: JSONSchemaDialect {
+  public struct Dialect: JSONSchemaDialect, CustomStringConvertible {
     public static let `default`: Dialect = Dialect()
     public static let `validateFormat`: Dialect = Dialect(vocabulary: Vocabulary(format: true))
     
@@ -85,6 +85,10 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     public func validator(for schema: JSONSchema,
                           in context: JSONSchemaValidationContext) -> JSONSchemaValidator {
       return JSONSchemaDraft2020(dialect: self, context: context, schema: schema)
+    }
+    
+    public var description: String {
+      return self.uri.description
     }
   }
   

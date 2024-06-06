@@ -28,6 +28,9 @@ import Foundation
 ///
 public protocol JSONReference: CustomStringConvertible {
   
+  /// Returns true if this reference refers to the root of a JSON document
+  var isRoot: Bool { get }
+  
   /// Returns a new JSONReference with the given member selected.
   func select(member: String) -> Self
   
@@ -56,12 +59,18 @@ extension JSONReference {
   }
 }
 
+/// JSONReferences who can be converted into a set of JSONLocations implement this
+/// protocol.
+public protocol JSONLocationConvertible {
+  func locations() -> [JSONLocation]
+}
+
 ///
 /// Implementations of the `SegmentableJSONReference` protocol use a sequence of
 /// segments to identify a value within a JSON document. Each segment needs to implement
 /// the `JSONReferenceSegment` protocol.
 ///
-public protocol SegmentableJSONReference: JSONReference {
+public protocol SegmentableJSONReference: JSONReference, JSONLocationConvertible {
   
   /// Segment type.
   associatedtype Segment: JSONReferenceSegment

@@ -27,6 +27,7 @@ import Foundation
 /// structure of a JSON document.
 ///
 public struct JSONPointer: SegmentableJSONReference,
+                           JSONLocationConvertible,
                            Codable,
                            Hashable,
                            CustomStringConvertible {
@@ -174,6 +175,11 @@ public struct JSONPointer: SegmentableJSONReference,
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.description)
+  }
+  
+  /// Returns true if this JSON pointer refers to the root of JSON documents.
+  public var isRoot: Bool {
+    return self.tokens.isEmpty
   }
   
   /// Returns this JSONPointer as an array of reference tokens.

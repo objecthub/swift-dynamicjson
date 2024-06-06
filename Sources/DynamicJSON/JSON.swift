@@ -947,7 +947,7 @@ public enum JSON: Hashable,
   /// strings starting with "/" are parsed as `JSONPointer` references; all other
   /// strings are interpreted as `JSONLocation` references (with some flexibility
   /// to omit the initial "$", for backward compatibility purposes).
-  public static func reference(from str: String) throws -> JSONReference {
+  public static func reference(from str: String) throws -> any SegmentableJSONReference {
     if let first = str.first {
       if first == "/" {
         return try JSONPointer(str)

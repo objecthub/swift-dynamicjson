@@ -28,6 +28,7 @@ import Foundation
 /// value within a JSON document.
 ///
 public indirect enum JSONLocation: SegmentableJSONReference,
+                                   JSONLocationConvertible,
                                    Codable,
                                    Hashable,
                                    CustomStringConvertible {
@@ -151,6 +152,19 @@ public indirect enum JSONLocation: SegmentableJSONReference,
   public func encode(to encoder: Encoder) throws {
     var container = encoder.singleValueContainer()
     try container.encode(self.description)
+  }
+  
+  /// Returns true if this location is referring to the root of JSON documents.
+  public var isRoot: Bool {
+    guard case .root = self else {
+      return false
+    }
+    return true
+  }
+  
+  /// Returns the location itself wrapped in an array.
+  public func locations() -> [JSONLocation] {
+    return [self]
   }
   
   /// Returns a new JSONLocation with the given member selected.
