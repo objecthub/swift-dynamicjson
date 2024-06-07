@@ -16,7 +16,7 @@ final class JSONSchemaFormatSuite: JSONSchemaTestCase {
   }
   
   private func formatRegistry() -> JSONSchemaRegistry {
-    let vocabulary = JSONSchemaDraft2020.Vocabulary(format: true)
+    let vocabulary = JSONSchemaDraft2020.Vocabulary(formatValid: true)
     let dialect = JSONSchemaDraft2020.Dialect(vocabulary: vocabulary)
     return JSONSchemaRegistry(defaultDialect: dialect)
   }

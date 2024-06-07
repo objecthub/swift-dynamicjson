@@ -42,7 +42,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     public let unevaluated: Bool
     public let validation: Bool
     public let metadata: Bool
-    public let format: Bool
+    public let formatAnnot: Bool
+    public let formatValid: Bool
     public let content: Bool
     public let deprecated: Bool
     public let formatValidators: [String : (String) -> Bool]
@@ -52,7 +53,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
                 unevaluated: Bool = true,
                 validation: Bool = true,
                 metadata: Bool = true,
-                format: Bool = false,
+                formatAnnot: Bool = true,
+                formatValid: Bool = false,
                 content: Bool = true,
                 deprecated: Bool = true,
                 formatValidators: [String : (String) -> Bool] = JSONSchemaFormatValidators.draft2020) {
@@ -61,7 +63,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
       self.unevaluated = unevaluated
       self.validation = validation
       self.metadata = metadata
-      self.format = format
+      self.formatAnnot = formatAnnot
+      self.formatValid = formatValid
       self.content = content
       self.deprecated = deprecated
       self.formatValidators = formatValidators
@@ -71,7 +74,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   /// Draft 2020-20 dialect representation
   public struct Dialect: JSONSchemaDialect, CustomStringConvertible {
     public static let `default`: Dialect = Dialect()
-    public static let `validateFormat`: Dialect = Dialect(vocabulary: Vocabulary(format: true))
+    public static let `validateFormat`: Dialect = Dialect(vocabulary: Vocabulary(formatValid: true))
     
     public let uri: URL
     public let vocabulary: Vocabulary
@@ -669,7 +672,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
           case .string(let str) = instance.value else {
       return
     }
-    if self.dialect.vocabulary.format,
+    if self.dialect.vocabulary.formatValid,
        let validator = self.dialect.vocabulary.formatValidators[format] {
       let valid = validator(str)
       if !valid {
@@ -679,12 +682,14 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
                     at: .member(self.context.location, "format"))
       }
       // Write annotation
-      result.flag(format: format,
-                  valid: valid,
-                  for: instance,
-                  schema: self.schema,
-                  at: .member(self.context.location, "format"))
-    } else {
+      if self.dialect.vocabulary.formatAnnot {
+        result.flag(format: format,
+                    valid: valid,
+                    for: instance,
+                    schema: self.schema,
+                    at: .member(self.context.location, "format"))
+      }
+    } else if self.dialect.vocabulary.formatAnnot {
       // Write annotation
       result.flag(format: format,
                   valid: nil,
