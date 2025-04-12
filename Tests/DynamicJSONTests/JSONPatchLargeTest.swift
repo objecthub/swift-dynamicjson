@@ -76,4 +76,56 @@ final class JSONPatchLargeTest: XCTestCase {
       }
     }
   }
+  
+  func testPatchMaker() throws {
+    let source = try JSON(string:
+      """
+      {
+        "title": "Source",
+        "indices": [
+          [1, 2],
+          3,
+          "four"
+        ],
+        "author": {
+          "givenName": "John",
+          "familyName": "Doe"
+        },
+        "tags": [
+          "example",
+          "sample"
+        ],
+        "content": "This is invariant"
+      }
+      """)
+    let target = try JSON(string:
+      """
+      {
+        "title": "Target",
+        "author": {
+          "givenName": "John"
+        },
+        "tags": [
+          "example"
+        ],
+        "content": "This is invariant",
+        "phoneNumber": "+1-012-345-678",
+        "indices": [
+          [1, ["two", "three"], "four"],
+          3,
+          "four",
+          "five"
+        ],
+      }
+      """)
+    let patch = source.patch(to: target)
+    XCTAssertEqual(target, try source.applying(patch: patch))
+    if let source = try self.loadJSON("bigexample1"),
+       let target = try self.loadJSON("bigexample2") {
+      let patch = source.patch(to: target)
+      XCTAssertEqual(target, try source.applying(patch: patch))
+    } else {
+      XCTFail("large patch creation setup broken")
+    }
+  }
 }

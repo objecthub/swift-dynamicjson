@@ -31,6 +31,8 @@ public struct JSONPointer: SegmentableJSONReference,
                            Codable,
                            Hashable,
                            CustomStringConvertible {
+  public static let root = JSONPointer(tokens: [])
+  
   private let tokens: [ReferenceToken]
   
   /// Segment implementation.

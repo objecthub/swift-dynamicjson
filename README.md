@@ -1,6 +1,6 @@
 # Swift DynamicJSON
 
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![IDE: Xcode 15](https://img.shields.io/badge/IDE-Xcode%2015-blue.svg?style=flat)](https://developer.apple.com/xcode/) [![Package managers: SwiftPM, Carthage](https://img.shields.io/badge/Package%20managers-SwiftPM,%20Carthage-green.svg?style=flat)](https://github.com/Carthage/Carthage) [![License: Apache](http://img.shields.io/badge/License-Apache-lightgrey.svg?style=flat)](https://raw.githubusercontent.com/objecthub/swift-numberkit/master/LICENSE)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![IDE: Xcode 16](https://img.shields.io/badge/IDE-Xcode%2016-blue.svg?style=flat)](https://developer.apple.com/xcode/) [![Package managers: SwiftPM, Carthage](https://img.shields.io/badge/Package%20managers-SwiftPM,%20Carthage-green.svg?style=flat)](https://github.com/Carthage/Carthage) [![License: Apache](http://img.shields.io/badge/License-Apache-lightgrey.svg?style=flat)](https://raw.githubusercontent.com/objecthub/swift-numberkit/master/LICENSE)
 
 _DynamicJSON_ is a framework for representing, querying, and manipulating generic JSON values. The framework provides:
 
@@ -719,7 +719,7 @@ A JSON schema gets represented by enum [`JSONSchema`](https://github.com/objecth
 It is possible to load JSON schema values either from a file, decode them from a string,
 or from a data object. In the context of schema validation, top-level schema values are managed via class
 [`JSONSchemaResource`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaResource.swift)
-which pre-processes and validates schema values and provides an identity for them. Often it's easier just to work
+which pre-processes and validates schema values and provides an identity for them. Often it's easier to just work
 with `JSONSchemaResource` objects directly. JSON schema are identified by
 [`JSONSchemaIdentifier`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONSchema/JSONSchemaIdentifier.swift)
 values, which are essentially URIs with JSON schema-specific methods. A `JSONSchemaIdentifier`
@@ -1019,11 +1019,11 @@ with an entry of type
 The following technologies are needed to build the _DynamicJSON_ framework. The library
 and the command-line tool can both be built either using _Xcode_ or the _Swift Package Manager_.
 
-- [Xcode 15](https://developer.apple.com/xcode/)
-- [Swift 5.10](https://developer.apple.com/swift/)
+- [Xcode 16](https://developer.apple.com/xcode/)
+- [Swift 6](https://developer.apple.com/swift/)
 - [Swift Package Manager](https://swift.org/package-manager/)
 
 ## Copyright
 
 Author: Matthias Zenger (<matthias@objecthub.com>)  
-Copyright © 2024 Matthias Zenger. All rights reserved.
+Copyright © 2024-2025 Matthias Zenger. All rights reserved.

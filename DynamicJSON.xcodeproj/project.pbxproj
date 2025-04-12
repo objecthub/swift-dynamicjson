@@ -202,6 +202,7 @@
 		CCB4664D2BBF66C7001FBDFA /* JSONPatchLargeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */; };
 		CCB466B82BBFCDCA001FBDFA /* README-BIG in Resources */ = {isa = PBXBuildFile; fileRef = CCB466B72BBFCDCA001FBDFA /* README-BIG */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
+		CCF37FFD2DA8E65E000936CA /* JSONPatchMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF37FFC2DA8E647000936CA /* JSONPatchMaker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -675,6 +676,7 @@
 		CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchLargeTest.swift; sourceTree = "<group>"; };
 		CCB466B72BBFCDCA001FBDFA /* README-BIG */ = {isa = PBXFileReference; lastKnownFileType = text; path = "README-BIG"; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
+		CCF37FFC2DA8E647000936CA /* JSONPatchMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchMaker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1080,6 +1082,7 @@
 			children = (
 				CCB466302BBB8511001FBDFA /* JSONPatch.swift */,
 				CCB466362BBCB999001FBDFA /* JSONPatchOperation.swift */,
+				CCF37FFC2DA8E647000936CA /* JSONPatchMaker.swift */,
 			);
 			path = JSONPatch;
 			sourceTree = "<group>";
@@ -1188,7 +1191,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
 					CC2473ED2B8180F70022800A = {
 						CreatedOnToolsVersion = 15.2;
@@ -1301,6 +1304,7 @@
 				CCB465EC2BAD6E30001FBDFA /* JSONSchemaRegistry.swift in Sources */,
 				CCD13B722B82536500307526 /* JSONLocation.swift in Sources */,
 				CC2473E92B8161A00022800A /* JSONPathEvaluator.swift in Sources */,
+				CCF37FFD2DA8E65E000936CA /* JSONPatchMaker.swift in Sources */,
 				CCB4661F2BB8CE77001FBDFA /* JSONSchemaValidationContext.swift in Sources */,
 				CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */,
 			);
@@ -1354,10 +1358,13 @@
 		CC2473F32B8180F70022800A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.JSONPathTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1367,10 +1374,13 @@
 		CC2473F42B8180F70022800A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_HARDENED_RUNTIME = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.JSONPathTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1412,6 +1422,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1476,6 +1487,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1500,9 +1512,10 @@
 		CC528E392B7975DC001E9E52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = C72Z63N8M5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1539,9 +1552,10 @@
 		CC528E3A2B7975DC001E9E52 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = C72Z63N8M5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1578,9 +1592,11 @@
 		CC528E3C2B7975DC001E9E52 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = C72Z63N8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -1598,9 +1614,11 @@
 		CC528E3D2B7975DC001E9E52 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = C72Z63N8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MACOSX_DEPLOYMENT_TARGET = 13.0;

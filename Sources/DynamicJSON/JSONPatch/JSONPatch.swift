@@ -38,6 +38,13 @@ public struct JSONPatch: Codable,
     self.operations = operations
   }
   
+  /// Initializer based on a target and source JSON object
+  public init(from: JSON, to: JSON, via maker: () -> JSONPatchMaker = JSONPatchMaker.init) {
+    let patchMaker = maker()
+    patchMaker.traverse(source: from, target: to)
+    self = patchMaker.jsonPatch
+  }
+  
   /// Initializer based on a JSON object
   public init(_ json: JSON) throws {
     self = try json.coerce()
@@ -134,6 +141,16 @@ public struct JSONPatch: Codable,
     for operation in self.operations {
       try operation.apply(to: &json)
     }
+  }
+  
+  /// Returns true iff this JSON patch object has no operations.
+  public var isEmpty: Bool {
+    return self.operations.isEmpty
+  }
+  
+  /// Returns the number of operations encapsulated by this JSON patch object.
+  public var operationCount: Int {
+    return self.operations.count
   }
   
   /// Returns a pretty-printed representation of this JSONPatch value with sorted keys in

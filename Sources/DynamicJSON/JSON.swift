@@ -705,6 +705,11 @@ public enum JSON: Hashable,
     return value
   }
   
+  /// Creates a JSON patch object for transforming this JSON value into `target`.
+  public func patch(to target: JSON) -> JSONPatch {
+    return JSONPatch(from: self, to: target)
+  }
+  
   // MARK: - Mutating data
   
   /// Mutates this JSON value if it represents either an array or a string by appending
