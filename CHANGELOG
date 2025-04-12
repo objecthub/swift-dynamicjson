@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.2 (2025-04-12)
+- Support the creation of `JSONPatch` objects from a source and target `JSON` value via function `patch(to:)` of enum `JSON`
+- Extension of test suite
+- Migration to Xcode 16
+
+## 1.0.1 (2024-06-01)
+- Make new methods of `Decodable` and `Encodable` public
+- Enable `mutate` and `update` methods to insert new object members
+- API for removing members of JSON objects
+
 ## 1.0.0 (2024-05-02)
 - First official release
 - Full support for JSON Pointer, JSON Path, JSON Patch, JSON Merge Patch, and JSON Schema
