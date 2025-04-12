@@ -549,6 +549,8 @@ struct JSONPatch: Codable, Hashable, CustomStringConvertible, CustomDebugStringC
   let operations: [JSONPatchOperation]
   // Initializer based on a sequence of operations
   init(operations: [JSONPatchOperation]) { ... }
+  // Initializer based on a target and source JSON object
+  init(from: JSON, to: JSON, via maker: () -> JSONPatchMaker = JSONPatchMaker.init)
   // Decodes the provided data with the given decoding strategies.
   init(data: Data,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
@@ -589,6 +591,8 @@ let patch = try JSONPatch(string: jsonstr)
 var json: JSON = ...
 try json.apply(patch: patch)
 ```
+
+Given two JSON values `source` and `target`, the expression `source.patch(to: target)` returns a `JSONPatch` object that when applied to `source`, transforms `source` into `target`. Function `patch` generates `JSONPatch` objects that perform the required transformation, but they are currently not optimized.
 
 ## Merging JSON Values
 
