@@ -156,6 +156,7 @@ public struct JSONType: OptionSet,
     return res.debugDescription
   }
   
+  /// Returns true if this type (set) is included in `expected`. A `number` includes `integer`.
   public func included(in expected: JSONType) -> Bool {
     var expanded = expected
     if expected.contains(.number) {

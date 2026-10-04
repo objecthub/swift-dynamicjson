@@ -107,8 +107,12 @@ public struct JSONPathEvaluator {
   
   /// Representation of functions available in JSONPath filter expressions.
   public struct Function {
+    /// The types of the parameters of this function.
     public let argtypes: [ValueType]
+    /// The type of the result of this function.
     public let restype: ValueType
+    /// The implementation of this function. It receives the root document, the current
+    /// node, and the argument values.
     public let impl: (JSON, JSON, [Value]) throws -> Value
   }
   
@@ -136,6 +140,8 @@ public struct JSONPathEvaluator {
     case json(JSON?)
     case nodes([JSON])
     
+    /// Creates a value of the given `type` from `bool`. Fails if `type` is not able to
+    /// represent a boolean.
     public init(_ bool: Bool, type: ValueType) throws {
       switch type {
         case .logicalType:
@@ -147,6 +153,7 @@ public struct JSONPathEvaluator {
       }
     }
     
+    /// Returns true if this value is a logical value that is true.
     public var isTrue: Bool {
       switch self {
         case .logical(let bool):
@@ -156,6 +163,7 @@ public struct JSONPathEvaluator {
       }
     }
     
+    /// Returns true if this value is of the given value type.
     public func has(type: ValueType) -> Bool {
       switch self {
         case .logical(_):

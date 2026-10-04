@@ -56,16 +56,20 @@ extension KeyedDecodingContainer  {
 }
 
 extension Array<LocatedJSON> {
+  /// Returns the values of all elements.
   public var values: [JSON] {
     return self.map { res in res.value }
   }
   
+  /// Returns the locations of all elements.
   public var locations: [JSONLocation] {
     return self.map { res in res.location }
   }
 }
 
 extension Array<JSON> {
+  /// Returns the elements as `LocatedJSON` values, with locations being the indices of
+  /// the elements within an array at `location`.
   public func located(at location: JSONLocation) -> [LocatedJSON] {
     var res: [LocatedJSON] = []
     for i in self.indices {
@@ -76,6 +80,8 @@ extension Array<JSON> {
 }
 
 extension Dictionary<String, JSON> {
+  /// Returns the values as `LocatedJSON` values, with locations being the members of an
+  /// object at `location`.
   public func located(at location: JSONLocation) -> [LocatedJSON] {
     var res: [LocatedJSON] = []
     for (key, val) in self {
@@ -86,6 +92,7 @@ extension Dictionary<String, JSON> {
 }
 
 extension URL {
+  /// Returns true if this URL refers to a directory.
   public var isDirectory: Bool {
     return (try? self.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true
   }

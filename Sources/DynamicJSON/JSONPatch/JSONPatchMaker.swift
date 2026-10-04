@@ -5,21 +5,32 @@
 //  Created by Matthias Zenger on 10/04/2025.
 //
 
+///
+/// Class `JSONPatchMaker` computes a JSON patch that transforms a source JSON value into
+/// a target JSON value. It traverses both values in parallel and records the required
+/// operations. The generated patches are correct, but not minimal. Subclasses can
+/// override `traverse(current:source:target:)` to customize the algorithm.
+///
 open class JSONPatchMaker {
   private var operations: [JSONPatchOperation]
   
+  /// Creates a new patch maker without any recorded operations.
   public init() {
     self.operations = []
   }
   
+  /// Appends `operation` to the sequence of operations recorded by this patch maker.
   public func append(operation: JSONPatchOperation) {
     self.operations.append(operation)
   }
   
+  /// Records the operations needed to transform `source` into `target`, starting at the root.
   open func traverse(source: JSON, target: JSON) {
     self.traverse(current: JSONPointer.root, source: source, target: target)
   }
   
+  /// Records the operations needed to transform `source` into `target`, both located at the
+  /// JSON pointer `ptr` relative to the root of the documents.
   open func traverse(current ptr: JSONPointer, source: JSON, target: JSON) {
     switch (source, target) {
       case (.null, .null):
@@ -63,6 +74,7 @@ open class JSONPatchMaker {
     }
   }
   
+  /// The JSON patch consisting of all operations recorded so far.
   open var jsonPatch: JSONPatch {
     return JSONPatch(operations: self.operations)
   }

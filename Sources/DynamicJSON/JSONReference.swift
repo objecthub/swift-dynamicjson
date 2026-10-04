@@ -108,6 +108,8 @@ public enum JSONReferenceSegmentIndex: Hashable, CustomStringConvertible {
   case fromStart(Int)
   case fromEnd(Int)
   
+  /// Returns the element of `array` this index refers to. Throws an error if the index is out
+  /// of bounds.
   public func value<T>(from array: [T]) throws -> T {
     switch self {
       case .fromStart(let offset):

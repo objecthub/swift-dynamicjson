@@ -59,10 +59,14 @@ public struct JSONSchemaValidationContext {
     }
   }
   
+  /// The registry used for resolving schema references.
   public let registry: JSONSchemaRegistry
+  /// The locations of the schemas currently being evaluated, innermost last.
   public let path: [JSONLocation]
+  /// The active schema resources, innermost last (the dynamic scope).
   public let active: [JSONSchemaResource]
   
+  /// Creates a validation context for `registry`, optionally starting in `resource`.
   public init(registry: JSONSchemaRegistry, resource: JSONSchemaResource? = nil) {
     self.init(registry: registry,
               location: .root,
@@ -81,22 +85,28 @@ public struct JSONSchemaValidationContext {
     self.active = active
   }
   
+  /// Returns true if the current location was reached without descending into a keyword, i.e.
+  /// validation was delegated to another schema.
   public var isDelegated: Bool {
     return self.path.count > 1 && self.path[self.path.count - 1] == self.path[self.path.count - 2]
   }
   
+  /// The innermost active schema resource.
   public var resource: JSONSchemaResource? {
     return self.active.last
   }
   
+  /// The location of the schema currently being evaluated.
   public var location: JSONLocation {
     return self.path.last!
   }
   
+  /// Returns the location of `member` of the current schema location.
   public func memberLocation(_ member: String) -> JSONLocation {
     return .member(self.location, member)
   }
   
+  /// Returns a new context in which `resource` at `location` is the innermost active resource.
   public func context(for resource: JSONSchemaResource,
                       at location: JSONLocation) -> JSONSchemaValidationContext {
     var extended = self.active

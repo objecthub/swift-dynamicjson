@@ -27,8 +27,11 @@ import Foundation
 /// used to express whether that value actually exists at this location or doesn't.
 ///
 public struct LocatedJSON: Hashable, CustomStringConvertible {
+  /// The JSON value.
   public let value: JSON
+  /// The location of the value within a JSON document.
   public let location: JSONLocation
+  /// Does the value actually exist at the location?
   public let exists: Bool
   
   /// Returns a new `LocatedJSON` value representing the full document.

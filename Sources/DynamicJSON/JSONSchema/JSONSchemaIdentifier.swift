@@ -24,6 +24,7 @@ import Foundation
 /// URI representing a JSON schema identifier.
 ///
 public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
+  /// The URI components of this identifier.
   public let uri: URLComponents
   
   /// Initialize URI from a string.

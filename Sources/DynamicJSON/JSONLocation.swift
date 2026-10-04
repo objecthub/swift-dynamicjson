@@ -65,6 +65,8 @@ public indirect enum JSONLocation: SegmentableJSONReference,
     case member(String)
     case index(Int)
     
+    /// Returns the index of this segment, if it is an index segment, relative to the start
+    /// of the array.
     public var index: JSONReferenceSegmentIndex? {
       switch self {
         case .member(_):
@@ -74,6 +76,7 @@ public indirect enum JSONLocation: SegmentableJSONReference,
       }
     }
     
+    /// Returns the member name of this segment, if it is a member segment.
     public var member: String? {
       switch self {
         case .member(let member):

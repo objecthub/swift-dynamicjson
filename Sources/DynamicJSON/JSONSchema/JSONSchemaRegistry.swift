@@ -242,6 +242,8 @@ public class JSONSchemaRegistry {
 /// Special version of `JSONSchemaRegistry` with support to reset the resources.
 ///
 public final class DefaultJSONSchemaRegistry: JSONSchemaRegistry {
+  /// Creates the default registry, supporting only the 2020-12 dialect and having no
+  /// resources or providers.
   public init() {
     let dialect: JSONSchemaDialect = .draft2020
     super.init(defaultDialect: dialect,
@@ -250,6 +252,8 @@ public final class DefaultJSONSchemaRegistry: JSONSchemaRegistry {
                providers: [])
   }
   
+  /// Removes all registered resources, and, if `preserveProviders` is false, all providers.
+  /// If `defaultDialect` is provided, it replaces all registered dialects.
   public func clear(defaultDialect: JSONSchemaDialect? = nil,
                     preserveProviders: Bool = true) {
     if let defaultDialect {

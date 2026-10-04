@@ -37,17 +37,29 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   /// Draft 2020-20 vocabulary implementation
   public struct Vocabulary {
+    /// Is the core vocabulary enabled?
     public let core: Bool
+    /// Is the applicator vocabulary enabled?
     public let applicator: Bool
+    /// Is the unevaluated vocabulary enabled?
     public let unevaluated: Bool
+    /// Is the validation vocabulary enabled?
     public let validation: Bool
+    /// Is the meta-data vocabulary enabled?
     public let metadata: Bool
+    /// Are format annotations collected?
     public let formatAnnot: Bool
+    /// Do invalid formats cause validation errors (i.e. is format assertion enabled)?
     public let formatValid: Bool
+    /// Is the content vocabulary enabled?
     public let content: Bool
+    /// Are deprecation annotations collected?
     public let deprecated: Bool
+    /// Do invalid formats cause validation errors (i.e. is format assertion enabled)?
     public let formatValidators: [String : (String) -> Bool]
     
+    /// Creates a vocabulary configuration. By default, all vocabularies are enabled except
+    /// format assertion.
     public init(core: Bool = true,
                 applicator: Bool = true,
                 unevaluated: Bool = true,
@@ -73,18 +85,25 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   /// Draft 2020-20 dialect representation
   public struct Dialect: JSONSchemaDialect, CustomStringConvertible {
+    /// The default dialect, which collects but does not assert `format` annotations.
     public static let `default`: Dialect = Dialect()
+    /// A dialect that also asserts `format` annotations, i.e. invalid formats result in
+    /// validation errors.
     public static let `validateFormat`: Dialect = Dialect(vocabulary: Vocabulary(formatValid: true))
     
+    /// The URI identifying this dialect.
     public let uri: URL
+    /// The vocabularies enabled for this dialect.
     public let vocabulary: Vocabulary
     
+    /// Creates a dialect with the given identifying `uri` and `vocabulary`.
     public init(uri: URL = URL(string: "https://json-schema.org/draft/2020-12/schema")!,
                 vocabulary: Vocabulary = Vocabulary()) {
       self.uri = uri
       self.vocabulary = vocabulary
     }
     
+    /// Returns a validator for `schema` implementing this dialect.
     public func validator(for schema: JSONSchema,
                           in context: JSONSchemaValidationContext) -> JSONSchemaValidator {
       return JSONSchemaDraft2020(dialect: self, context: context, schema: schema)
@@ -221,6 +240,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     self.schema = schema
   }
   
+  /// Validates the core vocabulary keywords for `instance` and records the outcome in `result`.
   open func validateCore(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.core,
           case .descriptor(let descriptor, _) = self.schema else {
@@ -261,6 +281,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     // if let defs = descriptor.defs {}
   }
   
+  /// Validates the applicator vocabulary keywords for `instance` and records the outcome in
+  /// `result`.
   open func validateApplicator(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.applicator,
           case .descriptor(let descriptor, _) = self.schema else {
@@ -439,6 +461,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Validates the unevaluated vocabulary keywords for `instance` and records the outcome in
+  /// `result`.
   open func validateUnevaluated(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.unevaluated,
           case .descriptor(let descriptor, _) = self.schema else {
@@ -484,6 +508,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Validates the validation vocabulary keywords for `instance` and records the outcome in
+  /// `result`.
   open func validateValidation(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.validation,
           case .descriptor(let descriptor, _) = self.schema else {
@@ -643,6 +669,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Collects the meta-data vocabulary annotations (such as defaults) for `instance` in `result`.
   open func validateMetadata(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.metadata,
           case .descriptor(let descriptor, _) = self.schema else {
@@ -666,6 +693,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Validates and annotates the `format` keyword for `instance` and records the outcome in
+  /// `result`.
   open func validateFormat(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard case .descriptor(let descriptor, _) = self.schema,
           let format = descriptor.format,
@@ -699,6 +728,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Validates the content vocabulary keywords for `instance` and records the outcome in `result`.
   open func validateContent(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.content,
           case .descriptor(_, _) = self.schema else {
@@ -706,6 +736,8 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     }
   }
   
+  /// Collects deprecation-related annotations (`deprecated`, `readOnly`, `writeOnly`) for
+  /// `instance` in `result`.
   open func validateDeprecated(instance: LocatedJSON, result: inout JSONSchemaValidationResult) {
     guard self.dialect.vocabulary.deprecated,
           case .descriptor(let descriptor, _) = self.schema else {

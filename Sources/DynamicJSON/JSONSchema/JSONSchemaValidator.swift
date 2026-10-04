@@ -25,6 +25,7 @@ import Foundation
 /// entry point. They return a `JSONSchemaValidationResult` object as their output.
 ///
 public protocol JSONSchemaValidator {
+  /// Validates `instance`, returning the collected errors and annotations.
   func validate(_ instance: LocatedJSON) -> JSONSchemaValidationResult
 }
 

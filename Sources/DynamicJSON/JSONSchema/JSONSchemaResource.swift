@@ -27,12 +27,18 @@ import Foundation
 /// optional `outer` link to its enclosing schema.
 ///
 public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConvertible {
+  /// The schema defining this resource.
   public let schema: JSONSchema
   private var distance: Int = .max
+  /// The resource enclosing this resource, if there is one.
   public private(set) weak var outer: JSONSchemaResource? = nil
+  /// The resources nested within this resource, keyed by their location.
   public private(set) var nested: [JSONLocation : JSONSchemaResource]?
+  /// The anchors defined within this resource.
   public private(set) var anchors: [String : Anchor]?
+  /// The name of the static anchor of this resource itself, if any.
   public private(set) var selfAnchor: String? = nil
+  /// The name of the dynamic anchor of this resource itself, if any.
   public private(set) var dynamicSelfAnchor: String? = nil
   
   /// Anchors are either static and dynamic. They are stored in resolved form, i.e.
@@ -41,6 +47,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     case `static`(JSONSchemaResource)
     case `dynamic`(JSONSchemaResource)
     
+    /// Returns true if this is a static anchor.
     public var isStatic: Bool {
       switch self {
         case .static(_):
@@ -50,6 +57,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
       }
     }
     
+    /// The resource this anchor refers to.
     public var resource: JSONSchemaResource {
       switch self {
         case .static(let resource):
@@ -198,6 +206,7 @@ public class JSONSchemaResource: CustomStringConvertible, CustomDebugStringConve
     return self.schema.id
   }
   
+  /// Returns this resource if it has an id, otherwise the closest enclosing resource that has one.
   public var nonAnonymousResource: JSONSchemaResource {
     var res: JSONSchemaResource? = self
     while res?.isAnonymous ?? false {

@@ -114,6 +114,7 @@ public indirect enum JSONSchema: Codable,
     }
   }
   
+  /// Returns true if this schema is a boolean schema (`true` or `false`).
   public var isBoolean: Bool {
     switch self {
       case .boolean(_):
@@ -123,6 +124,7 @@ public indirect enum JSONSchema: Codable,
     }
   }
   
+  /// Returns the `$id` of this schema, if it has one.
   public var id: JSONSchemaIdentifier? {
     switch self {
       case .boolean(_):
@@ -132,6 +134,7 @@ public indirect enum JSONSchema: Codable,
     }
   }
   
+  /// Returns the `$schema` URI of this schema, if it has one.
   public var schema: URL? {
     switch self {
       case .boolean(_):
@@ -141,6 +144,7 @@ public indirect enum JSONSchema: Codable,
     }
   }
   
+  /// Returns the `title` of this schema, if it has one.
   public var title: String? {
     switch self {
       case .boolean(_):
@@ -161,6 +165,7 @@ public indirect enum JSONSchema: Codable,
     }
   }
   
+  /// Returns all schemas nested within this schema (including itself), keyed by their location.
   public var schemaObjects: [JSONLocation : JSONSchema] {
     guard case .descriptor(let descriptor, _) = self else {
       return [:]
@@ -195,91 +200,150 @@ public struct JSONSchemaDescriptor: Codable, Equatable, CustomDebugStringConvert
   // Core vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/core
   
+  /// The `$id` keyword: the identifier of this schema.
   public var id: JSONSchemaIdentifier?
+  /// The `$schema` keyword: the URI of the dialect of this schema.
   public let schema: URL?
+  /// The `$anchor` keyword.
   public let anchor: String?
+  /// The `$ref` keyword.
   public let ref: JSONSchemaIdentifier?
+  /// The `$dynamicRef` keyword.
   public let dynamicRef: JSONSchemaIdentifier?
+  /// The `$dynamicAnchor` keyword.
   public let dynamicAnchor: String?
+  /// The `$vocabulary` keyword.
   public let vocabulary: [String : Bool]?
+  /// The `$comment` keyword.
   public let comment: String?
+  /// The `$defs` keyword: reusable subschemas.
   public let defs: [String : JSONSchema]?
   
   // Applicator vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/applicator
   
+  /// The `prefixItems` keyword.
   public let prefixItems: [JSONSchema]?
+  /// The `items` keyword.
   public let items: JSONSchema?
+  /// The `contains` keyword.
   public let contains: JSONSchema?
+  /// The `additionalProperties` keyword.
   public let additionalProperties: JSONSchema?
+  /// The `properties` keyword.
   public let properties: [String : JSONSchema]?
+  /// The `patternProperties` keyword.
   public let patternProperties: [String : JSONSchema]?
+  /// The `dependentSchemas` keyword.
   public let dependentSchemas: [String : JSONSchema]?
+  /// The `propertyNames` keyword.
   public let propertyNames: JSONSchema?
+  /// The `if` keyword.
   public let `if`: JSONSchema?
+  /// The `then` keyword.
   public let `then`: JSONSchema?
+  /// The `else` keyword.
   public let `else`: JSONSchema?
+  /// The `allOf` keyword.
   public let allOf: [JSONSchema]?
+  /// The `anyOf` keyword.
   public let anyOf: [JSONSchema]?
+  /// The `oneOf` keyword.
   public let oneOf: [JSONSchema]?
+  /// The `not` keyword.
   public let not: JSONSchema?
   
   // Unevaluated applicator vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/unevaluated
   
+  /// The `unevaluatedItems` keyword.
   public let unevaluatedItems: JSONSchema?
+  /// The `unevaluatedProperties` keyword.
   public let unevaluatedProperties: JSONSchema?
   
   // Validation vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/validation
   
+  /// The `multipleOf` keyword.
   public let multipleOf: Double?
+  /// The `maximum` keyword.
   public let maximum: Double?
+  /// The `exclusiveMaximum` keyword.
   public let exclusiveMaximum: Double?
+  /// The `minimum` keyword.
   public let minimum: Double?
+  /// The `exclusiveMinimum` keyword.
   public let exclusiveMinimum: Double?
+  /// The `maxLength` keyword.
   public let maxLength: UInt?
+  /// The `minLength` keyword.
   public let minLength: UInt?
+  /// The `pattern` keyword.
   public let pattern: String?
+  /// The `maxItems` keyword.
   public let maxItems: UInt?
+  /// The `minItems` keyword.
   public let minItems: UInt?
+  /// The `uniqueItems` keyword.
   public let uniqueItems: Bool?
+  /// The `maxContains` keyword.
   public let maxContains: UInt?
+  /// The `minContains` keyword.
   public let minContains: UInt?
+  /// The `maxProperties` keyword.
   public let maxProperties: UInt?
+  /// The `minProperties` keyword.
   public let minProperties: UInt?
+  /// The `required` keyword.
   public let required: [String]?
+  /// The `dependentRequired` keyword.
   public let dependentRequired: [String : [String]]?
+  /// The `const` keyword.
   public let const: JSON?
+  /// The `enum` keyword.
   public let `enum`: [JSON]?
+  /// The `type` keyword.
   public let type: JSONType?
   
   // Meta-data vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/meta-data
   
+  /// The `title` keyword.
   public let title: String?
+  /// The `description` keyword.
   public let description: String?
+  /// The `default` keyword.
   public let `default`: JSON?
+  /// The `deprecated` keyword.
   public let deprecated: Bool?
+  /// The `readOnly` keyword.
   public let readOnly: Bool?
+  /// The `writeOnly` keyword.
   public let writeOnly: Bool?
+  /// The `examples` keyword.
   public let examples: [JSON]?
   
   // Format vocabulary meta-schema for annotation results
   // https://json-schema.org/draft/2020-12/meta/format-annotation
   
+  /// The `format` keyword.
   public let format: String?
   
   // Content vocabulary meta-schema
   // https://json-schema.org/draft/2020-12/meta/content
   
+  /// The `contentMediaType` keyword.
   public let contentMediaType: String?
+  /// The `contentEncoding` keyword.
   public let contentEncoding: String?
+  /// The `contentSchema` keyword.
   public let contentSchema: JSONSchema?
   
   // For backward compatibility
   
+  /// The legacy `definitions` keyword (superseded by `$defs`).
   public let definitions: [String : JSONSchema]?
+  /// The legacy `dependencies` keyword (superseded by `dependentRequired` and `dependentSchemas`).
   public let dependencies: [String : JSONSchemaDependency]?
   
   public var debugDescription: String {

@@ -20,30 +20,49 @@
 
 import Foundation
 
+///
+/// A schema provider discovers and loads schema resources on demand. Registries consult
+/// their providers for schemas that have not been registered explicitly.
+///
 public protocol JSONSchemaProvider {
+  /// Returns the schema resource identified by `id`, or `nil` if this provider has none.
   func resource(for id: JSONSchemaIdentifier) -> JSONSchemaResource?
 }
 
 extension JSONSchemaProvider where Self == StaticJSONSchemaFileProvider {
+  /// Returns a provider that discovers schema files below `directory`, mapping them to
+  /// identifiers relative to `uri`. The directory is rescanned after `expiry` seconds.
   public static func files(from directory: URL,
                            base uri: JSONSchemaIdentifier,
                            expiry: TimeInterval = .infinity) -> JSONSchemaProvider {
     return JSONSchemaFileProvider(directory: directory, base: uri, expiry: expiry)
   }
   
+  /// Returns a provider that discovers schema files below `directory` once, mapping them to
+  /// identifiers relative to `uri`.
   public static func staticFiles(from directory: URL,
                                  base uri: JSONSchemaIdentifier) -> JSONSchemaProvider {
     return StaticJSONSchemaFileProvider(directory: directory, base: uri)
   }
 }
 
+///
+/// A schema provider backed by a directory of JSON schema files. The directory gets
+/// rescanned once `expiry` seconds have passed since the last scan.
+///
 open class JSONSchemaFileProvider: JSONSchemaProvider, CustomStringConvertible {
+  /// The directory containing the schema files.
   public let directory: URL
+  /// The base identifier schema file paths are resolved against.
   public let uri: JSONSchemaIdentifier
+  /// The time interval after which the directory is rescanned.
   public let expiry: TimeInterval
+  /// The time of the last directory scan.
   public var updateTime: Date
+  /// The provider reflecting the state of the directory at the last scan.
   public var fileProvider: StaticJSONSchemaFileProvider
   
+  /// Creates a provider for the schema files below `dir`, whose identifiers are relative to `uri`.
   public init(directory dir: URL,
               base uri: JSONSchemaIdentifier,
               expiry: TimeInterval = .infinity) {
@@ -54,6 +73,7 @@ open class JSONSchemaFileProvider: JSONSchemaProvider, CustomStringConvertible {
     self.updateTime = .now
   }
   
+  /// Returns the schema resource for `id`, or `nil` if no matching file exists.
   public func resource(for id: JSONSchemaIdentifier) -> JSONSchemaResource? {
     if Date.now.timeIntervalSince(self.updateTime) > self.expiry {
       self.update()
@@ -61,6 +81,7 @@ open class JSONSchemaFileProvider: JSONSchemaProvider, CustomStringConvertible {
     return self.fileProvider.resource(for: id)
   }
   
+  /// Rescans the directory for schema files.
   public func update() {
     self.fileProvider = StaticJSONSchemaFileProvider(directory: self.directory, base: self.uri)
   }
@@ -70,9 +91,15 @@ open class JSONSchemaFileProvider: JSONSchemaProvider, CustomStringConvertible {
   }
 }
 
+///
+/// A schema provider backed by a snapshot of the schema files in a directory, taken
+/// when the provider is created.
+///
 public struct StaticJSONSchemaFileProvider: JSONSchemaProvider, CustomStringConvertible {
+  /// Maps schema identifiers to the URLs of the files defining them.
   public let fileUrls: [JSONSchemaIdentifier : URL]
   
+  /// Creates a provider for the schema files below `dir`, whose identifiers are relative to `uri`.
   public init(directory dir: URL, base uri: JSONSchemaIdentifier) {
     var fileUrls: [JSONSchemaIdentifier : URL] = [:]
     var content: [(String, URL, Bool)] = Self.contents(of: dir)
@@ -91,6 +118,7 @@ public struct StaticJSONSchemaFileProvider: JSONSchemaProvider, CustomStringConv
     self.fileUrls = fileUrls
   }
   
+  /// Returns the schema resource for `id`, or `nil` if no matching file exists.
   public func resource(for id: JSONSchemaIdentifier) -> JSONSchemaResource? {
     guard let url = self.fileUrls[id] else {
       return nil

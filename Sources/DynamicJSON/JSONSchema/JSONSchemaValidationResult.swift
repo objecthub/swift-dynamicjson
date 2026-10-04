@@ -37,11 +37,16 @@ public protocol FailureReason {
 ///
 public struct JSONSchemaValidationResult: CustomStringConvertible {
   
+  /// An annotation attached to the validated `value`, produced by the schema at `location`.
   public struct Annotation<Message: AnnotationMessage>: CustomStringConvertible {
+    /// The annotated value of the instance.
     public let value: LocatedJSON
+    /// The location of the schema that produced the annotation.
     public let location: JSONLocation
+    /// The content of the annotation.
     public let message: Message
     
+    /// Creates an annotation for `value`, produced at schema `location`.
     public init(value: LocatedJSON,
                 location: JSONLocation,
                 message: Message) {
@@ -55,8 +60,11 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
     }
   }
   
+  /// Annotation message describing a validation error.
   public struct ValidationError: AnnotationMessage {
+    /// The schema that failed.
     public let schema: JSONSchema
+    /// The reason why validation failed.
     public let reason: FailureReason
     
     public func description(value: LocatedJSON, location: JSONLocation) -> String {
@@ -65,13 +73,19 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
     }
   }
   
+  /// Annotation message for the property metadata `deprecated`, `readOnly`, and `writeOnly`.
   public struct MetaTags: OptionSet, AnnotationMessage {
+    /// The value is deprecated.
     public static let deprecated = MetaTags(rawValue: 1 << 0)
+    /// The value is read-only.
     public static let readOnly = MetaTags(rawValue: 1 << 1)
+    /// The value is write-only.
     public static let writeOnly = MetaTags(rawValue: 1 << 2)
     
+    /// The raw bit set of this value.
     public let rawValue: UInt
     
+    /// Creates a set of tags from its raw value.
     public init(rawValue: UInt = 0) {
       self.rawValue = rawValue
     }
@@ -91,8 +105,11 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
     }
   }
   
+  /// Annotation message for a `format` constraint.
   public struct FormatConstraint: AnnotationMessage {
+    /// The name of the format.
     public let format: String
+    /// Is the value valid for `format`? `nil` if this could not be determined.
     public let valid: Bool?
     
     public func description(value: LocatedJSON, location: JSONLocation) -> String {
@@ -101,6 +118,8 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
     }
   }
   
+  /// Determines how defaults of nested validation results are combined with the defaults of
+  /// the enclosing result.
   public enum DefaultPropagationMode {
     case suppress
     case merge
@@ -152,6 +171,7 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
     return self.errors.isEmpty
   }
   
+  /// Returns the defaults for all locations at which no value exists in the validated instance.
   public var nonexistingDefaults: [JSONLocation : Set<JSON>] {
     var res: [JSONLocation : Set<JSON>] = [:]
     for (location, (exists, defaults)) in self.defaults where !exists {

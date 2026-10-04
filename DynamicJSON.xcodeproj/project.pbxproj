@@ -487,6 +487,7 @@
 		CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaOptionalSuite.swift; sourceTree = "<group>"; };
 		CC0A5A052BCB34A500F155FE /* JSONSchemaFormatSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaFormatSuite.swift; sourceTree = "<group>"; };
 		CC0A5A072BCC665700F155FE /* JSONSchemaFormatValidators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaFormatValidators.swift; sourceTree = "<group>"; };
+		CC0AD5C830727E0B00B58056 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
 		CC10ABE72B9CBB6100746181 /* JSONPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointer.swift; sourceTree = "<group>"; };
 		CC10ABE92B9D27F200746181 /* JSONReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONReference.swift; sourceTree = "<group>"; };
 		CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMutationTests.swift; sourceTree = "<group>"; };
@@ -728,6 +729,7 @@
 				CC2473DF2B7B9DEE0022800A /* LICENSE */,
 				CC2473E02B7B9DF60022800A /* README.md */,
 				CC1D53302BE4666E00EE1A24 /* CHANGELOG */,
+				CC0AD5C830727E0B00B58056 /* CLAUDE.md */,
 				CC2473E12B7B9E330022800A /* Package.swift */,
 				CC528E262B7975DC001E9E52 /* DynamicJSON */,
 				CC528E322B7975DC001E9E52 /* DynamicJSONTests */,

@@ -26,7 +26,9 @@ import Foundation
 /// validation context.
 ///
 public protocol JSONSchemaDialect {
+  /// The URI identifying this dialect.
   var uri: URL { get }
+  /// Returns a validator for `schema` implementing this dialect.
   func validator(for: JSONSchema, in: JSONSchemaValidationContext) -> JSONSchemaValidator
 }
 

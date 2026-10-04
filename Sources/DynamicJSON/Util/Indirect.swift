@@ -7,10 +7,16 @@
 
 import Foundation
 
+///
+/// Property wrapper storing a value indirectly on the heap. It makes it possible to use
+/// recursive value types in stored properties.
+///
 @propertyWrapper
 public class Indirect<Wrapped: Codable>: Codable {
+  /// The wrapped value.
   public let wrappedValue: Wrapped
   
+  /// Creates an indirect wrapper for `wrappedValue`.
   public init(wrappedValue: Wrapped) {
     self.wrappedValue = wrappedValue
   }

@@ -15,6 +15,7 @@ import Foundation
 ///
 public struct JSONSchemaFormatValidators {
   
+  /// The format validators defined for the 2020-12 draft, keyed by format name.
   public static let draft2020: [String : (String) -> Bool] = [
     "unknown": JSONSchemaFormatValidators.isUnknown,
     "date-time": JSONSchemaFormatValidators.isDateTime,
@@ -32,11 +33,13 @@ public struct JSONSchemaFormatValidators {
     "hostname": JSONSchemaFormatValidators.isHostname
   ]
   
+  /// Accepts every string. Used for formats without a validator.
   public static func isUnknown(_ str: String) -> Bool {
     return true
   }
   
 #if os(iOS) || os(watchOS) || os(tvOS) || os(macOS)
+  /// Returns true if `str` is an RFC 3339 `date-time` value.
   public static func isDateTime(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -54,6 +57,7 @@ public struct JSONSchemaFormatValidators {
     return false
   }
 #else
+  /// Returns true if `str` is an RFC 3339 `date-time` value.
   public static func isDateTime(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -78,6 +82,7 @@ public struct JSONSchemaFormatValidators {
     pattern: ##"^(?<year>\d\d\d\d)\-(?<month>\d\d)\-(?<day>\d\d)$"##,
     options: [.caseInsensitive])
   
+  /// Returns true if `str` is an RFC 3339 `full-date` value.
   public static func isDate(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -104,6 +109,7 @@ public struct JSONSchemaFormatValidators {
                               (?<numoffsetminute>[0-5]\d)))) $
       """#, options: [.caseInsensitive])
   
+  /// Returns true if `str` is an RFC 3339 `full-time` value.
   public static func isTime(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -139,6 +145,7 @@ public struct JSONSchemaFormatValidators {
       ##"((\d+M)(\d+S)?)|(\d+S)))|(\d+W))$"##,
       options: [])
   
+  /// Returns true if `str` is an RFC 3339 `duration` value.
   public static func isDuration(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -157,6 +164,7 @@ public struct JSONSchemaFormatValidators {
       ##"[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\"## +
       ##"[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])"##, options: [.caseInsensitive])
   
+  /// Returns true if `str` is a valid email address.
   public static func isEmail(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -165,6 +173,7 @@ public struct JSONSchemaFormatValidators {
       in: str, range: NSMakeRange(0, str.utf16.count)) == 1
   }
   
+  /// Returns true if `str` is a valid JSON pointer (RFC 6901).
   public static func isJSONPointer(_ str: String) -> Bool {
     do {
       _ = try JSONPointer(str, strict: true)
@@ -174,6 +183,7 @@ public struct JSONSchemaFormatValidators {
     }
   }
   
+  /// Returns true if `str` is a valid regular expression.
   public static func isRegex(_ str: String) -> Bool {
     do {
       _ = try NSRegularExpression(pattern: str)
@@ -183,10 +193,12 @@ public struct JSONSchemaFormatValidators {
     }
   }
   
+  /// Returns true if `str` is a valid UUID (RFC 4122).
   public static func isUUID(_ str: String) -> Bool {
     return UUID(uuidString: str) != nil
   }
   
+  /// Returns true if `str` is a valid URI (RFC 3986).
   public static func isURI(_ str: String) -> Bool {
     if let uri = URL(string: str) {
       return uri.scheme != nil && !str.contains("\\")
@@ -195,10 +207,12 @@ public struct JSONSchemaFormatValidators {
     }
   }
   
+  /// Returns true if `str` is a valid URI reference (RFC 3986).
   public static func isURIReference(_ str: String) -> Bool {
     return URL(string: str) != nil && !str.contains("\\")
   }
   
+  /// Returns true if `str` is a valid IPv4 address.
   public static func isIPV4(_ str: String) -> Bool {
     guard str.allSatisfy(\.isASCII) else {
       return false
@@ -218,6 +232,7 @@ public struct JSONSchemaFormatValidators {
     return true
   }
   
+  /// Returns true if `str` is a valid IPv6 address.
   public static func isIPV6(_ str: String) -> Bool {
     var sin6 = sockaddr_in6()
     return str.withCString({ cstring in inet_pton(AF_INET6, cstring, &sin6.sin6_addr) }) == 1
@@ -228,6 +243,7 @@ public struct JSONSchemaFormatValidators {
       pattern: "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$",
       options: [])
   
+  /// Returns true if `str` is a valid hostname.
   public static func isHostname(_ str: String) -> Bool {
     if str.count < 256,
        JSONSchemaFormatValidators.hostnameRegex.numberOfMatches(in: str,

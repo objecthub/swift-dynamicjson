@@ -31,6 +31,7 @@ public struct JSONPointer: SegmentableJSONReference,
                            Codable,
                            Hashable,
                            CustomStringConvertible {
+  /// The JSON pointer referring to the root of a JSON document.
   public static let root = JSONPointer(tokens: [])
   
   private let tokens: [ReferenceToken]
@@ -40,6 +41,7 @@ public struct JSONPointer: SegmentableJSONReference,
     case member(String)
     case index(String, Int?)
     
+    /// Returns the array index of this reference token, if it denotes one.
     public var index: JSONReferenceSegmentIndex? {
       switch self {
         case .member(_):
@@ -49,10 +51,12 @@ public struct JSONPointer: SegmentableJSONReference,
       }
     }
     
+    /// Returns the member name of this reference token, if it can denote an object member.
     public var member: String? {
       return self.string
     }
     
+    /// Returns the escaped string representation of this reference token, without the leading "/".
     public var string: String {
       switch self {
         case .member(let member):
