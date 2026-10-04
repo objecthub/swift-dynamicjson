@@ -1018,6 +1018,67 @@ with an entry of type
 [`Annotation<MetaTags>`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift#L40) providing access to fields `value` (a `LocatedJSON` value), `location` (within the schema), `message.deprecated`
 `message.readOnly`, and `message.writeOnly`. `deprecated`, `readOnly`, and `writeOnly` are boolean properties.
 
+## Building the Documentation
+
+The API reference and articles of _DynamicJSON_ are written for
+[DocC](https://www.swift.org/documentation/docc/). The DocC catalog is located at
+`Sources/DynamicJSON/DynamicJSON.docc`; the reference material is generated from the `///`
+comments in the source code.
+
+### With Xcode
+
+Open `Package.swift` (or `DynamicJSON.xcodeproj`) in Xcode, select the `DynamicJSON` scheme,
+and choose _Product_ > _Build Documentation_ (⌃⇧⌘D). The documentation shows up in Xcode's
+documentation viewer. To export it, right-click the _DynamicJSON_ entry in the documentation
+navigator and choose _Export…_ to create a `.doccarchive` bundle.
+
+### Without Xcode (Terminal)
+
+With the Xcode command-line tools or a Swift toolchain that includes `docc`, the
+documentation can be built from the terminal in two steps. First, emit symbol graphs for the
+`DynamicJSON` module (the package also contains the `JSONPathTool` executable, whose symbol
+graph must not be mixed in, as a DocC build covers a single module):
+
+```sh
+rm -rf .build/symbol-graphs && mkdir -p .build/symbol-graphs
+swift package dump-symbol-graph
+cp .build/out/symbolgraph/DynamicJSON*.symbols.json .build/symbol-graphs/
+```
+
+Then run `docc` to combine the symbol graphs with the DocC catalog:
+
+```sh
+xcrun docc convert Sources/DynamicJSON/DynamicJSON.docc \
+  --fallback-display-name DynamicJSON \
+  --fallback-bundle-identifier org.objecthub.DynamicJSON \
+  --additional-symbol-graph-dir .build/symbol-graphs \
+  --output-path .build/DynamicJSON.doccarchive
+```
+
+(On platforms without `xcrun`, invoke `docc` directly.) The resulting `.doccarchive` can be
+opened with Xcode, or previewed in a browser with a local web server:
+
+```sh
+xcrun docc preview Sources/DynamicJSON/DynamicJSON.docc \
+  --fallback-display-name DynamicJSON \
+  --fallback-bundle-identifier org.objecthub.DynamicJSON \
+  --additional-symbol-graph-dir .build/symbol-graphs
+```
+
+`docc preview` prints the URL to open (by default `http://localhost:8080/documentation/dynamicjson`).
+To publish the documentation on a static web host such as GitHub Pages, add
+`--transform-for-static-hosting --hosting-base-path <path>` to the `docc convert` command.
+
+Alternatively, `xcodebuild` builds the documentation for the Xcode project from the terminal:
+
+```sh
+xcodebuild docbuild -scheme DynamicJSON -destination 'generic/platform=macOS'
+```
+
+The build prints the location of the generated `.doccarchive` bundle (inside Xcode's
+DerivedData folder, or the folder passed via `-derivedDataPath`) and reports unresolved
+symbol links as warnings.
+
 ## Requirements
 
 The following technologies are needed to build the _DynamicJSON_ framework. The library
