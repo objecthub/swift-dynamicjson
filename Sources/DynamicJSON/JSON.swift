@@ -405,11 +405,29 @@ public enum JSON: Hashable,
     return value
   }
   
+  /// Returns an array if this value represents a JSON array, otherwise the empty array
+  /// is returned.
+  public var arrayElements: [JSON] {
+    guard case .array(let value) = self else {
+      return []
+    }
+    return value
+  }
+  
   /// Returns a dictionary if this value represents a JSON object, otherwise
   /// `nil` is returned.
   public var objectValue: [String: JSON]? {
     guard case .object(let value) = self else {
       return nil
+    }
+    return value
+  }
+  
+  /// Returns a dictionary if this value represents a JSON object, otherwise
+  /// an empty dictionary is returned.
+  public var objectBindings: [String: JSON] {
+    guard case .object(let value) = self else {
+      return [:]
     }
     return value
   }
@@ -429,8 +447,8 @@ public enum JSON: Hashable,
     }
   }
   
-  /// Applies the given function to all descendents (i.e. direct and indirect children)
-  /// of this JSON value.
+  /// Applies the given function to itself and all descendents (i.e. direct and
+  /// indirect children) of this JSON value.
   public func forEachDescendant(_ proc: (JSON) throws -> Void) rethrows {
     try proc(self)
     for child in self.children {
