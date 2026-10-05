@@ -40,8 +40,9 @@ The DocC build is expected to be free of warnings; unresolved symbol links show 
 overloads share a name, disambiguate links by parameter types, e.g.
 ``` ``JSON/query(_:)-(JSONPath)`` ```.
 
-Platforms: macOS 13, iOS 16, tvOS 16, watchOS 9. Package uses `swift-tools-version:5.7` with
-Swift language mode 5; README states Xcode 16 / Swift 6 as the toolchain requirement.
+Platforms: macOS 13, iOS 16, tvOS 16, watchOS 9. Package uses `swift-tools-version:6.0` with
+Swift language mode 6 (strict concurrency): public types are `Sendable` where possible, and the
+build (library, tests, tools) is expected to be free of warnings.
 
 ## Repository layout
 

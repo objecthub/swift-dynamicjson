@@ -23,7 +23,7 @@ import Foundation
 ///
 /// URI representing a JSON schema identifier.
 ///
-public struct JSONSchemaIdentifier: Codable, Hashable, CustomStringConvertible {
+public struct JSONSchemaIdentifier: Codable, Hashable, Sendable, CustomStringConvertible {
   /// The URI components of this identifier.
   public let uri: URLComponents
   

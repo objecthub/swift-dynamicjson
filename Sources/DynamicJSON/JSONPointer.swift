@@ -30,6 +30,7 @@ public struct JSONPointer: SegmentableJSONReference,
                            JSONLocationConvertible,
                            Codable,
                            Hashable,
+                           Sendable,
                            CustomStringConvertible {
   /// The JSON pointer referring to the root of a JSON document.
   public static let root = JSONPointer(tokens: [])
@@ -37,7 +38,7 @@ public struct JSONPointer: SegmentableJSONReference,
   private let tokens: [ReferenceToken]
   
   /// Segment implementation.
-  public enum ReferenceToken: JSONReferenceSegment, Hashable, CustomStringConvertible {
+  public enum ReferenceToken: JSONReferenceSegment, Hashable, Sendable, CustomStringConvertible {
     case member(String)
     case index(String, Int?)
     

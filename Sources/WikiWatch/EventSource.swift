@@ -212,12 +212,6 @@ enum EventSource {
   
   // MARK: - Replay
   
-  private static let timestampFormat: ISO8601DateFormatter = {
-    let format = ISO8601DateFormatter()
-    format.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    return format
-  }()
-  
   /// Returns the time at which an event was created, taken from field `meta.dt`. This is
   /// used to replay captures with their original timing.
   static func time(of event: ServerSentEvent) -> Date? {
@@ -226,7 +220,7 @@ enum EventSource {
           let text = json["meta"]?["dt"]?.stringValue else {
       return nil
     }
-    return self.timestampFormat.date(from: text)
+    return try? Date.ISO8601FormatStyle(includingFractionalSeconds: true).parse(text)
   }
   
   /// Returns the bytes of a file (or of standard input, if `path` is `-`) as a stream.

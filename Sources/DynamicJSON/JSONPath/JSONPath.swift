@@ -28,6 +28,7 @@ import Foundation
 ///
 public indirect enum JSONPath: Codable,
                                Hashable,
+                               Sendable,
                                CustomStringConvertible {
   case `self`
   case current
@@ -144,7 +145,7 @@ public indirect enum JSONPath: Codable,
   
   /// Representation of JSONPath query segments. There are two different segment types:
   /// children and descendants.
-  public enum Segment: Hashable, CustomStringConvertible {
+  public enum Segment: Hashable, Sendable, CustomStringConvertible {
     case children([Selector])
     case descendants([Selector])
     
@@ -246,7 +247,7 @@ public indirect enum JSONPath: Codable,
   ///   - index selectors,
   ///   - slice selectors, and
   ///   - filter selectors.
-  public enum Selector: Hashable, CustomStringConvertible {
+  public enum Selector: Hashable, Sendable, CustomStringConvertible {
     case wildcard
     case member(String)
     case index(Int)
@@ -302,7 +303,7 @@ public indirect enum JSONPath: Codable,
   }
   
   /// Representation of JSONPath query filter expressions.
-  public indirect enum Expression: Hashable, CustomStringConvertible {
+  public indirect enum Expression: Hashable, Sendable, CustomStringConvertible {
     case `null`
     case `true`
     case `false`
@@ -368,7 +369,7 @@ public indirect enum JSONPath: Codable,
   }
   
   /// Representation of a unary operator. Supported are currently "-" and "!".
-  public enum UnaryOperator: Hashable, CustomStringConvertible {
+  public enum UnaryOperator: Hashable, Sendable, CustomStringConvertible {
     case not
     case negate
     
@@ -384,7 +385,7 @@ public indirect enum JSONPath: Codable,
   
   /// Representation of a binary operator. Supported are currently "==", "!=", "<",
   /// ">", "<=", ">=", "||", "&&", "+", "-", "*", and "/".
-  public enum BinaryOperator: Hashable, CustomStringConvertible {
+  public enum BinaryOperator: Hashable, Sendable, CustomStringConvertible {
     case equals
     case notEquals
     case lessThan

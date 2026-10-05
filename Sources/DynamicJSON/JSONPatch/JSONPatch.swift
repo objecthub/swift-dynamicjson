@@ -55,7 +55,7 @@ public struct JSONPatch: Codable,
   public init(data: Data,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
-              userInfo: [CodingUserInfoKey : Any]? = nil) throws {
+              userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws {
     let decoder = JSONDecoder()
     decoder.keyDecodingStrategy = .useDefaultKeys
     decoder.dateDecodingStrategy = dateDecodingStrategy
@@ -71,7 +71,7 @@ public struct JSONPatch: Codable,
   public init(string: String,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
-              userInfo: [CodingUserInfoKey : Any]? = nil) throws {
+              userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws {
     guard let data = string.data(using: .utf8) else {
       throw JSON.Error.erroneousEncoding
     }
@@ -86,7 +86,7 @@ public struct JSONPatch: Codable,
   public init(url: URL,
               dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
               floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
-              userInfo: [CodingUserInfoKey : Any]? = nil) throws {
+              userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws {
     try self.init(data: try Data(contentsOf: url),
                   dateDecodingStrategy: dateDecodingStrategy,
                   floatDecodingStrategy: floatDecodingStrategy,
@@ -110,7 +110,7 @@ public struct JSONPatch: Codable,
   public func data(formatting: JSONEncoder.OutputFormatting = .init(),
                    dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate,
                    floatEncodingStrategy: JSONEncoder.NonConformingFloatEncodingStrategy = .throw,
-                   userInfo: [CodingUserInfoKey : Any]? = nil) throws -> Data {
+                   userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws -> Data {
     let encoder = JSONEncoder()
     encoder.outputFormatting = formatting
     encoder.keyEncodingStrategy = .useDefaultKeys
@@ -127,7 +127,7 @@ public struct JSONPatch: Codable,
   public func string(formatting: JSONEncoder.OutputFormatting = .init(),
                      dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate,
                      floatEncodingStrategy: JSONEncoder.NonConformingFloatEncodingStrategy = .throw,
-                     userInfo: [CodingUserInfoKey : Any]? = nil) throws -> String? {
+                     userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws -> String? {
     return String(data: try self.data(formatting: formatting,
                                       dateEncodingStrategy: dateEncodingStrategy,
                                       floatEncodingStrategy: floatEncodingStrategy,

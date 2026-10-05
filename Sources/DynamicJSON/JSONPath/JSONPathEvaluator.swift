@@ -106,18 +106,18 @@ public struct JSONPathEvaluator {
   }
   
   /// Representation of functions available in JSONPath filter expressions.
-  public struct Function {
+  public struct Function: Sendable {
     /// The types of the parameters of this function.
     public let argtypes: [ValueType]
     /// The type of the result of this function.
     public let restype: ValueType
     /// The implementation of this function. It receives the root document, the current
     /// node, and the argument values.
-    public let impl: (JSON, JSON, [Value]) throws -> Value
+    public let impl: @Sendable (JSON, JSON, [Value]) throws -> Value
   }
   
   /// Types of values as defined by JSONPath
-  public enum ValueType: Hashable, CustomStringConvertible {
+  public enum ValueType: Hashable, Sendable, CustomStringConvertible {
     case logicalType
     case jsonType
     case nodesType
@@ -135,7 +135,7 @@ public struct JSONPathEvaluator {
   }
   
   /// Values used for evaluating JSONPath filter expressions.
-  public enum Value: Hashable, CustomStringConvertible {
+  public enum Value: Hashable, Sendable, CustomStringConvertible {
     case logical(Bool)
     case json(JSON?)
     case nodes([JSON])

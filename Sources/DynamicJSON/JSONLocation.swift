@@ -31,6 +31,7 @@ public indirect enum JSONLocation: SegmentableJSONReference,
                                    JSONLocationConvertible,
                                    Codable,
                                    Hashable,
+                                   Sendable,
                                    CustomStringConvertible {
   case root
   case member(JSONLocation, String)
@@ -61,7 +62,7 @@ public indirect enum JSONLocation: SegmentableJSONReference,
   
   /// Representation of a segment of singular JSONPath queries (which are the
   /// foundation of `JSONLocation` references).
-  public enum Segment: JSONReferenceSegment, Codable, Hashable, CustomStringConvertible {
+  public enum Segment: JSONReferenceSegment, Codable, Hashable, Sendable, CustomStringConvertible {
     case member(String)
     case index(Int)
     

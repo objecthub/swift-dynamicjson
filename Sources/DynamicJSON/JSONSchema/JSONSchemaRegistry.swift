@@ -29,8 +29,9 @@ public class JSONSchemaRegistry {
   
   /// This is a shared, non-thread safe registry that can be used as a quick alternative
   /// for non-production usage to the default of `JSON.validate(with:, using:))` (which
-  /// creates a new empty registry for every invocation).
-  public static let `default` = DefaultJSONSchemaRegistry()
+  /// creates a new empty registry for every invocation). Since the registry is mutable and
+  /// not thread-safe, clients are responsible for not using it concurrently.
+  public nonisolated(unsafe) static let `default` = DefaultJSONSchemaRegistry()
   
   /// The default dialect used by this registry
   public let defaultDialect: JSONSchemaDialect

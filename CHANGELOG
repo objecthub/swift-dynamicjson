@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Migration to Swift 6 language mode (swift-tools-version 6.0): public value types (`JSONLocation`, `JSONPointer`, `JSONPath`, `JSONSchema`, ...) and protocol `JSONReference` are now `Sendable`; the `userInfo` parameters of the encoding/decoding methods have type `[CodingUserInfoKey : any Sendable]`; format validators are `@Sendable` functions; `JSONSchemaRegistry.default` is declared `nonisolated(unsafe)`
 - Support for streams of JSON values via `JSON.values(from:format:options:)` and `JSON.results(from:format:options:)`: NDJSON/JSON Lines, JSON text sequences (RFC 7464, RFC 8142), concatenated JSON, and elements of top-level arrays
 - Support for server-sent events (`JSON.StreamFormat.serverSentEvents`, `JSON.events(from:)`) and for reading JSON values that arrive in fragments (`JSONPartialParser`, `JSON.partialValues(from:)`, `JSON.fragments(from:at:)`), e.g. for streaming APIs of large language models
 - New demo tool `WikiWatch` (SPM and Xcode target) that processes Wikimedia's recent changes event stream

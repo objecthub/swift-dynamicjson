@@ -220,7 +220,7 @@ public enum JSONPatchOperation: Codable,
   public func data(formatting: JSONEncoder.OutputFormatting = .init(),
                    dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate,
                    floatEncodingStrategy: JSONEncoder.NonConformingFloatEncodingStrategy = .throw,
-                   userInfo: [CodingUserInfoKey : Any]? = nil) throws -> Data {
+                   userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws -> Data {
     let encoder = JSONEncoder()
     encoder.outputFormatting = formatting
     encoder.keyEncodingStrategy = .useDefaultKeys
@@ -237,7 +237,7 @@ public enum JSONPatchOperation: Codable,
   public func string(formatting: JSONEncoder.OutputFormatting = .init(),
                      dateEncodingStrategy: JSONEncoder.DateEncodingStrategy = .deferredToDate,
                      floatEncodingStrategy: JSONEncoder.NonConformingFloatEncodingStrategy = .throw,
-                     userInfo: [CodingUserInfoKey : Any]? = nil) throws -> String? {
+                     userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws -> String? {
     return String(data: try self.data(formatting: formatting,
                                       dateEncodingStrategy: dateEncodingStrategy,
                                       floatEncodingStrategy: floatEncodingStrategy,

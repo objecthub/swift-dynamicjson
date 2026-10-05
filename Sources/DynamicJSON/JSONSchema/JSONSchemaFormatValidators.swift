@@ -16,7 +16,7 @@ import Foundation
 public struct JSONSchemaFormatValidators {
   
   /// The format validators defined for the 2020-12 draft, keyed by format name.
-  public static let draft2020: [String : (String) -> Bool] = [
+  public static let draft2020: [String : @Sendable (String) -> Bool] = [
     "unknown": JSONSchemaFormatValidators.isUnknown,
     "date-time": JSONSchemaFormatValidators.isDateTime,
     "date": JSONSchemaFormatValidators.isDate,

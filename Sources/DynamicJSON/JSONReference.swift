@@ -26,7 +26,7 @@ import Foundation
 /// coming with the DynamicJSON framework: `JSONPointer` (implementing RFC 6901) and
 /// `JSONLocation` (implementing singular JSONPath queries as defined by RFC 9535)
 ///
-public protocol JSONReference: CustomStringConvertible {
+public protocol JSONReference: CustomStringConvertible, Sendable {
   
   /// Returns true if this reference refers to the root of a JSON document
   var isRoot: Bool { get }
@@ -104,7 +104,7 @@ public protocol JSONReferenceSegment {
 /// An index together with an indicator whether the index is relative to the beginning or
 /// end of an array.
 ///
-public enum JSONReferenceSegmentIndex: Hashable, CustomStringConvertible {
+public enum JSONReferenceSegmentIndex: Hashable, Sendable, CustomStringConvertible {
   case fromStart(Int)
   case fromEnd(Int)
   

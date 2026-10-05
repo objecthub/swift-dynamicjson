@@ -27,6 +27,16 @@
 		CC0AD5E83073322600B58056 /* ServerSentEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5E73073322600B58056 /* ServerSentEvents.swift */; };
 		CC0AD5EA3073327700B58056 /* JSONPartialParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5E93073327700B58056 /* JSONPartialParserTests.swift */; };
 		CC0AD5EC3073328C00B58056 /* JSONServerSentEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5EB3073328C00B58056 /* JSONServerSentEventTests.swift */; };
+		CC0AD6093073400000B58056 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6013073400000B58056 /* main.swift */; };
+		CC0AD60A3073400000B58056 /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6023073400000B58056 /* Options.swift */; };
+		CC0AD60B3073400000B58056 /* Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6033073400000B58056 /* Schema.swift */; };
+		CC0AD60C3073400000B58056 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6043073400000B58056 /* Stats.swift */; };
+		CC0AD60D3073400000B58056 /* EventSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6053073400000B58056 /* EventSource.swift */; };
+		CC0AD60E3073400000B58056 /* Pipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6063073400000B58056 /* Pipeline.swift */; };
+		CC0AD60F3073400000B58056 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6073073400000B58056 /* Dashboard.swift */; };
+		CC0AD6103073400000B58056 /* Trickle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6083073400000B58056 /* Trickle.swift */; };
+		CC0AD6133073400000B58056 /* DynamicJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC528E242B7975DC001E9E52 /* DynamicJSON.framework */; };
+		CC0AD6143073400000B58056 /* DynamicJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CC528E242B7975DC001E9E52 /* DynamicJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE72B9CBB6100746181 /* JSONPointer.swift */; };
 		CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE92B9D27F200746181 /* JSONReference.swift */; };
 		CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */; };
@@ -218,19 +228,16 @@
 		CCB466B82BBFCDCA001FBDFA /* README-BIG in Resources */ = {isa = PBXBuildFile; fileRef = CCB466B72BBFCDCA001FBDFA /* README-BIG */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 		CCF37FFD2DA8E65E000936CA /* JSONPatchMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF37FFC2DA8E647000936CA /* JSONPatchMaker.swift */; };
-		CC0AD6093073400000B58056 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6013073400000B58056 /* main.swift */; };
-		CC0AD60A3073400000B58056 /* Options.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6023073400000B58056 /* Options.swift */; };
-		CC0AD60B3073400000B58056 /* Schema.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6033073400000B58056 /* Schema.swift */; };
-		CC0AD60C3073400000B58056 /* Stats.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6043073400000B58056 /* Stats.swift */; };
-		CC0AD60D3073400000B58056 /* EventSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6053073400000B58056 /* EventSource.swift */; };
-		CC0AD60E3073400000B58056 /* Pipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6063073400000B58056 /* Pipeline.swift */; };
-		CC0AD60F3073400000B58056 /* Dashboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6073073400000B58056 /* Dashboard.swift */; };
-		CC0AD6103073400000B58056 /* Trickle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD6083073400000B58056 /* Trickle.swift */; };
-		CC0AD6133073400000B58056 /* DynamicJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC528E242B7975DC001E9E52 /* DynamicJSON.framework */; };
-		CC0AD6143073400000B58056 /* DynamicJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CC528E242B7975DC001E9E52 /* DynamicJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CC0AD6193073400000B58056 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CC528E1B2B7975DC001E9E52 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC528E232B7975DC001E9E52;
+			remoteInfo = DynamicJSON;
+		};
 		CC2473F82B8184DE0022800A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CC528E1B2B7975DC001E9E52 /* Project object */;
@@ -239,13 +246,6 @@
 			remoteInfo = DynamicJSON;
 		};
 		CC528E302B7975DC001E9E52 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CC528E1B2B7975DC001E9E52 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CC528E232B7975DC001E9E52;
-			remoteInfo = DynamicJSON;
-		};
-		CC0AD6193073400000B58056 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CC528E1B2B7975DC001E9E52 /* Project object */;
 			proxyType = 1;
@@ -266,6 +266,26 @@
 				CC0AD5DE307323DC00B58056 /* amazon_cellphones.ndjson in Copy JSONStream */,
 			);
 			name = "Copy JSONStream";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC0AD6173073400000B58056 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		CC0AD6183073400000B58056 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CC0AD6143073400000B58056 /* DynamicJSON.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CC2473EC2B8180F70022800A /* CopyFiles */ = {
@@ -524,26 +544,6 @@
 			name = "Copy JSONPatch";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CC0AD6173073400000B58056 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-		CC0AD6183073400000B58056 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				CC0AD6143073400000B58056 /* DynamicJSON.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -570,6 +570,17 @@
 		CC0AD5E73073322600B58056 /* ServerSentEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSentEvents.swift; sourceTree = "<group>"; };
 		CC0AD5E93073327700B58056 /* JSONPartialParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPartialParserTests.swift; sourceTree = "<group>"; };
 		CC0AD5EB3073328C00B58056 /* JSONServerSentEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONServerSentEventTests.swift; sourceTree = "<group>"; };
+		CC0AD6013073400000B58056 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		CC0AD6023073400000B58056 /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
+		CC0AD6033073400000B58056 /* Schema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schema.swift; sourceTree = "<group>"; };
+		CC0AD6043073400000B58056 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
+		CC0AD6053073400000B58056 /* EventSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSource.swift; sourceTree = "<group>"; };
+		CC0AD6063073400000B58056 /* Pipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeline.swift; sourceTree = "<group>"; };
+		CC0AD6073073400000B58056 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
+		CC0AD6083073400000B58056 /* Trickle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trickle.swift; sourceTree = "<group>"; };
+		CC0AD6113073400000B58056 /* WikiWatch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WikiWatch; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC0AD6213073400000B58056 /* sample-recentchange.sse */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sample-recentchange.sse"; sourceTree = "<group>"; };
+		CC0AD6223073400000B58056 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CC10ABE72B9CBB6100746181 /* JSONPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointer.swift; sourceTree = "<group>"; };
 		CC10ABE92B9D27F200746181 /* JSONReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONReference.swift; sourceTree = "<group>"; };
 		CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMutationTests.swift; sourceTree = "<group>"; };
@@ -760,20 +771,17 @@
 		CCB466B72BBFCDCA001FBDFA /* README-BIG */ = {isa = PBXFileReference; lastKnownFileType = text; path = "README-BIG"; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 		CCF37FFC2DA8E647000936CA /* JSONPatchMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchMaker.swift; sourceTree = "<group>"; };
-		CC0AD6013073400000B58056 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		CC0AD6023073400000B58056 /* Options.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Options.swift; sourceTree = "<group>"; };
-		CC0AD6033073400000B58056 /* Schema.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schema.swift; sourceTree = "<group>"; };
-		CC0AD6043073400000B58056 /* Stats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stats.swift; sourceTree = "<group>"; };
-		CC0AD6053073400000B58056 /* EventSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSource.swift; sourceTree = "<group>"; };
-		CC0AD6063073400000B58056 /* Pipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pipeline.swift; sourceTree = "<group>"; };
-		CC0AD6073073400000B58056 /* Dashboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dashboard.swift; sourceTree = "<group>"; };
-		CC0AD6083073400000B58056 /* Trickle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trickle.swift; sourceTree = "<group>"; };
-		CC0AD6113073400000B58056 /* WikiWatch */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WikiWatch; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC0AD6213073400000B58056 /* sample-recentchange.sse */ = {isa = PBXFileReference; lastKnownFileType = text; path = "sample-recentchange.sse"; sourceTree = "<group>"; };
-		CC0AD6223073400000B58056 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CC0AD6163073400000B58056 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC0AD6133073400000B58056 /* DynamicJSON.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC2473EB2B8180F70022800A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -794,14 +802,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC528E2F2B7975DC001E9E52 /* DynamicJSON.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CC0AD6163073400000B58056 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CC0AD6133073400000B58056 /* DynamicJSON.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -832,6 +832,39 @@
 				CC0AD5D93073231300B58056 /* twitter.json */,
 			);
 			path = JSONStream;
+			sourceTree = "<group>";
+		};
+		CC0AD6123073400000B58056 /* WikiWatch */ = {
+			isa = PBXGroup;
+			children = (
+				CC0AD6013073400000B58056 /* main.swift */,
+				CC0AD6023073400000B58056 /* Options.swift */,
+				CC0AD6033073400000B58056 /* Schema.swift */,
+				CC0AD6043073400000B58056 /* Stats.swift */,
+				CC0AD6053073400000B58056 /* EventSource.swift */,
+				CC0AD6063073400000B58056 /* Pipeline.swift */,
+				CC0AD6073073400000B58056 /* Dashboard.swift */,
+				CC0AD6083073400000B58056 /* Trickle.swift */,
+			);
+			name = WikiWatch;
+			path = Sources/WikiWatch;
+			sourceTree = "<group>";
+		};
+		CC0AD61F3073400000B58056 /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				CC0AD6203073400000B58056 /* WikiWatch */,
+			);
+			path = Examples;
+			sourceTree = "<group>";
+		};
+		CC0AD6203073400000B58056 /* WikiWatch */ = {
+			isa = PBXGroup;
+			children = (
+				CC0AD6223073400000B58056 /* README.md */,
+				CC0AD6213073400000B58056 /* sample-recentchange.sse */,
+			);
+			path = WikiWatch;
 			sourceTree = "<group>";
 		};
 		CC2473EF2B8180F70022800A /* JSONPathTool */ = {
@@ -1241,39 +1274,6 @@
 			path = JSONPatch;
 			sourceTree = "<group>";
 		};
-		CC0AD6123073400000B58056 /* WikiWatch */ = {
-			isa = PBXGroup;
-			children = (
-				CC0AD6013073400000B58056 /* main.swift */,
-				CC0AD6023073400000B58056 /* Options.swift */,
-				CC0AD6033073400000B58056 /* Schema.swift */,
-				CC0AD6043073400000B58056 /* Stats.swift */,
-				CC0AD6053073400000B58056 /* EventSource.swift */,
-				CC0AD6063073400000B58056 /* Pipeline.swift */,
-				CC0AD6073073400000B58056 /* Dashboard.swift */,
-				CC0AD6083073400000B58056 /* Trickle.swift */,
-			);
-			name = WikiWatch;
-			path = Sources/WikiWatch;
-			sourceTree = "<group>";
-		};
-		CC0AD61F3073400000B58056 /* Examples */ = {
-			isa = PBXGroup;
-			children = (
-				CC0AD6203073400000B58056 /* WikiWatch */,
-			);
-			path = Examples;
-			sourceTree = "<group>";
-		};
-		CC0AD6203073400000B58056 /* WikiWatch */ = {
-			isa = PBXGroup;
-			children = (
-				CC0AD6223073400000B58056 /* README.md */,
-				CC0AD6213073400000B58056 /* sample-recentchange.sse */,
-			);
-			path = WikiWatch;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1288,6 +1288,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		CC0AD61B3073400000B58056 /* WikiWatch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC0AD61C3073400000B58056 /* Build configuration list for PBXNativeTarget "WikiWatch" */;
+			buildPhases = (
+				CC0AD6153073400000B58056 /* Sources */,
+				CC0AD6163073400000B58056 /* Frameworks */,
+				CC0AD6173073400000B58056 /* CopyFiles */,
+				CC0AD6183073400000B58056 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC0AD61A3073400000B58056 /* PBXTargetDependency */,
+			);
+			name = WikiWatch;
+			productName = WikiWatch;
+			productReference = CC0AD6113073400000B58056 /* WikiWatch */;
+			productType = "com.apple.product-type.tool";
+		};
 		CC2473ED2B8180F70022800A /* JSONPathTool */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CC2473F22B8180F70022800A /* Build configuration list for PBXNativeTarget "JSONPathTool" */;
@@ -1356,25 +1375,6 @@
 			productReference = CC528E2E2B7975DC001E9E52 /* DynamicJSONTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		CC0AD61B3073400000B58056 /* WikiWatch */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CC0AD61C3073400000B58056 /* Build configuration list for PBXNativeTarget "WikiWatch" */;
-			buildPhases = (
-				CC0AD6153073400000B58056 /* Sources */,
-				CC0AD6163073400000B58056 /* Frameworks */,
-				CC0AD6173073400000B58056 /* CopyFiles */,
-				CC0AD6183073400000B58056 /* Embed Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				CC0AD61A3073400000B58056 /* PBXTargetDependency */,
-			);
-			name = WikiWatch;
-			productName = WikiWatch;
-			productReference = CC0AD6113073400000B58056 /* WikiWatch */;
-			productType = "com.apple.product-type.tool";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1383,7 +1383,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					CC2473ED2B8180F70022800A = {
 						CreatedOnToolsVersion = 15.2;
@@ -1460,6 +1460,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CC0AD6153073400000B58056 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC0AD6093073400000B58056 /* main.swift in Sources */,
+				CC0AD60A3073400000B58056 /* Options.swift in Sources */,
+				CC0AD60B3073400000B58056 /* Schema.swift in Sources */,
+				CC0AD60C3073400000B58056 /* Stats.swift in Sources */,
+				CC0AD60D3073400000B58056 /* EventSource.swift in Sources */,
+				CC0AD60E3073400000B58056 /* Pipeline.swift in Sources */,
+				CC0AD60F3073400000B58056 /* Dashboard.swift in Sources */,
+				CC0AD6103073400000B58056 /* Trickle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC2473EA2B8180F70022800A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1544,24 +1559,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CC0AD6153073400000B58056 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CC0AD6093073400000B58056 /* main.swift in Sources */,
-				CC0AD60A3073400000B58056 /* Options.swift in Sources */,
-				CC0AD60B3073400000B58056 /* Schema.swift in Sources */,
-				CC0AD60C3073400000B58056 /* Stats.swift in Sources */,
-				CC0AD60D3073400000B58056 /* EventSource.swift in Sources */,
-				CC0AD60E3073400000B58056 /* Pipeline.swift in Sources */,
-				CC0AD60F3073400000B58056 /* Dashboard.swift in Sources */,
-				CC0AD6103073400000B58056 /* Trickle.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CC0AD61A3073400000B58056 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC528E232B7975DC001E9E52 /* DynamicJSON */;
+			targetProxy = CC0AD6193073400000B58056 /* PBXContainerItemProxy */;
+		};
 		CC2473F92B8184DE0022800A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CC528E232B7975DC001E9E52 /* DynamicJSON */;
@@ -1572,27 +1577,59 @@
 			target = CC528E232B7975DC001E9E52 /* DynamicJSON */;
 			targetProxy = CC528E302B7975DC001E9E52 /* PBXContainerItemProxy */;
 		};
-		CC0AD61A3073400000B58056 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CC528E232B7975DC001E9E52 /* DynamicJSON */;
-			targetProxy = CC0AD6193073400000B58056 /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		CC0AD61D3073400000B58056 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.WikiWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		CC0AD61E3073400000B58056 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
+				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.WikiWatch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
 		CC2473F32B8180F70022800A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.JSONPathTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -1602,13 +1639,12 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_HARDENED_RUNTIME = YES;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.JSONPathTool;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
@@ -1649,6 +1685,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1714,6 +1751,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = C72Z63N8M5;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -1742,7 +1780,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1750,7 +1787,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -1759,7 +1796,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1769,7 +1806,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1782,7 +1819,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1790,7 +1826,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -1799,7 +1835,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -1809,7 +1845,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1821,7 +1857,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
@@ -1831,7 +1866,7 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1843,7 +1878,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MACOSX_DEPLOYMENT_TARGET = 14.6;
@@ -1853,54 +1887,23 @@
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		CC0AD61D3073400000B58056 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
-				ENABLE_HARDENED_RUNTIME = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.WikiWatch;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		CC0AD61E3073400000B58056 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
-				CODE_SIGN_STYLE = Automatic;
-				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = C72Z63N8M5;
-				ENABLE_HARDENED_RUNTIME = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.objecthub.WikiWatch;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CC0AD61C3073400000B58056 /* Build configuration list for PBXNativeTarget "WikiWatch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC0AD61D3073400000B58056 /* Debug */,
+				CC0AD61E3073400000B58056 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CC2473F22B8180F70022800A /* Build configuration list for PBXNativeTarget "JSONPathTool" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1933,15 +1936,6 @@
 			buildConfigurations = (
 				CC528E3C2B7975DC001E9E52 /* Debug */,
 				CC528E3D2B7975DC001E9E52 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		CC0AD61C3073400000B58056 /* Build configuration list for PBXNativeTarget "WikiWatch" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CC0AD61D3073400000B58056 /* Debug */,
-				CC0AD61E3073400000B58056 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

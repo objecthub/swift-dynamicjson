@@ -36,7 +36,7 @@ import Foundation
 open class JSONSchemaDraft2020: JSONSchemaValidator {
   
   /// Draft 2020-20 vocabulary implementation
-  public struct Vocabulary {
+  public struct Vocabulary: Sendable {
     /// Is the core vocabulary enabled?
     public let core: Bool
     /// Is the applicator vocabulary enabled?
@@ -56,7 +56,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
     /// Are deprecation annotations collected?
     public let deprecated: Bool
     /// Do invalid formats cause validation errors (i.e. is format assertion enabled)?
-    public let formatValidators: [String : (String) -> Bool]
+    public let formatValidators: [String : @Sendable (String) -> Bool]
     
     /// Creates a vocabulary configuration. By default, all vocabularies are enabled except
     /// format assertion.
@@ -69,7 +69,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
                 formatValid: Bool = false,
                 content: Bool = true,
                 deprecated: Bool = true,
-                formatValidators: [String : (String) -> Bool] = JSONSchemaFormatValidators.draft2020) {
+                formatValidators: [String : @Sendable (String) -> Bool] = JSONSchemaFormatValidators.draft2020) {
       self.core = core
       self.applicator = applicator
       self.unevaluated = unevaluated
@@ -84,7 +84,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
   }
   
   /// Draft 2020-20 dialect representation
-  public struct Dialect: JSONSchemaDialect, CustomStringConvertible {
+  public struct Dialect: JSONSchemaDialect, Sendable, CustomStringConvertible {
     /// The default dialect, which collects but does not assert `format` annotations.
     public static let `default`: Dialect = Dialect()
     /// A dialect that also asserts `format` annotations, i.e. invalid formats result in

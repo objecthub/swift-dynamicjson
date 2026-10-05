@@ -58,10 +58,10 @@ public struct PartialJSONStream<Base: AsyncSequence>: AsyncSequence {
   public typealias Element = PartialJSON
   
   private let base: Base
-  private let feed: @Sendable (inout JSONPartialParser, Base.Element) throws -> Void
+  private let feed: (inout JSONPartialParser, Base.Element) throws -> Void
   
   internal init(base: Base,
-                feed: @escaping @Sendable (inout JSONPartialParser, Base.Element) throws -> Void) {
+                feed: @escaping (inout JSONPartialParser, Base.Element) throws -> Void) {
     self.base = base
     self.feed = feed
   }
@@ -72,14 +72,14 @@ public struct PartialJSONStream<Base: AsyncSequence>: AsyncSequence {
   
   public struct AsyncIterator: AsyncIteratorProtocol {
     private var base: Base.AsyncIterator
-    private let feed: @Sendable (inout JSONPartialParser, Base.Element) throws -> Void
+    private let feed: (inout JSONPartialParser, Base.Element) throws -> Void
     private var parser = JSONPartialParser()
     private var last: PartialJSON? = nil
     private var finished = false
     
     internal init(base: Base.AsyncIterator,
-                  feed: @escaping @Sendable (inout JSONPartialParser,
-                                             Base.Element) throws -> Void) {
+                  feed: @escaping (inout JSONPartialParser,
+                                   Base.Element) throws -> Void) {
       self.base = base
       self.feed = feed
     }

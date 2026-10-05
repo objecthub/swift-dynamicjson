@@ -1,4 +1,4 @@
-// swift-tools-version:5.7
+// swift-tools-version:6.0
 //
 //  Package.swift
 //  DynamicJSON
@@ -25,10 +25,10 @@ let package = Package(
   name: "DynamicJSON",
   
   platforms: [
-    .macOS(.v13),
-    .iOS(.v16),
-    .tvOS(.v16),
-    .watchOS(.v9)
+    .macOS(.v14),
+    .iOS(.v17),
+    .tvOS(.v17),
+    .watchOS(.v10)
   ],
   
   // Products define the executables and libraries produced by a package, and make them visible
@@ -220,5 +220,5 @@ let package = Package(
   ],
   
   // Required Swift language version.
-  swiftLanguageVersions: [.v5]
+  swiftLanguageModes: [.v6]
 )

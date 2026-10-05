@@ -74,7 +74,7 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
   }
   
   /// Annotation message for the property metadata `deprecated`, `readOnly`, and `writeOnly`.
-  public struct MetaTags: OptionSet, AnnotationMessage {
+  public struct MetaTags: OptionSet, AnnotationMessage, Sendable {
     /// The value is deprecated.
     public static let deprecated = MetaTags(rawValue: 1 << 0)
     /// The value is read-only.

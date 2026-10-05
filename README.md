@@ -1,6 +1,6 @@
 # Swift DynamicJSON
 
-[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![IDE: Xcode 16](https://img.shields.io/badge/IDE-Xcode%2016-blue.svg?style=flat)](https://developer.apple.com/xcode/) [![Package managers: SwiftPM, Carthage](https://img.shields.io/badge/Package%20managers-SwiftPM,%20Carthage-green.svg?style=flat)](https://github.com/Carthage/Carthage) [![License: Apache](http://img.shields.io/badge/License-Apache-lightgrey.svg?style=flat)](https://raw.githubusercontent.com/objecthub/swift-numberkit/master/LICENSE)
+[![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fobjecthub%2Fswift-dynamicjson%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/objecthub/swift-dynamicjson) [![IDE: Xcode 16](https://img.shields.io/badge/IDE-Xcode%2016-blue.svg?style=flat)](https://developer.apple.com/xcode/) [![Package managers: SwiftPM, Carthage](https://img.shields.io/badge/Package%20managers-SwiftPM,%20Carthage-green.svg?style=flat)](https://github.com/Carthage/Carthage) [![License: Apache](http://img.shields.io/badge/License-Apache-lightgrey.svg?style=flat)](https://raw.githubusercontent.com/objecthub/swift-dynamicjson/master/LICENSE)
 
 _DynamicJSON_ is a framework for representing, querying, and manipulating generic JSON values. The framework provides:
 
@@ -25,12 +25,12 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 4. &nbsp;<a href="#mutating-json-values">Mutating JSON Values</a><br />
 &nbsp;&nbsp; 4.1 &nbsp;<a href="#mutation-api">Mutation API</a><br />
 &nbsp;&nbsp; 4.2 &nbsp;<a href="#json-patch">JSON Patch</a><br />
-</td>
-<td width="50%" valign="top">
 5. &nbsp;<a href="#merging-json-values">Merging JSON Values</a><br />
 &nbsp;&nbsp; 5.1 &nbsp;<a href="#symmetrical-merge">Symmetrical Merge</a><br />
 &nbsp;&nbsp; 5.2 &nbsp;<a href="#overriding-merge">Overriding Merge</a><br />
 &nbsp;&nbsp; 5.3 &nbsp;<a href="#json-merge-patch">JSON Merge Patch</a><br />
+</td>
+<td width="50%" valign="top">
 6. &nbsp;<a href="#validating-json-data">Validating JSON Data</a><br />
 &nbsp;&nbsp; 6.1 &nbsp;<a href="#implementation-overview">Implementation Overview</a><br />
 &nbsp;&nbsp; 6.2 &nbsp;<a href="#validation-api">Validation API</a><br />
@@ -38,6 +38,9 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 7. &nbsp;<a href="#streaming-json-values">Streaming JSON Values</a><br />
 &nbsp;&nbsp; 7.1 &nbsp;<a href="#streaming-from-web-apis-and-llms">Streaming from Web APIs and LLMs</a><br />
 &nbsp;&nbsp; 7.2 &nbsp;<a href="#demo-wikiwatch">Demo: WikiWatch</a><br />
+8. &nbsp;<a href="#building-the-documentation">Building the Documentation<br />
+9. &nbsp;<a href="#requirements">Requirements<br />
+10. &nbsp;<a href="#migrating-from-the-swift-5-version">Migrating from the Swift 5 Version<br />
 </td>
 </tr>
 </table>
@@ -559,17 +562,17 @@ struct JSONPatch: Codable, Hashable, CustomStringConvertible, CustomDebugStringC
   init(data: Data,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
        floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
-       userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
+       userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws { ... }
   // Decodes the provided string with the given decoding strategies.
   init(string: String,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
        floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
-       userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
+       userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws { ... }
   // Decodes the content at the provided URL with the given decoding strategies.
   init(url: URL,
        dateDecodingStrategy: JSONDecoder.DateDecodingStrategy = .deferredToDate,
        floatDecodingStrategy: JSONDecoder.NonConformingFloatDecodingStrategy = .throw,
-       userInfo: [CodingUserInfoKey : Any]? = nil) throws { ... }
+       userInfo: [CodingUserInfoKey : any Sendable]? = nil) throws { ... }
   ...
   // Applies this patch object to `json` mutating `json` in place.
   func apply(to json: inout JSON) throws { ... }
@@ -1185,7 +1188,33 @@ and the command-line tool can both be built either using _Xcode_ or the _Swift P
 - [Swift 6](https://developer.apple.com/swift/)
 - [Swift Package Manager](https://swift.org/package-manager/)
 
+## Migrating from the Swift 5 Version
+
+This version of _DynamicJSON_ is built in the Swift 6 language mode (`swift-tools-version:6.0`)
+and needs a Swift 6 toolchain (Xcode 16 or later). Previous versions were built in the Swift 5
+language mode. The API is otherwise unchanged, but the move to strict concurrency checking
+introduced the following source incompatibilities:
+
+- **`JSONReference` requires `Sendable`.** Custom implementations of the protocol
+  (`JSONReference`, `SegmentableJSONReference`) have to be `Sendable`, e.g. value types with
+  `Sendable` members. `JSONLocation` and `JSONPointer` already are.
+- **`userInfo` parameters.** The parameter `userInfo` of the initializers and methods that
+  encode or decode JSON data (`JSON`, `JSONPatch`, `JSONPatchOperation`) now has type
+  `[CodingUserInfoKey : any Sendable]?` instead of `[CodingUserInfoKey : Any]?`, matching
+  `JSONEncoder` and `JSONDecoder` of the current Foundation. A dictionary variable of the old
+  type needs to be changed accordingly; dictionary literals continue to work.
+- **`@Sendable` closures.** Format validators of a schema dialect
+  (`JSONSchemaDraft2020.Vocabulary.formatValidators`) and functions added to JSON Path
+  (`JSONPathEvaluator.Function`) are `@Sendable`: closures that are registered there must not
+  capture mutable state.
+- **More types are `Sendable`.** `JSONLocation`, `JSONPointer`, `JSONPath`, `JSONSchema` and
+  the related schema types are now `Sendable`. This only matters for code that relied on them
+  _not_ being `Sendable`, which is rare.
+- **`JSONSchemaRegistry.default` is unsafe to share.** It is declared `nonisolated(unsafe)`,
+  as it was already documented not to be thread-safe. Do not use it from multiple tasks at
+  the same time; create separate registries instead.
+
 ## Copyright
 
 Author: Matthias Zenger (<matthias@objecthub.com>)  
-Copyright © 2024-2025 Matthias Zenger. All rights reserved.
+Copyright © 2024-2026 Matthias Zenger. All rights reserved.
