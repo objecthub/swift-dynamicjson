@@ -228,6 +228,9 @@
 		CCB466B82BBFCDCA001FBDFA /* README-BIG in Resources */ = {isa = PBXBuildFile; fileRef = CCB466B72BBFCDCA001FBDFA /* README-BIG */; };
 		CCD13B722B82536500307526 /* JSONLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCD13B712B82536500307526 /* JSONLocation.swift */; };
 		CCF37FFD2DA8E65E000936CA /* JSONPatchMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF37FFC2DA8E647000936CA /* JSONPatchMaker.swift */; };
+		CC0AD7053074000000B58056 /* JSONLenientParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD7023074000000B58056 /* JSONLenientParser.swift */; };
+		CC0AD7063074000000B58056 /* JSONExtraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD7033074000000B58056 /* JSONExtraction.swift */; };
+		CC0AD7073074000000B58056 /* JSONLenientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD7043074000000B58056 /* JSONLenientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -771,6 +774,9 @@
 		CCB466B72BBFCDCA001FBDFA /* README-BIG */ = {isa = PBXFileReference; lastKnownFileType = text; path = "README-BIG"; sourceTree = "<group>"; };
 		CCD13B712B82536500307526 /* JSONLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLocation.swift; sourceTree = "<group>"; };
 		CCF37FFC2DA8E647000936CA /* JSONPatchMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPatchMaker.swift; sourceTree = "<group>"; };
+		CC0AD7023074000000B58056 /* JSONLenientParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLenientParser.swift; sourceTree = "<group>"; };
+		CC0AD7033074000000B58056 /* JSONExtraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONExtraction.swift; sourceTree = "<group>"; };
+		CC0AD7043074000000B58056 /* JSONLenientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLenientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -922,6 +928,7 @@
 				CCD13B712B82536500307526 /* JSONLocation.swift */,
 				CC10ABE72B9CBB6100746181 /* JSONPointer.swift */,
 				CC0AD5CE3073063E00B58056 /* JSONStream */,
+				CC0AD7013074000000B58056 /* JSONLenient */,
 				CCB464FF2BA83485001FBDFA /* JSONPath */,
 				CCB464FE2BA83472001FBDFA /* JSONSchema */,
 				CCB4662D2BBB4AB9001FBDFA /* JSONPatch */,
@@ -961,6 +968,7 @@
 				CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */,
 				CC0AD5DB3073237D00B58056 /* JSONStreamDataTests.swift */,
 				CC0AD5D33073068700B58056 /* JSONStreamTests.swift */,
+				CC0AD7043074000000B58056 /* JSONLenientTests.swift */,
 				CC0AD5E93073327700B58056 /* JSONPartialParserTests.swift */,
 				CC0AD5EB3073328C00B58056 /* JSONServerSentEventTests.swift */,
 				CC0AD5E13073267100B58056 /* TestOutput.swift */,
@@ -1274,6 +1282,15 @@
 			path = JSONPatch;
 			sourceTree = "<group>";
 		};
+		CC0AD7013074000000B58056 /* JSONLenient */ = {
+			isa = PBXGroup;
+			children = (
+				CC0AD7033074000000B58056 /* JSONExtraction.swift */,
+				CC0AD7023074000000B58056 /* JSONLenientParser.swift */,
+			);
+			path = JSONLenient;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1500,6 +1517,8 @@
 				CC0AD5D13073063E00B58056 /* JSON+Streaming.swift in Sources */,
 				CC0AD5E63073322000B58056 /* PartialJSONStream.swift in Sources */,
 				CC0AD5D23073063E00B58056 /* JSONValueStream.swift in Sources */,
+				CC0AD7053074000000B58056 /* JSONLenientParser.swift in Sources */,
+				CC0AD7063074000000B58056 /* JSONExtraction.swift in Sources */,
 				CC908A122B82A498003253DA /* JSONPathEnvironment.swift in Sources */,
 				CC528E412B797980001E9E52 /* NSNumber.swift in Sources */,
 				CCB465ED2BAD82A8001FBDFA /* JSONSchemaDraft2020.swift in Sources */,
@@ -1534,6 +1553,7 @@
 				CC0A5A062BCB34A500F155FE /* JSONSchemaFormatSuite.swift in Sources */,
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
 				CC0AD5D43073068700B58056 /* JSONStreamTests.swift in Sources */,
+				CC0AD7073074000000B58056 /* JSONLenientTests.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
 				CC0AD5EA3073327700B58056 /* JSONPartialParserTests.swift in Sources */,
 				CC0A59F22BC31A8900F155FE /* JSONPointerTests.swift in Sources */,

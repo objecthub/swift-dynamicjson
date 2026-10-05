@@ -96,6 +96,7 @@ is available via the Swift Package Manager and Carthage.
 
 - <doc:StreamingJSON>
 - <doc:StreamingFromAPIs>
+- <doc:ExtractingJSON>
 - ``JSONValueStream``
 - ``JSONResultStream``
 - ``JSONResultSequence``
@@ -105,6 +106,9 @@ is available via the Swift Package Manager and Carthage.
 - ``PartialJSON``
 - ``PartialJSONStream``
 - ``JSONFragmentStream``
+- ``JSONExtractionOptions``
+- ``ExtractedJSON``
+- ``JSONRepair``
 
 ### Validating with JSON Schema
 

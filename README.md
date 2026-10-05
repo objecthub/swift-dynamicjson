@@ -37,10 +37,11 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 &nbsp;&nbsp; 6.3 &nbsp;<a href="#metadata-and-defaults">Metadata and Defaults</a><br />
 7. &nbsp;<a href="#streaming-json-values">Streaming JSON Values</a><br />
 &nbsp;&nbsp; 7.1 &nbsp;<a href="#streaming-from-web-apis-and-llms">Streaming from Web APIs and LLMs</a><br />
-&nbsp;&nbsp; 7.2 &nbsp;<a href="#demo-wikiwatch">Demo: WikiWatch</a><br />
-8. &nbsp;<a href="#building-the-documentation">Building the Documentation<br />
-9. &nbsp;<a href="#requirements">Requirements<br />
-10. &nbsp;<a href="#migrating-from-the-swift-5-version">Migrating from the Swift 5 Version<br />
+&nbsp;&nbsp; 7.2 &nbsp;<a href="#extracting-json-from-llm-output">Extracting JSON from LLM Output</a><br />
+&nbsp;&nbsp; 7.3 &nbsp;<a href="#demo-wikiwatch">Demo: WikiWatch</a><br />
+8. &nbsp;<a href="#building-the-documentation">Building the Documentation</a><br />
+9. &nbsp;<a href="#requirements">Requirements</a><br />
+10. &nbsp;<a href="#migrating-from-the-swift-5-version">Migrating from the Swift 5 Version</a><br />
 </td>
 </tr>
 </table>
@@ -1099,6 +1100,34 @@ for try await partial in JSON.partialValues(from: JSON.fragments(from: events, a
 
 No provider-specific code is involved; the JSON pointer selects the fragments from the events
 of the API at hand (e.g. `/delta/partial_json` for Anthropic tool input).
+
+### Extracting JSON from LLM Output
+
+Language models rarely produce _only_ JSON: answers often wrap the data in prose and Markdown
+code blocks, and the JSON itself might contain comments, trailing commas, single quotes, Python
+literals such as `None`, or be cut off at the length limit. `JSON.extract(from:options:)` finds
+the objects and arrays in such a text and parses them leniently. Each result tells where it was
+found, which range of the text it occupies, and which deviations from JSON (`JSONRepair`) had to
+be accepted:
+
+```swift
+let answer = """
+  Sure! Here is the data you asked for:
+  ```json
+  { "name": "Ada", "languages": ["en", "fr",], }   // trailing commas
+  ```
+  Let me know if you need anything else.
+  """
+let found = JSON.extract(from: answer)
+found[0].value     // {"name": "Ada", "languages": ["en", "fr"]}
+found[0].repairs   // [trailingComma, comment]
+```
+
+`JSON.extractFirst(from:options:)` returns only the first value, and `JSON(lenient:)` parses a
+text that consists of exactly one value (optionally in a code block). Truncated values are
+completed by closing strings, arrays, and objects and by dropping incomplete members, as
+`JSONPartialParser` does. `JSONExtractionOptions` restricts the search to code blocks, selects
+the types of values to extract, and limits the number of results.
 
 ### Demo: WikiWatch
 

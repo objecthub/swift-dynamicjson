@@ -66,6 +66,11 @@ data, or bytes) and returns a sequence of ``PartialJSON`` snapshots. The last sn
 complete value. ``PartialJSON/patch(from:)`` computes a ``JSONPatch`` between two successive
 snapshots, which allows clients to apply only the changes to a data model or user interface.
 
+### Output that is not pure JSON
+
+Models often surround JSON with prose and Markdown, or produce JSON with small errors.
+<doc:ExtractingJSON> describes how to find and parse such JSON leniently.
+
 ### Putting it together
 
 ``JSON/fragments(from:at:)`` extracts the text fragments from the deltas using a

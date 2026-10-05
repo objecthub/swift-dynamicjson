@@ -60,6 +60,8 @@ Sources/DynamicJSON/
   JSONStream/            Reading sequences of JSON values (NDJSON, RFC 7464, concatenated,
                          array elements, server-sent events): byte-level framer + async/sync stream
                          types; JSONPartialParser for values arriving in fragments (LLM output)
+  JSONLenient/           Lenient parser and extraction of JSON values from text (LLM output):
+                         JSON(lenient:), JSON.extract(from:), JSONRepair
   JSONPatch/             JSONPatch, JSONPatchOperation, JSONPatchMaker (diff)
   JSONSchema/            Schema model, registry, resources, providers, dialects, validators
   Util/                  Indirect, Encodable/Decodable/Array extensions, NSNumber bool check
