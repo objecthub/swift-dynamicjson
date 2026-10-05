@@ -29,10 +29,12 @@ extension JSON {
   public enum StreamFormat: Hashable, Sendable {
     
     /// Chooses the format based on the first bytes of the stream: if the first non-whitespace
-    /// byte is the ASCII record separator (0x1E), the stream is read as `sequence`; otherwise
-    /// as `concatenated`. Since `concatenated` also reads newline-delimited values, this
-    /// covers NDJSON/JSON Lines input as well, but does not recover from malformed lines. The
-    /// elements of a top-level array are never detected automatically; use `arrayElements`.
+    /// byte is the ASCII record separator (0x1E), the stream is read as `sequence`; if it is
+    /// one of the letters starting a server-sent event field (`d`, `e`, `i`, `r`) or a colon,
+    /// as `serverSentEvents`; otherwise as `concatenated`. Since `concatenated` also reads
+    /// newline-delimited values, this covers NDJSON/JSON Lines input as well, but does not
+    /// recover from malformed lines. The elements of a top-level array are never detected
+    /// automatically; use `arrayElements`.
     case automatic
     
     /// Newline-delimited JSON, as defined by NDJSON and JSON Lines (`.ndjson`, `.jsonl`). Each
@@ -58,6 +60,14 @@ extension JSON {
     /// one, without having to hold the whole array in memory. Anything but whitespace following
     /// the closing bracket is an error.
     case arrayElements
+    
+    /// Server-sent events (`text/event-stream`) as used by most streaming web APIs, including
+    /// those of large language models. The data of each event (the `data` fields, joined with
+    /// line feeds) is expected to be a JSON value; events without data, comments, and
+    /// the fields `event`, `id` and `retry` are ignored (use `JSON.events(from:)` to access
+    /// them). If the data of an event equals `StreamOptions.terminator`, the stream ends.
+    /// After an event with malformed data, reading resumes with the next event.
+    case serverSentEvents
   }
   
   ///
@@ -87,10 +97,18 @@ extension JSON {
     /// ends with error `StreamError.valueTooLarge`. By default, there is no limit.
     public var maxValueSize: Int?
     
+    /// For format `StreamFormat.serverSentEvents`: if the data of an event equals this
+    /// string, the stream ends without error. The default is `[DONE]`, as used by the
+    /// OpenAI API and compatible APIs.
+    public var terminator: String?
+    
     /// Creates stream options.
-    public init(errors: StreamErrorPolicy = .fail, maxValueSize: Int? = nil) {
+    public init(errors: StreamErrorPolicy = .fail,
+                maxValueSize: Int? = nil,
+                terminator: String? = "[DONE]") {
       self.errors = errors
       self.maxValueSize = maxValueSize
+      self.terminator = terminator
     }
   }
   

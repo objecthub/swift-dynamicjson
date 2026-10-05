@@ -26,10 +26,11 @@ swift build                       # build library and JSONPathTool
 swift test                        # run all tests (incl. compliance suites)
 swift test --filter JSONPathTests # run one test class
 swift run JSONPathTool            # interactive JSON Path REPL against a sample document
+swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse   # streaming demo (offline)
 ```
 
 The project also has an Xcode project (`DynamicJSON.xcodeproj`, schemes `DynamicJSON` and
-`JSONPathTool`). Build the DocC archive with:
+`JSONPathTool`, `WikiWatch`). Build the DocC archive with:
 
 ```bash
 xcodebuild docbuild -scheme DynamicJSON -destination 'generic/platform=macOS'
@@ -56,12 +57,15 @@ Sources/DynamicJSON/
   JSONPath/              Parser → JSONPath AST → JSONPathEvaluator (+ JSONPathEnvironment
                          holding variables and filter functions)
   JSONStream/            Reading sequences of JSON values (NDJSON, RFC 7464, concatenated,
-                         array elements): byte-level framer + async/sync stream types
+                         array elements, server-sent events): byte-level framer + async/sync stream
+                         types; JSONPartialParser for values arriving in fragments (LLM output)
   JSONPatch/             JSONPatch, JSONPatchOperation, JSONPatchMaker (diff)
   JSONSchema/            Schema model, registry, resources, providers, dialects, validators
   Util/                  Indirect, Encodable/Decodable/Array extensions, NSNumber bool check
   DynamicJSON.docc/      DocC catalog (landing page + articles)
 Sources/JSONPathTool/    Small command-line REPL for trying out JSON Path queries
+Sources/WikiWatch/       Demo command-line tool: live dashboard for Wikimedia's recent changes stream
+                         (server-sent events, JSON Schema, JSON Path); sample data in Examples/WikiWatch/
 Tests/DynamicJSONTests/  XCTest unit tests and compliance suites (see below)
 ```
 

@@ -20,7 +20,7 @@ On top of this core representation, the framework implements the following stand
   for mutating JSON data (see ``JSONPatch``)
 - **JSON Merge Patch** as defined by [RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/)
   for merging JSON data with patch documents (see ``JSON/merging(patch:)``)
-- **JSON streaming**: NDJSON / JSON Lines, JSON text sequences ([RFC 7464](https://datatracker.ietf.org/doc/html/rfc7464/)), concatenated JSON, and incrementally read top-level arrays (see <doc:StreamingJSON>)
+- **JSON streaming**: NDJSON / JSON Lines, JSON text sequences ([RFC 7464](https://datatracker.ietf.org/doc/html/rfc7464/)), concatenated JSON, and incrementally read top-level arrays (see <doc:StreamingJSON>), as well as server-sent events and partial JSON values as delivered by streaming web APIs and large language models (see <doc:StreamingFromAPIs>)
 - **JSON Schema** as defined by the
   [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/)
   for validating JSON data (see ``JSONSchema``)
@@ -95,9 +95,16 @@ is available via the Swift Package Manager and Carthage.
 ### Streaming JSON values
 
 - <doc:StreamingJSON>
+- <doc:StreamingFromAPIs>
 - ``JSONValueStream``
 - ``JSONResultStream``
 - ``JSONResultSequence``
+- ``ServerSentEvent``
+- ``ServerSentEventStream``
+- ``JSONPartialParser``
+- ``PartialJSON``
+- ``PartialJSONStream``
+- ``JSONFragmentStream``
 
 ### Validating with JSON Schema
 

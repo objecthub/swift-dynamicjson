@@ -63,6 +63,12 @@ let package = Package(
         .target(name: "DynamicJSON")
       ],
       exclude: []),
+    .executableTarget(
+      name: "WikiWatch",
+      dependencies: [
+        .target(name: "DynamicJSON")
+      ],
+      exclude: []),
     .testTarget(
       name: "DynamicJSONTests",
       dependencies: [

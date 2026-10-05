@@ -19,7 +19,8 @@ delimited is selected by a ``JSON/StreamFormat``:
 | ``JSON/StreamFormat/sequence`` | JSON text sequences, [RFC 7464](https://datatracker.ietf.org/doc/html/rfc7464/) (`application/json-seq`) and [RFC 8142](https://datatracker.ietf.org/doc/html/rfc8142/) (GeoJSON text sequences): each value is preceded by the ASCII record separator (0x1E) |
 | ``JSON/StreamFormat/concatenated`` | values follow each other with arbitrary or no whitespace in between, e.g. `{"a":1}{"b":2}` |
 | ``JSON/StreamFormat/arrayElements`` | the elements of one huge top-level array are returned incrementally |
-| ``JSON/StreamFormat/automatic`` | the default: `sequence` if the stream starts with a record separator, `concatenated` otherwise |
+| ``JSON/StreamFormat/serverSentEvents`` | server-sent events (`text/event-stream`), the transport of most streaming web APIs; see <doc:StreamingFromAPIs> |
+| ``JSON/StreamFormat/automatic`` | the default: `sequence` if the stream starts with a record separator, `serverSentEvents` if it starts with an event field or a comment, `concatenated` otherwise |
 
 ### Reading values asynchronously
 
@@ -106,6 +107,10 @@ for example when reading untrusted input. The resulting error is fatal.
 - ``JSON/values(from:format:options:)-(String,_,_)``
 - ``JSON/results(from:format:options:)->JSONResultSequence<S>``
 - ``JSONResultSequence``
+
+### Streams from web APIs
+
+- <doc:StreamingFromAPIs>
 
 ### Configuration
 

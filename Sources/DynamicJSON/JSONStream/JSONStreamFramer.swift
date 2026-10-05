@@ -173,6 +173,7 @@ internal struct JSONStreamFramer {
   enum Event {
     case frame([UInt8], offset: Int)
     case error(JSON.StreamError)
+    case end
   }
   
   private enum Mode {
@@ -181,6 +182,7 @@ internal struct JSONStreamFramer {
     case sequence
     case concatenated
     case array
+    case events
   }
   
   private enum ArrayState {
@@ -196,6 +198,8 @@ internal struct JSONStreamFramer {
   
   private var mode: Mode
   private let maxSize: Int?
+  private let terminator: String?
+  private var sse = SSEParser()
   private var offset = 0
   private var bomMatched = 0
   private var atStart = true
@@ -205,8 +209,9 @@ internal struct JSONStreamFramer {
   private var scanner = ValueScanner()
   private var arrayState: ArrayState = .expectOpen
   
-  init(format: JSON.StreamFormat, maxValueSize: Int?) {
+  init(format: JSON.StreamFormat, maxValueSize: Int?, terminator: String? = nil) {
     self.maxSize = maxValueSize
+    self.terminator = terminator
     switch format {
       case .automatic:
         self.mode = .undetermined
@@ -218,6 +223,8 @@ internal struct JSONStreamFramer {
         self.mode = .concatenated
       case .arrayElements:
         self.mode = .array
+      case .serverSentEvents:
+        self.mode = .events
     }
   }
   
@@ -274,6 +281,9 @@ internal struct JSONStreamFramer {
         if self.arrayState != .expectOpen && self.arrayState != .closed {
           events.append(.error(.truncated(offset: self.offset)))
         }
+      case .events:
+        // An event that is not terminated by an empty line is dropped
+        break
     }
     self.halted = true
   }
@@ -286,6 +296,10 @@ internal struct JSONStreamFramer {
         self.mode = .sequence
       } else if isJSONWhitespace(byte) {
         return
+      } else if byte == UInt8(ascii: ":") || byte == UInt8(ascii: "d") ||
+                byte == UInt8(ascii: "e") || byte == UInt8(ascii: "i") ||
+                byte == UInt8(ascii: "r") {
+        self.mode = .events
       } else {
         self.mode = .concatenated
       }
@@ -301,6 +315,8 @@ internal struct JSONStreamFramer {
         self.processConcatenated(byte, at: pos, into: &events)
       case .array:
         self.processArray(byte, at: pos, into: &events)
+      case .events:
+        self.processEvents(byte, into: &events)
     }
   }
   
@@ -426,6 +442,26 @@ internal struct JSONStreamFramer {
     }
   }
   
+  // MARK: - Server-sent events
+  
+  private mutating func processEvents(_ byte: UInt8, into events: inout [Event]) {
+    if let (event, offset) = self.sse.push(byte) {
+      if let terminator = self.terminator,
+         event.data.trimmingCharacters(in: .whitespacesAndNewlines) == terminator {
+        events.append(.end)
+        self.halted = true
+        return
+      }
+      let bytes = Array(event.data.utf8)
+      if !bytes.allSatisfy(isJSONWhitespace) {
+        self.emit(bytes, offset: offset, into: &events)
+      }
+    }
+    if let max = self.maxSize, self.sse.pendingSize > max {
+      self.fail(.valueTooLarge(offset: self.offset - 1), into: &events)
+    }
+  }
+  
   // MARK: - Elements of a top-level array
   
   private static func endsScalarInArray(_ byte: UInt8) -> Bool {
@@ -501,7 +537,9 @@ internal struct JSONStreamCore {
   private(set) var isHalted = false
   
   init(format: JSON.StreamFormat, options: JSON.StreamOptions) {
-    self.framer = JSONStreamFramer(format: format, maxValueSize: options.maxValueSize)
+    self.framer = JSONStreamFramer(format: format,
+                                   maxValueSize: options.maxValueSize,
+                                   terminator: options.terminator)
   }
   
   /// Is the stream completely processed, i.e. no further results can be polled?
@@ -548,6 +586,9 @@ internal struct JSONStreamCore {
           self.isHalted = true
         }
         return .failure(error)
+      case .end:
+        self.isHalted = true
+        return nil
     }
   }
 }

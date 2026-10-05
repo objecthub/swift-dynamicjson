@@ -36,6 +36,8 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 &nbsp;&nbsp; 6.2 &nbsp;<a href="#validation-api">Validation API</a><br />
 &nbsp;&nbsp; 6.3 &nbsp;<a href="#metadata-and-defaults">Metadata and Defaults</a><br />
 7. &nbsp;<a href="#streaming-json-values">Streaming JSON Values</a><br />
+&nbsp;&nbsp; 7.1 &nbsp;<a href="#streaming-from-web-apis-and-llms">Streaming from Web APIs and LLMs</a><br />
+&nbsp;&nbsp; 7.2 &nbsp;<a href="#demo-wikiwatch">Demo: WikiWatch</a><br />
 </td>
 </tr>
 </table>
@@ -1053,6 +1055,65 @@ and continues, as recommended by RFC 7464; this works reliably for `.lines` and 
 which resynchronize at the next line or record separator. `JSON.results(from:format:options:)`
 returns `Result<JSON, JSON.StreamError>` elements instead of throwing, and
 `StreamOptions.maxValueSize` bounds the memory used for a single value.
+
+### Streaming from Web APIs and LLMs
+
+Streaming web APIs, including the APIs of large language models, deliver JSON in two layers:
+the response body is a stream of _server-sent events_ (`text/event-stream`), and the JSON
+carried by these events is often a sequence of _fragments_ of one larger value, such as the
+arguments of a tool call. _DynamicJSON_ supports both.
+
+Format `.serverSentEvents` returns the JSON data of each event. Comments and the fields
+`event`, `id` and `retry` are skipped (use `JSON.events(from:)` to access them), and the
+stream ends when an event has the data `[DONE]` (configurable via `StreamOptions.terminator`).
+
+`JSONPartialParser` reads a single JSON value that arrives in fragments and returns the best
+approximation of the value at any time. It closes open strings, arrays, and objects, and leaves
+out incomplete keys, values, and numbers, so that each snapshot is a prefix of all later ones:
+
+```swift
+var parser = JSONPartialParser()
+try parser.append(#"{"city": "Par"#)
+try parser.snapshot()                  // {"city": "Par"}
+try parser.append(#"is", "population": 21"#)
+try parser.snapshot()                  // {"city": "Paris"}
+try parser.append("00000}")
+try parser.finish()                    // {"city": "Paris", "population": 2100000}
+```
+
+The pieces compose. `JSON.fragments(from:at:)` extracts the text fragments of the events with
+a JSON pointer, and `JSON.partialValues(from:)` turns the fragments into a sequence of
+`PartialJSON` snapshots (use `PartialJSON.patch(from:)` to get the changes as a `JSONPatch`):
+
+```swift
+let (bytes, _) = try await URLSession.shared.bytes(for: request)
+let events = JSON.values(from: bytes, format: .serverSentEvents)
+let pointer = try JSONPointer("/choices/0/delta/tool_calls/0/function/arguments")
+for try await partial in JSON.partialValues(from: JSON.fragments(from: events, at: pointer)) {
+  print(partial.value, partial.isComplete)
+}
+```
+
+No provider-specific code is involved; the JSON pointer selects the fragments from the events
+of the API at hand (e.g. `/delta/partial_json` for Anthropic tool input).
+
+### Demo: WikiWatch
+
+[`WikiWatch`](Examples/WikiWatch/README.md) is a small command-line tool (target `WikiWatch` of
+the Swift package and of the Xcode project) that puts the streaming support to work on a real
+stream: Wikimedia's public feed of all edits to its wikis, delivered as server-sent events. It
+reads the events with `JSON.events(from:)`, validates them with a JSON Schema, selects events with
+JSON Path filters, and shows a live dashboard in the terminal. Its source code is extensively
+commented and written to teach how the library is used in practice: start reading at
+`Sources/WikiWatch/main.swift`, which has a map of the files and what each of them demonstrates. A recorded sample makes it
+possible to try it without network access:
+
+```
+swift run WikiWatch                                       # live dashboard
+swift run WikiWatch --plain --wiki enwiki --no-bots       # one line per matching event
+swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse
+swift run WikiWatch --trickle Examples/WikiWatch/sample-recentchange.sse   # incremental JSON
+```
 
 ## Building the Documentation
 
