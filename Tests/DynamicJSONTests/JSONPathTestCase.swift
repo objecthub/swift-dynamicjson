@@ -24,6 +24,11 @@ import DynamicJSON
 
 class JSONPathTestCase: XCTestCase {
   
+  override class func setUp() {
+    super.setUp()
+    _ = lineBufferedOutput
+  }
+  
   enum JSONPathTestError: Error {
     case testSuiteNotFound
   }

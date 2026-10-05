@@ -11,6 +11,7 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
    - An implementation of _JSON Patch_ as defined by [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902/) for mutating JSON data.
    - An implementation of _JSON Merge Patch_ as defined by [RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/) for merging JSON data with JSON patches.
    - An implementation of _JSON Schema_ as defined by the [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/) for validating JSON data.
+   - Reading of _JSON streams_ supporting NDJSON/JSON Lines, JSON text sequences as defined by [RFC 7464](https://datatracker.ietf.org/doc/html/rfc7464/), concatenated JSON, and the elements of large top-level arrays.
 
 <table width="100%">
 <tr><th colspan="2">Table of contents</th></tr>
@@ -34,6 +35,7 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 &nbsp;&nbsp; 6.1 &nbsp;<a href="#implementation-overview">Implementation Overview</a><br />
 &nbsp;&nbsp; 6.2 &nbsp;<a href="#validation-api">Validation API</a><br />
 &nbsp;&nbsp; 6.3 &nbsp;<a href="#metadata-and-defaults">Metadata and Defaults</a><br />
+7. &nbsp;<a href="#streaming-json-values">Streaming JSON Values</a><br />
 </td>
 </tr>
 </table>
@@ -1017,6 +1019,40 @@ values. Each location within the validated value with a metadata annotation is i
 with an entry of type
 [`Annotation<MetaTags>`](https://github.com/objecthub/swift-dynamicjson/blob/344527ee09e7829dce4e4505b3c834be2ab0e977/Sources/DynamicJSON/JSONSchema/JSONSchemaValidationResult.swift#L40) providing access to fields `value` (a `LocatedJSON` value), `location` (within the schema), `message.deprecated`
 `message.readOnly`, and `message.writeOnly`. `deprecated`, `readOnly`, and `writeOnly` are boolean properties.
+
+## Streaming JSON Values
+
+Many sources deliver a _sequence_ of JSON values instead of a single document: log files,
+exports, web service responses, or the output of other processes. `JSON.values(from:format:options:)`
+is the single entry point for reading such sequences from any `AsyncSequence` of bytes
+(`UInt8`), one value at a time. The `format` parameter selects how values are delimited:
+
+| Format | Description |
+|--------|-------------|
+| `.lines` | NDJSON and JSON Lines (`.ndjson`, `.jsonl`): one value per line; `\r\n` and blank lines are tolerated |
+| `.sequence` | JSON text sequences, [RFC 7464](https://datatracker.ietf.org/doc/html/rfc7464/) (`application/json-seq`) and [RFC 8142](https://datatracker.ietf.org/doc/html/rfc8142/) (GeoJSON text sequences): each value is preceded by the ASCII record separator (0x1E) |
+| `.concatenated` | values follow each other with arbitrary or no whitespace in between, e.g. `{"a":1}{"b":2}` |
+| `.arrayElements` | the elements of one huge top-level array are returned incrementally |
+| `.automatic` | the default: `.sequence` if the stream starts with a record separator, otherwise `.concatenated` (which also reads NDJSON) |
+
+```swift
+// Asynchronous streaming from a file, a URL, or a pipe
+for try await value in JSON.values(from: url.resourceBytes, format: .lines) {
+  print(value)
+}
+for try await value in JSON.values(contentsOf: url, format: .arrayElements) { ... }
+
+// In-memory data
+let values = try JSON.values(from: "{\"a\": 1}\n{\"a\": 2}\n", format: .lines)
+for result in JSON.results(from: data, format: .sequence) { ... }
+```
+
+By default, the `for try await` loop throws a `JSON.StreamError` (including the byte offset)
+when it reaches the first malformed value, and no further values are read. Setting `JSON.StreamOptions(errors: .skipInvalid)` drops malformed values
+and continues, as recommended by RFC 7464; this works reliably for `.lines` and `.sequence`,
+which resynchronize at the next line or record separator. `JSON.results(from:format:options:)`
+returns `Result<JSON, JSON.StreamError>` elements instead of throwing, and
+`StreamOptions.maxValueSize` bounds the memory used for a single value.
 
 ## Building the Documentation
 

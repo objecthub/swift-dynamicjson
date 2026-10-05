@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+- Support for streams of JSON values via `JSON.values(from:format:options:)` and `JSON.results(from:format:options:)`: NDJSON/JSON Lines, JSON text sequences (RFC 7464, RFC 8142), concatenated JSON, and elements of top-level arrays
+- Tests for streaming with larger real-world data files (simdjson `jsonexamples`)
+
 ## 1.0.2 (2025-04-12)
 - Support the creation of `JSONPatch` objects from a source and target `JSON` value via function `patch(to:)` of enum `JSON`
 - Extension of test suite

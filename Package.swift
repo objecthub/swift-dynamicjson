@@ -69,6 +69,11 @@ let package = Package(
         .target(name: "DynamicJSON")
       ],
       exclude: [
+        "ComplianceTests/JSONStream/LICENSE.txt",
+        "ComplianceTests/JSONStream/NOTICE.txt",
+        "ComplianceTests/JSONStream/amazon_cellphones.ndjson",
+        "ComplianceTests/JSONStream/citm_catalog.json",
+        "ComplianceTests/JSONStream/twitter.json",
         "ComplianceTests/JSONPatch/README.md",
         "ComplianceTests/JSONPatch/README-BIG",
         "ComplianceTests/JSONPatch/bigexample1.json",

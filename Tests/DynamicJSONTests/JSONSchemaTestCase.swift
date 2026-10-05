@@ -24,6 +24,11 @@ import DynamicJSON
 
 class JSONSchemaTestCase: XCTestCase {
   
+  override class func setUp() {
+    super.setUp()
+    _ = lineBufferedOutput
+  }
+  
   enum JSONSchemaTestError: Error {
     case testSuiteNotFound
   }

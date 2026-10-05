@@ -55,6 +55,8 @@ Sources/DynamicJSON/
   LocatedJSON.swift      A JSON value paired with its JSONLocation (query results)
   JSONPath/              Parser → JSONPath AST → JSONPathEvaluator (+ JSONPathEnvironment
                          holding variables and filter functions)
+  JSONStream/            Reading sequences of JSON values (NDJSON, RFC 7464, concatenated,
+                         array elements): byte-level framer + async/sync stream types
   JSONPatch/             JSONPatch, JSONPatchOperation, JSONPatchMaker (diff)
   JSONSchema/            Schema model, registry, resources, providers, dialects, validators
   Util/                  Indirect, Encodable/Decodable/Array extensions, NSNumber bool check
@@ -117,6 +119,10 @@ Tests are XCTest-based. Besides focused unit tests (`JSONConstructorTests`,
 - `JSONPath/` — the JSONPath compliance test suite (see `LICENSE.txt`/`NOTICE.txt`)
 - `JSONPatch/` — the JSON Patch test suite
 - `JSONSchema/` — the JSON-Schema-Test-Suite for 2020-12 (`tests/`, `remotes/`, metaschemas)
+- `JSONStream/` — three real-world files from simdjson (`amazon_cellphones.ndjson`,
+  `twitter.json`, `citm_catalog.json`; Apache-2.0, see `NOTICE.txt`). `JSONStreamDataTests`
+  derives streams for every `JSON.StreamFormat` from them in memory and compares the result
+  with values decoded by `JSON(data:)`; only genuine NDJSON ships as a stream file.
 
 Each corpus has a `*TestCase` base class that loads a file and executes its cases, and a
 `*ComplianceSuite` subclass with one `func testXyz() { self.execute(suite: "xyz") }` per file.

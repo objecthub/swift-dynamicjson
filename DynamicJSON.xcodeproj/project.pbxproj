@@ -12,6 +12,16 @@
 		CC0A59F42BC6737F00F155FE /* JSONSchemaOptionalSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A59F32BC6737F00F155FE /* JSONSchemaOptionalSuite.swift */; };
 		CC0A5A062BCB34A500F155FE /* JSONSchemaFormatSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A5A052BCB34A500F155FE /* JSONSchemaFormatSuite.swift */; };
 		CC0A5A082BCC665700F155FE /* JSONSchemaFormatValidators.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0A5A072BCC665700F155FE /* JSONSchemaFormatValidators.swift */; };
+		CC0AD5CF3073063E00B58056 /* JSONStreamFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5CB3073063E00B58056 /* JSONStreamFormat.swift */; };
+		CC0AD5D03073063E00B58056 /* JSONStreamFramer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5CC3073063E00B58056 /* JSONStreamFramer.swift */; };
+		CC0AD5D13073063E00B58056 /* JSON+Streaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5CA3073063E00B58056 /* JSON+Streaming.swift */; };
+		CC0AD5D23073063E00B58056 /* JSONValueStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5CD3073063E00B58056 /* JSONValueStream.swift */; };
+		CC0AD5D43073068700B58056 /* JSONStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5D33073068700B58056 /* JSONStreamTests.swift */; };
+		CC0AD5DC3073237D00B58056 /* JSONStreamDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5DB3073237D00B58056 /* JSONStreamDataTests.swift */; };
+		CC0AD5DE307323DC00B58056 /* amazon_cellphones.ndjson in Copy JSONStream */ = {isa = PBXBuildFile; fileRef = CC0AD5D53073231300B58056 /* amazon_cellphones.ndjson */; };
+		CC0AD5DF307323EA00B58056 /* citm_catalog.json in Copy JSONStream */ = {isa = PBXBuildFile; fileRef = CC0AD5D63073231300B58056 /* citm_catalog.json */; };
+		CC0AD5E0307323F700B58056 /* twitter.json in Copy JSONStream */ = {isa = PBXBuildFile; fileRef = CC0AD5D93073231300B58056 /* twitter.json */; };
+		CC0AD5E23073267100B58056 /* TestOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD5E13073267100B58056 /* TestOutput.swift */; };
 		CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE72B9CBB6100746181 /* JSONPointer.swift */; };
 		CC10ABEA2B9D27F200746181 /* JSONReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABE92B9D27F200746181 /* JSONReference.swift */; };
 		CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */; };
@@ -223,6 +233,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		CC0AD5DD307323BF00B58056 /* Copy JSONStream */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = JSONStream;
+			dstSubfolderSpec = 7;
+			files = (
+				CC0AD5E0307323F700B58056 /* twitter.json in Copy JSONStream */,
+				CC0AD5DF307323EA00B58056 /* citm_catalog.json in Copy JSONStream */,
+				CC0AD5DE307323DC00B58056 /* amazon_cellphones.ndjson in Copy JSONStream */,
+			);
+			name = "Copy JSONStream";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC2473EC2B8180F70022800A /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -488,6 +511,18 @@
 		CC0A5A052BCB34A500F155FE /* JSONSchemaFormatSuite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaFormatSuite.swift; sourceTree = "<group>"; };
 		CC0A5A072BCC665700F155FE /* JSONSchemaFormatValidators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONSchemaFormatValidators.swift; sourceTree = "<group>"; };
 		CC0AD5C830727E0B00B58056 /* CLAUDE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CLAUDE.md; sourceTree = "<group>"; };
+		CC0AD5CA3073063E00B58056 /* JSON+Streaming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSON+Streaming.swift"; sourceTree = "<group>"; };
+		CC0AD5CB3073063E00B58056 /* JSONStreamFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStreamFormat.swift; sourceTree = "<group>"; };
+		CC0AD5CC3073063E00B58056 /* JSONStreamFramer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStreamFramer.swift; sourceTree = "<group>"; };
+		CC0AD5CD3073063E00B58056 /* JSONValueStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONValueStream.swift; sourceTree = "<group>"; };
+		CC0AD5D33073068700B58056 /* JSONStreamTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStreamTests.swift; sourceTree = "<group>"; };
+		CC0AD5D53073231300B58056 /* amazon_cellphones.ndjson */ = {isa = PBXFileReference; lastKnownFileType = text; path = amazon_cellphones.ndjson; sourceTree = "<group>"; };
+		CC0AD5D63073231300B58056 /* citm_catalog.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = citm_catalog.json; sourceTree = "<group>"; };
+		CC0AD5D73073231300B58056 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		CC0AD5D83073231300B58056 /* NOTICE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = NOTICE.txt; sourceTree = "<group>"; };
+		CC0AD5D93073231300B58056 /* twitter.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = twitter.json; sourceTree = "<group>"; };
+		CC0AD5DB3073237D00B58056 /* JSONStreamDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONStreamDataTests.swift; sourceTree = "<group>"; };
+		CC0AD5E13073267100B58056 /* TestOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestOutput.swift; sourceTree = "<group>"; };
 		CC10ABE72B9CBB6100746181 /* JSONPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONPointer.swift; sourceTree = "<group>"; };
 		CC10ABE92B9D27F200746181 /* JSONReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONReference.swift; sourceTree = "<group>"; };
 		CC10ABEB2B9DCD4B00746181 /* JSONMutationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONMutationTests.swift; sourceTree = "<group>"; };
@@ -707,6 +742,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CC0AD5CE3073063E00B58056 /* JSONStream */ = {
+			isa = PBXGroup;
+			children = (
+				CC0AD5CA3073063E00B58056 /* JSON+Streaming.swift */,
+				CC0AD5CB3073063E00B58056 /* JSONStreamFormat.swift */,
+				CC0AD5CC3073063E00B58056 /* JSONStreamFramer.swift */,
+				CC0AD5CD3073063E00B58056 /* JSONValueStream.swift */,
+			);
+			path = JSONStream;
+			sourceTree = "<group>";
+		};
+		CC0AD5DA3073231300B58056 /* JSONStream */ = {
+			isa = PBXGroup;
+			children = (
+				CC0AD5D53073231300B58056 /* amazon_cellphones.ndjson */,
+				CC0AD5D63073231300B58056 /* citm_catalog.json */,
+				CC0AD5D73073231300B58056 /* LICENSE.txt */,
+				CC0AD5D83073231300B58056 /* NOTICE.txt */,
+				CC0AD5D93073231300B58056 /* twitter.json */,
+			);
+			path = JSONStream;
+			sourceTree = "<group>";
+		};
 		CC2473EF2B8180F70022800A /* JSONPathTool */ = {
 			isa = PBXGroup;
 			children = (
@@ -758,6 +816,7 @@
 				CC10ABE92B9D27F200746181 /* JSONReference.swift */,
 				CCD13B712B82536500307526 /* JSONLocation.swift */,
 				CC10ABE72B9CBB6100746181 /* JSONPointer.swift */,
+				CC0AD5CE3073063E00B58056 /* JSONStream */,
 				CCB464FF2BA83485001FBDFA /* JSONPath */,
 				CCB464FE2BA83472001FBDFA /* JSONSchema */,
 				CCB4662D2BBB4AB9001FBDFA /* JSONPatch */,
@@ -795,6 +854,9 @@
 				CCB4663B2BBF34D7001FBDFA /* JSONPatchTestCase.swift */,
 				CCB466412BBF3D88001FBDFA /* JSONPatchComplianceSuite.swift */,
 				CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */,
+				CC0AD5DB3073237D00B58056 /* JSONStreamDataTests.swift */,
+				CC0AD5D33073068700B58056 /* JSONStreamTests.swift */,
+				CC0AD5E13073267100B58056 /* TestOutput.swift */,
 			);
 			name = DynamicJSONTests;
 			path = Tests/DynamicJSONTests;
@@ -830,6 +892,7 @@
 				CC95DAE62B97D62400AC9D10 /* JSONPath */,
 				CCB465072BAB8F64001FBDFA /* JSONSchema */,
 				CCB466322BBBE23A001FBDFA /* JSONPatch */,
+				CC0AD5DA3073231300B58056 /* JSONStream */,
 			);
 			path = ComplianceTests;
 			sourceTree = "<group>";
@@ -1174,6 +1237,7 @@
 				CCB466132BB7534D001FBDFA /* Copy JSONSchema/2020-12 */,
 				CCB466152BB75395001FBDFA /* Copy JSONSchema/2020-12/meta */,
 				CCB4663E2BBF38B1001FBDFA /* Copy JSONPatch */,
+				CC0AD5DD307323BF00B58056 /* Copy JSONStream */,
 			);
 			buildRules = (
 			);
@@ -1289,6 +1353,10 @@
 				CC10ABE82B9CBB6100746181 /* JSONPointer.swift in Sources */,
 				CC2473E72B7DF5040022800A /* JSONPathParser.swift in Sources */,
 				CC9353012B840C2600E043A2 /* JSONType.swift in Sources */,
+				CC0AD5CF3073063E00B58056 /* JSONStreamFormat.swift in Sources */,
+				CC0AD5D03073063E00B58056 /* JSONStreamFramer.swift in Sources */,
+				CC0AD5D13073063E00B58056 /* JSON+Streaming.swift in Sources */,
+				CC0AD5D23073063E00B58056 /* JSONValueStream.swift in Sources */,
 				CC908A122B82A498003253DA /* JSONPathEnvironment.swift in Sources */,
 				CC528E412B797980001E9E52 /* NSNumber.swift in Sources */,
 				CCB465ED2BAD82A8001FBDFA /* JSONSchemaDraft2020.swift in Sources */,
@@ -1320,8 +1388,11 @@
 				CC0A59F02BC0854800F155FE /* JSONMergingTests.swift in Sources */,
 				CC0A5A062BCB34A500F155FE /* JSONSchemaFormatSuite.swift in Sources */,
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
+				CC0AD5D43073068700B58056 /* JSONStreamTests.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
 				CC0A59F22BC31A8900F155FE /* JSONPointerTests.swift in Sources */,
+				CC0AD5E23073267100B58056 /* TestOutput.swift in Sources */,
+				CC0AD5DC3073237D00B58056 /* JSONStreamDataTests.swift in Sources */,
 				CCB4664D2BBF66C7001FBDFA /* JSONPatchLargeTest.swift in Sources */,
 				CCB4655C2BAB91BE001FBDFA /* JSONSchemaComplianceTest.swift in Sources */,
 				CC0A59F42BC6737F00F155FE /* JSONSchemaOptionalSuite.swift in Sources */,

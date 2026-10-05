@@ -1,0 +1,12 @@
+Test data for the JSON streaming tests (JSONStreamDataTests.swift)
+
+The files amazon_cellphones.ndjson, twitter.json, and citm_catalog.json are unmodified copies
+of files from the "jsonexamples" directory of the simdjson project:
+
+  https://github.com/simdjson/simdjson/tree/1a37712d31778299f4531aa6de10693ceb6f70db/jsonexamples
+
+simdjson is licensed under the Apache License 2.0 (see LICENSE.txt in this directory).
+twitter.json and citm_catalog.json are also part of the nativejson-benchmark (MIT license),
+and originate from public Twitter API responses and a public event catalog.
+
+Downloaded on 2026-10-05.

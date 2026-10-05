@@ -20,6 +20,7 @@ On top of this core representation, the framework implements the following stand
   for mutating JSON data (see ``JSONPatch``)
 - **JSON Merge Patch** as defined by [RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396/)
   for merging JSON data with patch documents (see ``JSON/merging(patch:)``)
+- **JSON streaming**: NDJSON / JSON Lines, JSON text sequences ([RFC 7464](https://datatracker.ietf.org/doc/html/rfc7464/)), concatenated JSON, and incrementally read top-level arrays (see <doc:StreamingJSON>)
 - **JSON Schema** as defined by the
   [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/)
   for validating JSON data (see ``JSONSchema``)
@@ -90,6 +91,13 @@ is available via the Swift Package Manager and Carthage.
 ### Merging JSON values
 
 - <doc:MergingJSON>
+
+### Streaming JSON values
+
+- <doc:StreamingJSON>
+- ``JSONValueStream``
+- ``JSONResultStream``
+- ``JSONResultSequence``
 
 ### Validating with JSON Schema
 
