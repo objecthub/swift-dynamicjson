@@ -17,20 +17,20 @@ public struct JSONSchemaFormatValidators {
   
   /// The format validators defined for the 2020-12 draft, keyed by format name.
   public static let draft2020: [String : @Sendable (String) -> Bool] = [
-    "unknown": JSONSchemaFormatValidators.isUnknown,
-    "date-time": JSONSchemaFormatValidators.isDateTime,
-    "date": JSONSchemaFormatValidators.isDate,
-    "time": JSONSchemaFormatValidators.isTime,
-    "duration": JSONSchemaFormatValidators.isDuration,
-    "email": JSONSchemaFormatValidators.isEmail,
-    "json-pointer": JSONSchemaFormatValidators.isJSONPointer,
-    "regex": JSONSchemaFormatValidators.isRegex,
-    "uuid": JSONSchemaFormatValidators.isUUID,
-    "uri": JSONSchemaFormatValidators.isURI,
-    "uri-reference": JSONSchemaFormatValidators.isURIReference,
-    "ipv4": JSONSchemaFormatValidators.isIPV4,
-    "ipv6": JSONSchemaFormatValidators.isIPV6,
-    "hostname": JSONSchemaFormatValidators.isHostname
+    "unknown": { JSONSchemaFormatValidators.isUnknown($0) },
+    "date-time": { JSONSchemaFormatValidators.isDateTime($0) },
+    "date": { JSONSchemaFormatValidators.isDate($0) },
+    "time": { JSONSchemaFormatValidators.isTime($0) },
+    "duration": { JSONSchemaFormatValidators.isDuration($0) },
+    "email": { JSONSchemaFormatValidators.isEmail($0) },
+    "json-pointer": { JSONSchemaFormatValidators.isJSONPointer($0) },
+    "regex": { JSONSchemaFormatValidators.isRegex($0) },
+    "uuid": { JSONSchemaFormatValidators.isUUID($0) },
+    "uri": { JSONSchemaFormatValidators.isURI($0) },
+    "uri-reference": { JSONSchemaFormatValidators.isURIReference($0) },
+    "ipv4": { JSONSchemaFormatValidators.isIPV4($0) },
+    "ipv6": { JSONSchemaFormatValidators.isIPV6($0) },
+    "hostname": { JSONSchemaFormatValidators.isHostname($0) }
   ]
   
   /// Accepts every string. Used for formats without a validator.

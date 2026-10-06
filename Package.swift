@@ -4,7 +4,7 @@
 //  DynamicJSON
 //
 //  Created by Matthias Zenger on 13/02/2024.
-//  Copyright © 2024-2025 Matthias Zenger. All rights reserved.
+//  Copyright © 2024-2026 Matthias Zenger. All rights reserved.
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -219,6 +219,6 @@ let package = Package(
       ])
   ],
   
-  // Required Swift language version.
-  swiftLanguageModes: [.v6]
+  // Supported Swift language versions.
+  swiftLanguageModes: [.v5, .v6]
 )
