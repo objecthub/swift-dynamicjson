@@ -1110,13 +1110,13 @@ format, and `finish()` returns the closing bytes (such as the `]` of an array). 
 is written can be read again with `JSON.values(from:format:)`.
 
 ```swift
-var writer = try JSONStreamWriter(format: .lines)       // or .sequence, .concatenated,
-var output = Data()                                     // .arrayElements, .serverSentEvents
+var writer = try JSONStreamWriter(format: .lines)     // or .sequence, .concatenated,
+var output = Data()                                   // .arrayElements, .serverSentEvents
 output.append(try writer.write(["id": 1, "name": "Ada"]))
 output.append(try writer.write(["id": 2, "name": "Alan"]))
 output.append(try writer.finish())
 
-let data = try JSON.stream(values, format: .sequence)   // a whole sequence of values
+let data = try JSON.stream(values, format: .sequence) // a whole sequence of values
 try JSON.write(values, to: url, format: .arrayElements,
                options: .init(formatting: [.prettyPrinted, .sortedKeys]))
 
@@ -1144,13 +1144,13 @@ be accepted:
 let answer = """
   Sure! Here is the data you asked for:
   ```json
-  { "name": "Ada", "languages": ["en", "fr",], }   // trailing commas
+  { "name": "Ada", "languages": ["en", "fr",], }  // trailing commas
   ```
   Let me know if you need anything else.
   """
 let found = JSON.extract(from: answer)
-found[0].value     // {"name": "Ada", "languages": ["en", "fr"]}
-found[0].repairs   // [trailingComma, comment]
+found[0].value    // {"name": "Ada", "languages": ["en", "fr"]}
+found[0].repairs  // [trailingComma, comment]
 ````
 
 `JSON.extractFirst(from:options:)` returns only the first value, and `JSON(lenient:)` parses a
@@ -1171,11 +1171,11 @@ commented and written to teach how the library is used in practice: start readin
 possible to try it without network access:
 
 ```
-swift run WikiWatch                                       # live dashboard
-swift run WikiWatch --plain --wiki enwiki --no-bots       # one line per matching event
+swift run WikiWatch                                     # live dashboard
+swift run WikiWatch --plain --wiki enwiki --no-bots     # one line per matching event
 swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse
-swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse --export out.ndjson   # write a stream
-swift run WikiWatch --trickle Examples/WikiWatch/sample-recentchange.sse   # incremental JSON
+swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse --export out.ndjson  # write a stream
+swift run WikiWatch --trickle Examples/WikiWatch/sample-recentchange.sse  # incremental JSON
 ```
 
 ## Building the Documentation

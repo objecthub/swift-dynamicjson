@@ -20,7 +20,7 @@ independent of the strict parser, which remains RFC 8259 conformant.
 ``JSON/extract(from:options:)`` searches a text for Markdown code blocks and for JSON objects
 and arrays in running text, and returns the values it finds in the order in which they appear:
 
-```swift
+````swift
 let answer = """
   Sure! Here is the data you asked for:
 
@@ -40,7 +40,7 @@ for found in JSON.extract(from: answer) {
   print(found.repairs)   // [comment, trailingComma]
   print(answer[found.range])
 }
-```
+````
 
 Each result is an ``ExtractedJSON`` value. Besides the parsed ``ExtractedJSON/value``, it tells
 where the value was found (``ExtractedJSON/source``), the ``ExtractedJSON/range`` it occupies in
