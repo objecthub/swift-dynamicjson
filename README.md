@@ -1140,7 +1140,7 @@ the objects and arrays in such a text and parses them leniently. Each result tel
 found, which range of the text it occupies, and which deviations from JSON (`JSONRepair`) had to
 be accepted:
 
-```swift
+````swift
 let answer = """
   Sure! Here is the data you asked for:
   ```json
@@ -1151,7 +1151,7 @@ let answer = """
 let found = JSON.extract(from: answer)
 found[0].value     // {"name": "Ada", "languages": ["en", "fr"]}
 found[0].repairs   // [trailingComma, comment]
-```
+````
 
 `JSON.extractFirst(from:options:)` returns only the first value, and `JSON(lenient:)` parses a
 text that consists of exactly one value (optionally in a code block). Truncated values are
