@@ -152,9 +152,63 @@ final class Pipeline {
   }
 }
 
+/// Writes the events that passed the filters as a stream of JSON values to a file.
+///
+/// This shows how to create streams with DynamicJSON; it is the counterpart of reading
+/// streams. A `JSONStreamWriter` does not do any I/O. It is created for one of the formats
+/// (`.lines`, `.sequence`, `.concatenated`, `.arrayElements`, `.serverSentEvents`), turns each
+/// value into the bytes that belong to it, including the framing of the format, and tells
+/// what to append to the output. `finish()` returns the closing bytes, e.g. the `]` of an
+/// array. Everything written can be read again with `JSON.values(from:format:)`.
+///
+/// The same functionality is available as an asynchronous sequence: `JSON.stream(values,
+/// format:)` turns an `AsyncSequence` of `JSON` values into an `AsyncSequence` of `Data`
+/// chunks, which is what a server needs for a streaming response, and
+/// `JSON.write(values, to: url, format:)` writes values to a file in one go.
+final class Exporter {
+  private var writer: JSONStreamWriter
+  private let handle: FileHandle
+  private let format: JSON.StreamFormat
+  let toStandardOutput: Bool
+  
+  init(path: String, format: JSON.StreamFormat) throws {
+    // `.sortedKeys` makes the output independent of the (random) order of dictionary keys.
+    self.writer = try JSONStreamWriter(format: format, options: JSON.StreamWriteOptions(
+                                        formatting: [.withoutEscapingSlashes, .sortedKeys]))
+    self.format = format
+    self.toStandardOutput = path == "-"
+    if self.toStandardOutput {
+      self.handle = FileHandle.standardOutput
+    } else {
+      guard FileManager.default.createFile(atPath: path, contents: nil),
+            let handle = FileHandle(forWritingAtPath: path) else {
+        throw EventSourceError.fileNotFound(path)
+      }
+      self.handle = handle
+    }
+  }
+  
+  func write(_ json: JSON) throws {
+    if self.format == .serverSentEvents {
+      // Events can have a name; clients can use it to tell different kinds of events apart
+      self.handle.write(try self.writer.write(json, event: "recentchange"))
+    } else {
+      self.handle.write(try self.writer.write(json))
+    }
+  }
+  
+  func finish() throws {
+    self.handle.write(try self.writer.finish())
+    if !self.toStandardOutput {
+      try self.handle.close()
+    }
+  }
+}
+
 /// Runs the monitor: reads events, and either prints them or updates the dashboard.
 func runMonitor(options: Options) async throws {
   let pipeline = try Pipeline(options: options)
+  let exporter = try options.export.map { try Exporter(path: $0, format: options.exportFormat) }
   let recorder = try options.record.map { try Recorder(path: $0) }
   let events: AsyncThrowingStream<ServerSentEvent, Error>
   if let path = options.replay {
@@ -162,7 +216,9 @@ func runMonitor(options: Options) async throws {
   } else {
     events = EventSource.live(stream: options.stream, recorder: recorder, verbose: options.verbose)
   }
-  let showDashboard = !options.plain && Dashboard.isTerminal
+  // Standard output carries the exported data if the export goes there
+  let exportsToStandardOutput = exporter?.toStandardOutput ?? false
+  let showDashboard = !options.plain && Dashboard.isTerminal && !exportsToStandardOutput
   let dashboard = Dashboard(top: options.top,
                             source: options.replay.map { "replay \($0)" } ?? options.stream)
   if showDashboard {
@@ -171,8 +227,11 @@ func runMonitor(options: Options) async throws {
   var lastRender = Date.distantPast
   do {
     for try await event in events {
-      if let json = pipeline.process(event), !showDashboard {
-        print(Dashboard.line(for: json))
+      if let json = pipeline.process(event) {
+        try exporter?.write(json)
+        if !showDashboard && !exportsToStandardOutput {
+          print(Dashboard.line(for: json))
+        }
       }
       if showDashboard && Date().timeIntervalSince(lastRender) >= options.interval {
         pipeline.updateRate()
@@ -188,6 +247,7 @@ func runMonitor(options: Options) async throws {
     // Interrupted by the user
   }
   recorder?.flush()
+  try exporter?.finish()
   if showDashboard {
     pipeline.updateRate()
     print(dashboard.render(pipeline.stats), terminator: "")

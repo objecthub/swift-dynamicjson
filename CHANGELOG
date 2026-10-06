@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- Support for writing streams of JSON values: `JSONStreamWriter`, `JSON.stream(_:format:options:)`, `JSON.write(_:to:format:options:)`, and `JSONByteStream` create NDJSON, JSON text sequences, concatenated JSON, JSON arrays, and server-sent events (`ServerSentEvent.encoded`)
 - Lenient parsing and extraction of JSON from the output of large language models: `JSON.extract(from:options:)`, `JSON.extractFirst(from:options:)`, and `JSON(lenient:)` find values in prose and Markdown code blocks, and accept comments, trailing commas, single quotes, unquoted keys, Python literals, and truncated values
 - Migration to Swift 6 language mode (swift-tools-version 6.0): public value types (`JSONLocation`, `JSONPointer`, `JSONPath`, `JSONSchema`, ...) and protocol `JSONReference` are now `Sendable`; the `userInfo` parameters of the encoding/decoding methods have type `[CodingUserInfoKey : any Sendable]`; format validators are `@Sendable` functions; `JSONSchemaRegistry.default` is declared `nonisolated(unsafe)`
 - Support for streams of JSON values via `JSON.values(from:format:options:)` and `JSON.results(from:format:options:)`: NDJSON/JSON Lines, JSON text sequences (RFC 7464, RFC 8142), concatenated JSON, and elements of top-level arrays

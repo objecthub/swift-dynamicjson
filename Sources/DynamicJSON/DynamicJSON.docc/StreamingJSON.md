@@ -108,6 +108,10 @@ for example when reading untrusted input. The resulting error is fatal.
 - ``JSON/results(from:format:options:)->JSONResultSequence<S>``
 - ``JSONResultSequence``
 
+### Creating streams
+
+- <doc:WritingStreams>
+
 ### Streams from web APIs
 
 - <doc:StreamingFromAPIs>

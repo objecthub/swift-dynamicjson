@@ -11,6 +11,7 @@ swift run WikiWatch                                  # live dashboard
 swift run WikiWatch --plain --wiki enwiki --no-bots  # one line per matching event
 swift run WikiWatch --plain --filter '$[?@.length.new > 20000]'
 swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse --speed 4
+swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse --export out.sse --format sse
 swift run WikiWatch --trickle Examples/WikiWatch/sample-recentchange.sse
 swift run WikiWatch --help
 ```
@@ -34,6 +35,7 @@ file shows what.
 | Select events with `--filter` | `JSONPath`, `JSONPathEvaluator` |
 | Read fields | `JSON` subscripts, `intValue`, `stringValue`, ... |
 | `--trickle`: show a JSON value that arrives in small pieces | `JSONPartialParser`, `PartialJSON.patch(from:)` |
+| `--export FILE --format lines\|sequence\|array\|concatenated\|sse`: save the matching events as a stream | `JSONStreamWriter` (see `Exporter` in `Pipeline.swift`) |
 
 `--filter` takes a JSON Path expression that is evaluated on the event wrapped in an array, so
 that the usual filter syntax works: `$[?@.wiki == "dewiki" && @.bot == false]`.

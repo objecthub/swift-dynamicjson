@@ -59,7 +59,8 @@ Sources/DynamicJSON/
                          holding variables and filter functions)
   JSONStream/            Reading sequences of JSON values (NDJSON, RFC 7464, concatenated,
                          array elements, server-sent events): byte-level framer + async/sync stream
-                         types; JSONPartialParser for values arriving in fragments (LLM output)
+                         types; JSONPartialParser for values arriving in fragments (LLM output);
+                         JSONStreamWriter, JSONByteStream, JSON.stream(...) for writing streams
   JSONLenient/           Lenient parser and extraction of JSON values from text (LLM output):
                          JSON(lenient:), JSON.extract(from:), JSONRepair
   JSONPatch/             JSONPatch, JSONPatchOperation, JSONPatchMaker (diff)

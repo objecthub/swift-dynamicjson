@@ -231,6 +231,10 @@
 		CC0AD7053074000000B58056 /* JSONLenientParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD7023074000000B58056 /* JSONLenientParser.swift */; };
 		CC0AD7063074000000B58056 /* JSONExtraction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD7033074000000B58056 /* JSONExtraction.swift */; };
 		CC0AD7073074000000B58056 /* JSONLenientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD7043074000000B58056 /* JSONLenientTests.swift */; };
+		CC0AD8123075000000B58056 /* JSONStreamWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD8113075000000B58056 /* JSONStreamWriter.swift */; };
+		CC0AD8143075000000B58056 /* JSONByteStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD8133075000000B58056 /* JSONByteStream.swift */; };
+		CC0AD8163075000000B58056 /* JSON+StreamWriting.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD8153075000000B58056 /* JSON+StreamWriting.swift */; };
+		CC0AD8183075000000B58056 /* JSONStreamWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC0AD8173075000000B58056 /* JSONStreamWriterTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -777,6 +781,10 @@
 		CC0AD7023074000000B58056 /* JSONLenientParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLenientParser.swift; sourceTree = "<group>"; };
 		CC0AD7033074000000B58056 /* JSONExtraction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONExtraction.swift; sourceTree = "<group>"; };
 		CC0AD7043074000000B58056 /* JSONLenientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLenientTests.swift; sourceTree = "<group>"; };
+		CC0AD8113075000000B58056 /* JSONStreamWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONStreamWriter.swift"; sourceTree = "<group>"; };
+		CC0AD8133075000000B58056 /* JSONByteStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONByteStream.swift"; sourceTree = "<group>"; };
+		CC0AD8153075000000B58056 /* JSON+StreamWriting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSON+StreamWriting.swift"; sourceTree = "<group>"; };
+		CC0AD8173075000000B58056 /* JSONStreamWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JSONStreamWriterTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -822,6 +830,9 @@
 				CC0AD5CB3073063E00B58056 /* JSONStreamFormat.swift */,
 				CC0AD5CC3073063E00B58056 /* JSONStreamFramer.swift */,
 				CC0AD5CD3073063E00B58056 /* JSONValueStream.swift */,
+				CC0AD8113075000000B58056 /* JSONStreamWriter.swift */,
+				CC0AD8133075000000B58056 /* JSONByteStream.swift */,
+				CC0AD8153075000000B58056 /* JSON+StreamWriting.swift */,
 				CC0AD5E53073322000B58056 /* PartialJSONStream.swift */,
 				CC0AD5E73073322600B58056 /* ServerSentEvents.swift */,
 			);
@@ -968,6 +979,7 @@
 				CCB4664C2BBF66C7001FBDFA /* JSONPatchLargeTest.swift */,
 				CC0AD5DB3073237D00B58056 /* JSONStreamDataTests.swift */,
 				CC0AD5D33073068700B58056 /* JSONStreamTests.swift */,
+				CC0AD8173075000000B58056 /* JSONStreamWriterTests.swift */,
 				CC0AD7043074000000B58056 /* JSONLenientTests.swift */,
 				CC0AD5E93073327700B58056 /* JSONPartialParserTests.swift */,
 				CC0AD5EB3073328C00B58056 /* JSONServerSentEventTests.swift */,
@@ -1517,6 +1529,9 @@
 				CC0AD5D13073063E00B58056 /* JSON+Streaming.swift in Sources */,
 				CC0AD5E63073322000B58056 /* PartialJSONStream.swift in Sources */,
 				CC0AD5D23073063E00B58056 /* JSONValueStream.swift in Sources */,
+				CC0AD8123075000000B58056 /* JSONStreamWriter.swift in Sources */,
+				CC0AD8143075000000B58056 /* JSONByteStream.swift in Sources */,
+				CC0AD8163075000000B58056 /* JSON+StreamWriting.swift in Sources */,
 				CC0AD7053074000000B58056 /* JSONLenientParser.swift in Sources */,
 				CC0AD7063074000000B58056 /* JSONExtraction.swift in Sources */,
 				CC908A122B82A498003253DA /* JSONPathEnvironment.swift in Sources */,
@@ -1553,6 +1568,7 @@
 				CC0A5A062BCB34A500F155FE /* JSONSchemaFormatSuite.swift in Sources */,
 				CC95DB1C2B97EC8B00AC9D10 /* JSONPathComplianceSuite.swift in Sources */,
 				CC0AD5D43073068700B58056 /* JSONStreamTests.swift in Sources */,
+				CC0AD8183075000000B58056 /* JSONStreamWriterTests.swift in Sources */,
 				CC0AD7073074000000B58056 /* JSONLenientTests.swift in Sources */,
 				CC10ABEC2B9DCD4B00746181 /* JSONMutationTests.swift in Sources */,
 				CC0AD5EA3073327700B58056 /* JSONPartialParserTests.swift in Sources */,

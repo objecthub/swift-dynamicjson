@@ -37,8 +37,9 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
 &nbsp;&nbsp; 6.3 &nbsp;<a href="#metadata-and-defaults">Metadata and Defaults</a><br />
 7. &nbsp;<a href="#streaming-json-values">Streaming JSON Values</a><br />
 &nbsp;&nbsp; 7.1 &nbsp;<a href="#streaming-from-web-apis-and-llms">Streaming from Web APIs and LLMs</a><br />
-&nbsp;&nbsp; 7.2 &nbsp;<a href="#extracting-json-from-llm-output">Extracting JSON from LLM Output</a><br />
-&nbsp;&nbsp; 7.3 &nbsp;<a href="#demo-wikiwatch">Demo: WikiWatch</a><br />
+&nbsp;&nbsp; 7.2 &nbsp;<a href="#writing-streams-of-json-values">Writing Streams of JSON Values</a><br />
+&nbsp;&nbsp; 7.3 &nbsp;<a href="#extracting-json-from-llm-output">Extracting JSON from LLM Output</a><br />
+&nbsp;&nbsp; 7.4 &nbsp;<a href="#demo-wikiwatch">Demo: WikiWatch</a><br />
 8. &nbsp;<a href="#building-the-documentation">Building the Documentation</a><br />
 9. &nbsp;<a href="#requirements">Requirements</a><br />
 10. &nbsp;<a href="#migrating-from-the-swift-5-version">Migrating from the Swift 5 Version</a><br />
@@ -167,7 +168,7 @@ In _DynamicJSON_, components of a JSON value are identified by implementations
 of the protocols [`JSONReference`](https://github.com/objecthub/swift-dynamicjson/blob/main/Sources/DynamicJSON/JSONReference.swift) and [`SegmentableJSONReference`](https://github.com/objecthub/swift-dynamicjson/blob/5a14f6e014116be9c95c68f0e3141d2605f95c5e/Sources/DynamicJSON/JSONReference.swift#L57). The following code presents the core methods implementing JSON references:
 
 ```swift
-protocol JSONReference: CustomStringConvertible {
+protocol JSONReference: CustomStringConvertible, Sendable {
   // Returns a new JSONReference with the given member selected.
   func select(member: String) -> Self
   // Returns a new JSONReference with the given index selected.
@@ -181,7 +182,7 @@ protocol JSONReference: CustomStringConvertible {
   func mutate(_ json: inout JSON, with proc: (inout JSON) throws -> Void) throws
 }
 
-protocol SegmentableJSONReference: JSONReference {
+protocol SegmentableJSONReference: JSONReference, JSONLocationConvertible {
   associatedtype Segment: JSONReferenceSegment
   // An array of segments representing the reference.
   var segments: [Segment] { get }
@@ -201,7 +202,7 @@ _DynamicJSON_ currently provides two implementations of `SegmentableJSONReferenc
 A `JSONLocation` value is defined in terms of a sequence of member names and array indices used to navigate through the structure of a JSON document. `JSONLocation` references refer to at most one value within a JSON document. The following code summarizes how `JSONLocation` values are represented:
 
 ```swift
-indirect enum JSONLocation: SegmentableJSONReference, Codable, Hashable, CustomStringConvertible {
+indirect enum JSONLocation: SegmentableJSONReference, Codable, Hashable, Sendable {
   case root
   case member(JSONLocation, String)
   case index(JSONLocation, Int)
@@ -298,7 +299,7 @@ Struct [`JSONPointer`](https://github.com/objecthub/swift-dynamicjson/blob/main/
 implements the JSON Pointer standard in the following way:
 
 ```swift
-struct JSONPointer: SegmentableJSONReference, Codable, Hashable, CustomStringConvertible {
+struct JSONPointer: SegmentableJSONReference, Codable, Hashable, Sendable {
   let segments: [ReferenceToken]
   
   enum ReferenceToken: JSONReferenceSegment, Hashable, CustomStringConvertible {
@@ -1101,6 +1102,35 @@ for try await partial in JSON.partialValues(from: JSON.fragments(from: events, a
 No provider-specific code is involved; the JSON pointer selects the fragments from the events
 of the API at hand (e.g. `/delta/partial_json` for Anthropic tool input).
 
+### Writing Streams of JSON Values
+
+The same formats can be created. `JSONStreamWriter` turns values into the bytes of a stream
+without doing any I/O: each call returns what belongs to a value, including the framing of the
+format, and `finish()` returns the closing bytes (such as the `]` of an array). Everything that
+is written can be read again with `JSON.values(from:format:)`.
+
+```swift
+var writer = try JSONStreamWriter(format: .lines)       // or .sequence, .concatenated,
+var output = Data()                                     // .arrayElements, .serverSentEvents
+output.append(try writer.write(["id": 1, "name": "Ada"]))
+output.append(try writer.write(["id": 2, "name": "Alan"]))
+output.append(try writer.finish())
+
+let data = try JSON.stream(values, format: .sequence)   // a whole sequence of values
+try JSON.write(values, to: url, format: .arrayElements,
+               options: .init(formatting: [.prettyPrinted, .sortedKeys]))
+
+// An asynchronous sequence of values becomes an asynchronous sequence of Data chunks,
+// e.g. for the body of a streaming HTTP response
+for try await chunk in JSON.stream(values, format: .lines) { ... }
+```
+
+`JSON.StreamWriteOptions` configure the encoding (output formatting, float and date strategies,
+line endings, the separator of concatenated values, and a terminator event such as `[DONE]` for
+server-sent events). `ServerSentEvent.encoded` and `JSONStreamWriter.write(_:event:id:retry:)`
+create events with names and identifiers; data that consists of several lines becomes several
+`data` fields.
+
 ### Extracting JSON from LLM Output
 
 Language models rarely produce _only_ JSON: answers often wrap the data in prose and Markdown
@@ -1144,6 +1174,7 @@ possible to try it without network access:
 swift run WikiWatch                                       # live dashboard
 swift run WikiWatch --plain --wiki enwiki --no-bots       # one line per matching event
 swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse
+swift run WikiWatch --replay Examples/WikiWatch/sample-recentchange.sse --export out.ndjson   # write a stream
 swift run WikiWatch --trickle Examples/WikiWatch/sample-recentchange.sse   # incremental JSON
 ```
 

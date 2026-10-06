@@ -35,6 +35,8 @@ struct Options {
   var limit: Int? = nil
   var plain = false
   var record: String? = nil
+  var export: String? = nil
+  var exportFormat: JSON.StreamFormat = .lines
   var replay: String? = nil
   var speed = 1.0
   var trickle: String? = nil
@@ -72,6 +74,10 @@ struct Options {
       --speed X            Replay speed relative to the original timing; 0 = as fast as
                            possible (default: 1)
       --record FILE        Save the raw event stream of a live session to FILE
+      --export FILE        Write the events that pass the filters to FILE as a stream of JSON
+                           values ('-' writes to standard output, replacing other output)
+      --format NAME        Format of the exported stream: lines (NDJSON, default), sequence
+                           (RFC 7464), array (one JSON array), concatenated, or sse
     
     FILTERS (events must match all of them)
       --wiki A,B           Only events of the given wikis, e.g. enwiki,dewiki
@@ -140,6 +146,24 @@ struct Options {
           options.plain = true
         case "--record":
           options.record = try value(for: option)
+        case "--export":
+          options.export = try value(for: option)
+        case "--format":
+          let name = try value(for: option)
+          switch name {
+            case "lines", "ndjson", "jsonl":
+              options.exportFormat = .lines
+            case "sequence", "json-seq":
+              options.exportFormat = .sequence
+            case "array":
+              options.exportFormat = .arrayElements
+            case "concatenated":
+              options.exportFormat = .concatenated
+            case "sse":
+              options.exportFormat = .serverSentEvents
+            default:
+              throw Error.invalidValue(option, name)
+          }
         case "--replay":
           options.replay = try value(for: option)
         case "--speed":
