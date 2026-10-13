@@ -13,6 +13,8 @@ _DynamicJSON_ is a framework for representing, querying, and manipulating generi
    - An implementation of _JSON Schema_ as defined by the [2020-12 Internet Draft specification](https://datatracker.ietf.org/doc/draft-bhutton-json-schema/) for validating JSON data.
    - Reading of _JSON streams_ supporting NDJSON/JSON Lines, JSON text sequences as defined by [RFC 7464](https://datatracker.ietf.org/doc/html/rfc7464/), concatenated JSON, and the elements of large top-level arrays.
 
+The API reference and a number of articles are also available as [online documentation](https://objecthub.github.io/swift-dynamicjson/documentation/dynamicjson/), generated with Swift-DocC.
+
 <table width="100%">
 <tr><th colspan="2">Table of contents</th></tr>
 <tr>
@@ -1185,6 +1187,9 @@ The API reference and articles of _DynamicJSON_ are written for
 `Sources/DynamicJSON/DynamicJSON.docc`; the reference material is generated from the `///`
 comments in the source code.
 
+The documentation is published on GitHub Pages at
+<https://objecthub.github.io/swift-dynamicjson/documentation/dynamicjson/>.
+
 ### With Xcode
 
 Open `Package.swift` (or `DynamicJSON.xcodeproj`) in Xcode, select the `DynamicJSON` scheme,
@@ -1228,6 +1233,8 @@ xcrun docc preview Sources/DynamicJSON/DynamicJSON.docc \
 `docc preview` prints the URL to open (by default `http://localhost:8080/documentation/dynamicjson`).
 To publish the documentation on a static web host such as GitHub Pages, add
 `--transform-for-static-hosting --hosting-base-path <path>` to the `docc convert` command.
+(For the GitHub Pages site of this repository, use the script described
+[below](#publishing-on-github-pages).)
 
 Alternatively, `xcodebuild` builds the documentation for the Xcode project from the terminal:
 
@@ -1238,6 +1245,27 @@ xcodebuild docbuild -scheme DynamicJSON -destination 'generic/platform=macOS'
 The build prints the location of the generated `.doccarchive` bundle (inside Xcode's
 DerivedData folder, or the folder passed via `-derivedDataPath`) and reports unresolved
 symbol links as warnings.
+
+### Publishing on GitHub Pages
+
+The documentation site is served from the root of branch `gh-pages`. Script
+`Scripts/generate-docs.sh` generates the site with the
+[Swift-DocC plugin](https://github.com/swiftlang/swift-docc-plugin) and copies it into a git
+worktree of that branch in `.build/gh-pages`. `Package.swift` only adds the plugin to the
+package's dependencies if environment variable `DYNAMICJSON_GENERATE_DOCS` is set (which the
+script does), so packages that depend on _DynamicJSON_ do not get to see it. The script
+neither commits nor pushes anything:
+
+```sh
+Scripts/generate-docs.sh
+cd .build/gh-pages
+git add -A
+git commit -m "Update the documentation site"
+git push -u origin gh-pages
+```
+
+Since the site documents the current state of the working copy, it should be generated before
+tagging a release.
 
 ## Requirements
 

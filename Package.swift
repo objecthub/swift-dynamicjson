@@ -19,6 +19,7 @@
 //  limitations under the License.
 //
 
+import Foundation
 import PackageDescription
 
 let package = Package(
@@ -54,8 +55,7 @@ let package = Package(
         // .product(name: "MarkdownKit", package: "swift-markdownkit")
       ],
       exclude: [
-        "DynamicJSON.h",
-        "DynamicJSON.docc"
+        "DynamicJSON.h"
       ]),
     .executableTarget(
       name: "JSONPathTool",
@@ -222,3 +222,10 @@ let package = Package(
   // Supported Swift language versions.
   swiftLanguageModes: [.v5, .v6]
 )
+
+// The Swift-DocC plugin is only needed for generating the documentation (Scripts/generate-docs.sh).
+// It is added conditionally to keep it out of the dependency graph of packages that use DynamicJSON.
+if ProcessInfo.processInfo.environment["DYNAMICJSON_GENERATE_DOCS"] != nil {
+  package.dependencies.append(
+    .package(url: "https://github.com/swiftlang/swift-docc-plugin.git", from: "1.4.0"))
+}
