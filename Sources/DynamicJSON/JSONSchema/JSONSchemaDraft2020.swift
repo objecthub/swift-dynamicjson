@@ -451,7 +451,7 @@ open class JSONSchemaDraft2020: JSONSchemaValidator {
         }
       }
       if !valid {
-        flag(.noneOfTheSchemaValidates, for: "anyOf")
+        flag(.noneOfTheSchemaValidates, for: "oneOf")
       }
     }
     if let not = descriptor.not, let validator = validator(for: not, at: "not") {

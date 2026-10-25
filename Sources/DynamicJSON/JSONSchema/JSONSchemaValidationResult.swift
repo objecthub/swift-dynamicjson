@@ -295,6 +295,7 @@ public struct JSONSchemaValidationResult: CustomStringConvertible {
   public mutating func include(_ other: JSONSchemaValidationResult,
                                mode: DefaultPropagationMode = .merge) -> JSONSchemaValidationResult {
     self.errors.append(contentsOf: other.errors)
+    self.tags.append(contentsOf: other.tags)
     self.formatConstraints.append(contentsOf: other.formatConstraints)
     self.merge(defaults: other.defaults, mode: mode)
     if self.location == other.location {

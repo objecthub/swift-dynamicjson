@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 (2026-10-25)
+- Fix `JSON.merging(value:)`: merging two different scalar values (or values of different types) returned `.null` instead of `nil`, so conflicts went undetected for scalars
+- Fix JSON Schema validation results: annotations tagging instances as `deprecated`, `readOnly`, or `writeOnly` were lost whenever they were produced by a subschema, e.g. by `properties`, `items`, `allOf`, `anyOf`, or `oneOf`
+- Fix JSON Schema validation results: a failing `oneOf` was reported at location `anyOf` instead of `oneOf`
+- Fix `JSON.init(from:)`: members of objects and elements of arrays that are `null` are now decoded explicitly, which makes decoding work with decoders that do not support `null` values via `decode(_:forKey:)` and `decode(_:)`, e.g. CBOR decoders
+
 ## 2.0 (2026-10-06)
 - Migration to Swift 6 language mode: public value types (`JSONLocation`, `JSONPointer`, `JSONPath`, `JSONSchema`, ...) and protocol `JSONReference` are now `Sendable`; the `userInfo` parameters of the encoding/decoding methods have type `[CodingUserInfoKey : any Sendable]`; format validators are `@Sendable` functions; `JSONSchemaRegistry.default` is declared `nonisolated(unsafe)`
 - Support for reading streams of JSON values via `JSON.values(from:format:options:)` and `JSON.results(from:format:options:)`: NDJSON/JSON Lines, JSON text sequences (RFC 7464, RFC 8142), concatenated JSON, and elements of top-level arrays

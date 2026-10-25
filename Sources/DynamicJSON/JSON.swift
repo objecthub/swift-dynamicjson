@@ -186,14 +186,44 @@ public enum JSON: Hashable,
     }
   }
   
+  /// Coding key for the members of JSON objects.
+  private struct MemberKey: CodingKey {
+    let stringValue: String
+    var intValue: Int? { return nil }
+
+    init(stringValue: String) {
+      self.stringValue = stringValue
+    }
+
+    init?(intValue: Int) {
+      return nil
+    }
+  }
+
   /// Initializer used to decode JSON values.
   public init(from decoder: Decoder) throws {
-    let container = try decoder.singleValueContainer()
-    if let object = try? container.decode([String: JSON].self) {
+    // Objects and arrays are decoded element by element, checking explicitly for `null`.
+    // Some decoders, e.g. CBOR decoders, refuse to decode `null` members and elements via
+    // `decode(_:forKey:)` and `decode(_:)`.
+    if let members = try? decoder.container(keyedBy: MemberKey.self) {
+      var object: [String : JSON] = [:]
+      for key in members.allKeys {
+        object[key.stringValue] = try members.decodeNil(forKey: key) ?
+                                    .null : members.decode(JSON.self, forKey: key)
+      }
       self = .object(object)
-    } else if let array = try? container.decode([JSON].self) {
+      return
+    }
+    if var elements = try? decoder.unkeyedContainer() {
+      var array: [JSON] = []
+      while !elements.isAtEnd {
+        array.append(try elements.decodeNil() ? .null : elements.decode(JSON.self))
+      }
       self = .array(array)
-    } else if let string = try? container.decode(String.self) {
+      return
+    }
+    let container = try decoder.singleValueContainer()
+    if let string = try? container.decode(String.self) {
       self = .string(string)
     } else if let bool = try? container.decode(Bool.self) {
       self = .boolean(bool)
@@ -650,7 +680,12 @@ public enum JSON: Hashable,
         }
         return .object(dict)
       default:
-        return self == value ? self : nil
+        // Note: `self == value ? self : nil` would not work here, because `nil` would be
+        // inferred as `JSON.null` since `JSON` is `ExpressibleByNilLiteral`.
+        guard self == value else {
+          return nil
+        }
+        return self
     }
   }
   

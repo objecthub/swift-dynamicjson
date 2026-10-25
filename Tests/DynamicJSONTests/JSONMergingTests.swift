@@ -232,6 +232,30 @@ final class JSONMergingTests: XCTestCase {
     XCTAssertEqual(m0, e)
   }
   
+  func testSymmetricalMergeConflicts() throws {
+    // Different scalars contradict each other
+    XCTAssertNil(JSON.integer(1).merging(value: .integer(2)))
+    XCTAssertNil(JSON.string("a").merging(value: .string("b")))
+    XCTAssertNil(JSON.boolean(true).merging(value: .boolean(false)))
+    XCTAssertNil(JSON.null.merging(value: .integer(5)))
+    XCTAssertNil(JSON.integer(5).merging(value: .null))
+    XCTAssertNil(JSON.integer(1).merging(value: .string("1")))
+    XCTAssertEqual(JSON.integer(1).merging(value: .integer(1)), .integer(1))
+    XCTAssertEqual(JSON.null.merging(value: .null), .null)
+    // Contradictions in nested values make the whole merge fail
+    let a = try JSON(string: #"{"a": 1, "b": {"c": "x"}, "d": [true, null]}"#)
+    XCTAssertNil(a.merging(value: try JSON(string: #"{"a": 2}"#)))
+    XCTAssertNil(a.merging(value: try JSON(string: #"{"b": {"c": "y"}}"#)))
+    XCTAssertNil(a.merging(value: try JSON(string: #"{"d": [true, 0]}"#)))
+    XCTAssertNil(a.merging(value: try JSON(string: #"{"d": [true]}"#)))
+    XCTAssertNil(a.merging(value: try JSON(string: #"{"a": [1]}"#)))
+    // Compatible values do not fail, also not if they contain null
+    let b = try JSON(string: #"{"a": 1, "e": null, "d": [true, null]}"#)
+    let expected = try JSON(string: #"{"a": 1, "b": {"c": "x"}, "d": [true, null], "e": null}"#)
+    XCTAssertEqual(a.merging(value: b), expected)
+    XCTAssertEqual(b.merging(value: a), expected)
+  }
+
   func testRefinement() throws {
     let a = try JSON(string: #"""
       { "a": [1, {"b": 2}],
